@@ -162,6 +162,39 @@
   .underline-animate {
     @apply relative after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full;
   }
+
+  /* Prose styles for article content */
+  .prose {
+    @apply max-w-none;
+  }
+  
+  .prose p {
+    @apply text-muted-foreground my-6 leading-relaxed;
+  }
+  
+  .prose h2 {
+    @apply text-2xl font-medium my-8;
+  }
+  
+  .prose h3 {
+    @apply text-xl font-medium my-6;
+  }
+  
+  .prose ul, .prose ol {
+    @apply my-6 pl-6;
+  }
+  
+  .prose li {
+    @apply my-2;
+  }
+  
+  .prose a {
+    @apply text-primary underline hover:text-primary/80 transition-colors;
+  }
+  
+  .prose blockquote {
+    @apply border-l-4 border-border pl-4 italic my-6;
+  }
 }
 
 /* Animation delay utilities */

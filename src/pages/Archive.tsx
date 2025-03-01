@@ -202,6 +202,7 @@ const Archive = () => {
                   date={article.date}
                   category={article.category}
                   index={index}
+                  id={article.id}
                 />
               ))
             ) : (

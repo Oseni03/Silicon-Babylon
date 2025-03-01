@@ -1,5 +1,6 @@
 
 import { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 
 interface ArticleCardProps {
@@ -8,9 +9,10 @@ interface ArticleCardProps {
   date: string;
   category: string;
   index: number;
+  id: number;
 }
 
-const ArticleCard = ({ title, excerpt, date, category, index }: ArticleCardProps) => {
+const ArticleCard = ({ title, excerpt, date, category, index, id }: ArticleCardProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -74,8 +76,8 @@ const ArticleCard = ({ title, excerpt, date, category, index }: ArticleCardProps
         </p>
         
         <div className="pt-2">
-          <a
-            href="#"
+          <Link
+            to={`/article/${id}`}
             className="inline-flex items-center text-sm font-medium text-primary"
           >
             Read more
@@ -92,7 +94,7 @@ const ArticleCard = ({ title, excerpt, date, category, index }: ArticleCardProps
               <line x1="5" y1="12" x2="19" y2="12" />
               <polyline points="12 5 19 12 12 19" />
             </svg>
-          </a>
+          </Link>
         </div>
       </div>
     </div>
