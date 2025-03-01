@@ -32,13 +32,13 @@ const Hero = () => {
         aria-hidden="true"
       />
       
-      <div className="container mx-auto px-6 z-10">
-        <div className="max-w-3xl mx-auto text-center space-y-6">
+      <div className="container mx-auto px-4 sm:px-6 z-10">
+        <div className="max-w-3xl mx-auto text-center space-y-4 sm:space-y-6 px-2">
           <div className="inline-block px-3 py-1 rounded-full bg-secondary border border-border text-xs font-medium animate-fade-in">
             Autonomous Satire Website
           </div>
           
-          <h1 className="hero-text animate-fade-up">
+          <h1 className="hero-text text-3xl sm:text-4xl md:text-5xl lg:text-6xl animate-fade-up">
             Where Tech News Gets a 
             <span className="relative ml-2">
               Satirical
@@ -46,14 +46,14 @@ const Hero = () => {
             </span> Upgrade
           </h1>
           
-          <p className="text-lg md:text-xl text-muted-foreground animate-fade-up animation-delay-200">
+          <p className="text-base sm:text-lg md:text-xl text-muted-foreground animate-fade-up animation-delay-200">
             AI-generated comedy based on real tech headlines, curated for the discerning reader who appreciates both innovation and irony.
           </p>
           
           <div className="pt-4 animate-fade-up animation-delay-300">
             <a 
               href="#latest-articles" 
-              className="inline-flex items-center justify-center rounded-md px-6 py-3 bg-primary text-primary-foreground font-medium text-sm hover:bg-primary/90 transition-colors"
+              className="inline-flex items-center justify-center rounded-md px-4 sm:px-6 py-2 sm:py-3 bg-primary text-primary-foreground font-medium text-sm hover:bg-primary/90 transition-colors"
             >
               Read Latest Articles
               <svg 
