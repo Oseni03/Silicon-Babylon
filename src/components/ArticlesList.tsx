@@ -69,6 +69,7 @@ const ArticlesList = () => {
         {articles.map((article, index) => (
           <ArticleCard
             key={article.id}
+            id={article.id}
             title={article.title}
             excerpt={article.excerpt}
             date={article.date}
