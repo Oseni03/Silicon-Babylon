@@ -5,6 +5,11 @@ import { cn } from "@/lib/utils";
 
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,6 +43,7 @@ const Header = () => {
           </span>
         </Link>
         
+        {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-8">
           <Link to="/" className="text-sm font-medium hover:text-primary/80 transition-colors underline-animate">
             Home
@@ -50,10 +56,12 @@ const Header = () => {
           </Link>
         </nav>
 
+        {/* Mobile Menu Button */}
         <div className="md:hidden">
           <button 
             className="w-10 h-10 flex items-center justify-center rounded-md hover:bg-secondary transition-colors"
             aria-label="Toggle menu"
+            onClick={toggleMenu}
           >
             <svg 
               xmlns="http://www.w3.org/2000/svg" 
@@ -66,13 +74,51 @@ const Header = () => {
               strokeLinecap="round" 
               strokeLinejoin="round"
             >
-              <line x1="4" x2="20" y1="12" y2="12" />
-              <line x1="4" x2="20" y1="6" y2="6" />
-              <line x1="4" x2="20" y1="18" y2="18" />
+              {isMenuOpen ? (
+                <>
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </>
+              ) : (
+                <>
+                  <line x1="4" x2="20" y1="12" y2="12" />
+                  <line x1="4" x2="20" y1="6" y2="6" />
+                  <line x1="4" x2="20" y1="18" y2="18" />
+                </>
+              )}
             </svg>
           </button>
         </div>
       </div>
+
+      {/* Mobile Navigation Menu */}
+      {isMenuOpen && (
+        <div className="md:hidden absolute top-full left-0 right-0 bg-background border-b border-border shadow-lg animate-fade-in">
+          <nav className="container mx-auto py-4 flex flex-col space-y-4 px-6">
+            <Link 
+              to="/" 
+              className="text-base font-medium py-2 hover:text-primary transition-colors"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Home
+            </Link>
+            <Link 
+              to="/about" 
+              className="text-base font-medium py-2 hover:text-primary transition-colors"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              About
+            </Link>
+            <Link 
+              to="/archive" 
+              className="text-base font-medium py-2 hover:text-primary transition-colors"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Archive
+            </Link>
+          </nav>
+        </div>
+      )}
     </header>
   );
 };
