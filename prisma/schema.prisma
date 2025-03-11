@@ -14,15 +14,16 @@ datasource db {
 }
 
 model Article {
-  id         String   @id @default(cuid())
-  title      String
-  slug       String   @unique
-  content    String
-  image      String?
-  categoryId String
-  category   Category @relation(fields: [categoryId], references: [id])
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id            String      @id @default(cuid())
+  title         String      @db.VarChar(255)
+  content       String      @db.Text
+  originalUrl   String      @unique
+  originalTitle String
+  publishedAt   DateTime
+  keywords      String[]    // Add this line for keywords
+  categories    Category[]  // Change this to a relation
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
 }
 
 model Category {
