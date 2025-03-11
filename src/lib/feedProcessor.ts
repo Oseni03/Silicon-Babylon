@@ -171,6 +171,7 @@ async function fetchAndProcessFeeds() {
 								originalUrl: item.link,
 							},
 							update: {
+								slug: generateSlug(satirical.title), // Add slug to update
 								title: satirical.title,
 								content: satirical.content,
 								keywords: satirical.keywords,
@@ -184,6 +185,7 @@ async function fetchAndProcessFeeds() {
 								},
 							},
 							create: {
+								slug: generateSlug(satirical.title),
 								title: satirical.title,
 								content: satirical.content,
 								keywords: satirical.keywords,

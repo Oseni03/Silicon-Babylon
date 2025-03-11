@@ -1,0 +1,9 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/api/articles/route": "/api/articles",
+  "/api/process-feed/route": "/api/process-feed",
+  "/about/page": "/about",
+  "/archive/page": "/archive",
+  "/article/[slug]/page": "/article/[slug]",
+  "/page": "/"
+}

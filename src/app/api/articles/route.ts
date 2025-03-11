@@ -10,7 +10,7 @@ export async function GET() {
 				createdAt: "desc",
 			},
 			include: {
-				category: true,
+				categories: true,
 			},
 		});
 		return NextResponse.json(articles);
@@ -37,32 +37,45 @@ export async function POST(request: Request) {
 			}
 		);
 
-		const categorySlug = generateSlug(data.category);
+		// Handle categories
+		const categoryPromises = data.categories.map(
+			async (categoryName: string) => {
+				const categorySlug = generateSlug(categoryName);
+				return prisma.category.upsert({
+					where: { slug: categorySlug },
+					update: {},
+					create: {
+						name: categoryName,
+						slug: categorySlug,
+					},
+				});
+			}
+		);
 
-		// Get or create the category
-		const category = await prisma.category.upsert({
-			where: { slug: categorySlug },
-			update: {},
-			create: {
-				name: data.category,
-				slug: categorySlug,
-			},
-		});
+		const categories = await Promise.all(categoryPromises);
 
 		const article = await prisma.article.create({
 			data: {
 				title: data.title,
 				slug: articleSlug,
 				content: data.content,
-				image: data.image,
-				categoryId: category.id,
+				originalUrl: data.originalUrl,
+				originalTitle: data.originalTitle,
+				publishedAt: new Date(data.publishedAt),
+				keywords: data.keywords || [],
+				categories: {
+					connect: categories.map((category) => ({
+						id: category.id,
+					})),
+				},
 			},
 			include: {
-				category: true,
+				categories: true,
 			},
 		});
 		return NextResponse.json(article);
 	} catch (error) {
+		console.error("Error creating article:", error);
 		return NextResponse.json(
 			{ error: "Error creating article" },
 			{ status: 500 }
