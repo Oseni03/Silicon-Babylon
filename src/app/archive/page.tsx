@@ -4,137 +4,49 @@ import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ArticleCard from "@/components/ArticleCard";
-
-interface Article {
-	id: number;
-	title: string;
-	excerpt: string;
-	date: string;
-	category: string;
-}
-
-// Extended sample articles data for archive
-const allArticles: Article[] = [
-	{
-		id: 1,
-		title: "Apple's New iCar Requires AppleCare+ Just to Start the Engine",
-		excerpt:
-			"In a move surprising absolutely nobody, Apple's new automotive venture requires a subscription just to perform basic functions.",
-		date: "2023-05-15",
-		category: "Products",
-	},
-	{
-		id: 2,
-		title: "Meta Unveils 'Actual Reality' Platform for Users Who Need a Break from the Metaverse",
-		excerpt:
-			"In a shocking departure from its usual strategy, Mark Zuckerberg announced a new platform that encourages people to look up from their screens.",
-		date: "2023-05-12",
-		category: "Social Media",
-	},
-	{
-		id: 3,
-		title: "Amazon's New Delivery Drones Now Come With Complimentary Therapy Sessions",
-		excerpt:
-			"After detecting concerning levels of anxiety in most American households, Amazon's drones will now offer basic counseling alongside your packages.",
-		date: "2023-05-10",
-		category: "E-commerce",
-	},
-	{
-		id: 4,
-		title: "Microsoft's New AI Assistant Keeps Taking Smoke Breaks and Calling in Sick",
-		excerpt:
-			"Users report that the latest AI from Microsoft frequently claims to 'have a thing' and needs to 'step out for a minute.'",
-		date: "2023-05-08",
-		category: "AI & ML",
-	},
-	{
-		id: 5,
-		title: "Google's Latest Algorithm Update Ranks Websites Based on How Many Cats They Feature",
-		excerpt:
-			"SEO experts are scrambling to add feline content to every page after Google's surprise 'Purr-Core' update changed the search landscape overnight.",
-		date: "2023-05-05",
-		category: "Search",
-	},
-	{
-		id: 6,
-		title: "Tesla Announces Self-Driving Feature That Just Drives Back to the Dealership When It's Had Enough",
-		excerpt:
-			"The latest update from Tesla includes an 'I Quit' function that activates when the car detects it's being asked to parallel park for the third time in a day.",
-		date: "2023-05-02",
-		category: "Automotive",
-	},
-	{
-		id: 7,
-		title: "SpaceX Launches New Rocket That Comes Back With More Fuel Than It Left With",
-		excerpt:
-			"Scientists baffled as Elon Musk claims to have broken the laws of physics with SpaceX's latest reusable rocket that 'just keeps getting better with age.'",
-		date: "2023-04-28",
-		category: "Space",
-	},
-	{
-		id: 8,
-		title: "New Startup Promises to Disrupt the Disruption Industry",
-		excerpt:
-			"Silicon Valley's newest venture aims to help companies disrupt industries that are already being disrupted by other disruptive startups.",
-		date: "2023-04-25",
-		category: "Startups",
-	},
-	{
-		id: 9,
-		title: "Apple Introduces $999 Charging Cable That Doubles as Designer Fashion Accessory",
-		excerpt:
-			"Tim Cook insists that the new cable, made from 'responsibly sourced' precious metals, represents the 'future of charging and personal expression.'",
-		date: "2023-04-22",
-		category: "Products",
-	},
-	{
-		id: 10,
-		title: "Twitter Algorithm Now Just Asks Users 'Are You Angry Yet?' Before Showing Content",
-		excerpt:
-			"In a move towards transparency, Twitter has simplified its algorithm to directly query users about their current rage levels.",
-		date: "2023-04-19",
-		category: "Social Media",
-	},
-	{
-		id: 11,
-		title: "New Blockchain-Based Dating App Requires 51% Consensus from Friends Before You Can Message Someone",
-		excerpt:
-			"Developers claim the app, called 'ConsensUs,' eliminates bad pickup lines through a democratic review process.",
-		date: "2023-04-15",
-		category: "Blockchain",
-	},
-	{
-		id: 12,
-		title: "Intel Announces New Chip That Runs Entirely on Compliments and Positive Affirmations",
-		excerpt:
-			"The groundbreaking processor requires users to verbally praise their computer at least once every hour to maintain optimal performance.",
-		date: "2023-04-12",
-		category: "Hardware",
-	},
-];
-
-// Get unique categories
-const categories = Array.from(
-	new Set(allArticles.map((article) => article.category))
-);
+import { getArticles, getAllCategories } from "@/lib/db";
+import { type Article, type Category } from "@/types/types";
 
 const Page = () => {
-	const [filteredArticles, setFilteredArticles] =
-		useState<Article[]>(allArticles);
+	const [articles, setArticles] = useState<Article[]>([]);
+	const [categories, setCategories] = useState<Category[]>([]);
+	const [filteredArticles, setFilteredArticles] = useState<Article[]>([]);
 	const [selectedCategory, setSelectedCategory] = useState<string | null>(
 		null
 	);
 	const [searchQuery, setSearchQuery] = useState("");
+	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
-		document.title = "Archive - SatiricTech";
+		async function loadData() {
+			try {
+				const [articlesData, categoriesData] = await Promise.all([
+					getArticles(),
+					getAllCategories(),
+				]);
+				setArticles(articlesData);
+				setFilteredArticles(articlesData);
+				setCategories(categoriesData);
+			} catch (error) {
+				console.error("Failed to fetch data:", error);
+			} finally {
+				setIsLoading(false);
+			}
+		}
 
+		loadData();
+		document.title = "Archive - SatiricTech";
+	}, []);
+
+	useEffect(() => {
 		// Filter articles based on category and search query
-		let filtered = [...allArticles];
+		let filtered = [...articles];
 
 		if (selectedCategory) {
-			filtered = filtered.filter(
-				(article) => article.category === selectedCategory
+			filtered = filtered.filter((article) =>
+				article.categories.some(
+					(category) => category.slug === selectedCategory
+				)
 			);
 		}
 
@@ -143,12 +55,12 @@ const Page = () => {
 			filtered = filtered.filter(
 				(article) =>
 					article.title.toLowerCase().includes(query) ||
-					article.excerpt.toLowerCase().includes(query)
+					article.content.toLowerCase().includes(query)
 			);
 		}
 
 		setFilteredArticles(filtered);
-	}, [selectedCategory, searchQuery]);
+	}, [selectedCategory, searchQuery, articles]);
 
 	return (
 		<div className="flex flex-col min-h-screen">
@@ -210,8 +122,11 @@ const Page = () => {
 							>
 								<option value="">All Categories</option>
 								{categories.map((category) => (
-									<option key={category} value={category}>
-										{category}
+									<option
+										key={category.slug}
+										value={category.slug}
+									>
+										{category.name}
 									</option>
 								))}
 							</select>
@@ -230,13 +145,15 @@ const Page = () => {
 						{filteredArticles.length > 0 ? (
 							filteredArticles.map((article, index) => (
 								<ArticleCard
-									key={article.id}
+									key={article.slug}
 									title={article.title}
-									excerpt={article.excerpt}
-									date={article.date}
-									category={article.category}
+									excerpt={article.content}
+									date={article.publishedAt.toString()}
+									category={article.categories
+										.map((category) => category.name)
+										.join(", ")}
 									index={index}
-									id={article.id}
+									slug={article.slug}
 								/>
 							))
 						) : (

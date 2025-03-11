@@ -1,15 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-
-interface ArticleCardProps {
-	title: string;
-	excerpt: string;
-	date: string;
-	category: string;
-	index: number;
-	id: number;
-}
+import { type ArticleCardProps } from "@/types/types";
 
 const ArticleCard = ({
 	title,
@@ -17,7 +9,7 @@ const ArticleCard = ({
 	date,
 	category,
 	index,
-	id,
+	slug,
 }: ArticleCardProps) => {
 	const [isVisible, setIsVisible] = useState(false);
 	const cardRef = useRef<HTMLDivElement>(null);
@@ -85,7 +77,7 @@ const ArticleCard = ({
 
 				<div className="pt-2">
 					<Link
-						href={`/article/${id}`}
+						href={`/article/${slug}`}
 						className="inline-flex items-center text-sm font-medium text-primary"
 					>
 						Read more

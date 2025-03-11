@@ -15,6 +15,7 @@ datasource db {
 
 model Article {
   id            String      @id @default(cuid())
+  slug          String      @unique
   title         String      @db.VarChar(255)
   content       String      @db.Text
   originalUrl   String      @unique

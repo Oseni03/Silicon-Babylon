@@ -1764,6 +1764,9 @@ video {
 .h-4 {
   height: 1rem;
 }
+.h-40 {
+  height: 10rem;
+}
 .h-5 {
   height: 1.25rem;
 }
@@ -2872,6 +2875,9 @@ video {
 }
 .ease-out {
   animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+}
+.running {
+  animation-play-state: running;
 }
 .animation-delay-200 {
     animation-delay: 200ms;

@@ -1,0 +1,41 @@
+// Article Related Types
+export interface Category {
+	id: string;
+	name: string;
+	slug: string;
+}
+
+export interface Article {
+	id: string;
+	slug: string;
+	title: string;
+	content: string;
+	originalUrl: string;
+	originalTitle?: string;
+	publishedAt: Date;
+	categories: Category[];
+}
+
+export interface ArticleCardProps {
+	title: string;
+	excerpt: string;
+	date: string;
+	category: string;
+	index: number;
+	slug: string;
+}
+
+// API Response Types
+export interface SatiricalResult {
+	title: string;
+	content: string;
+	keywords: string[];
+}
+
+export interface TechCrunchItem {
+	title: string;
+	link: string;
+	content: string;
+	isoDate: string;
+	categories: string[];
+}
