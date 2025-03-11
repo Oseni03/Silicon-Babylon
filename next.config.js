@@ -12,6 +12,7 @@ const nextConfig = {
 		config.resolve.alias["@"] = path.resolve(__dirname, "src");
 		return config;
 	},
+	output: "standalone", // Add this line
 };
 
 export default nextConfig;

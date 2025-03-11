@@ -1,7 +1,12 @@
 {
   "version": 4,
   "routes": {
-    "/about": {
+    "/archive": {
+      "initialHeaders": {
+        "x-nextjs-stale-time": "4294967294",
+        "x-nextjs-prerender": "1",
+        "x-next-cache-tags": "_N_T_/layout,_N_T_/archive/layout,_N_T_/archive/page,_N_T_/archive"
+      },
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -14,8 +19,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/about",
-      "dataRoute": "/about.rsc",
+      "srcRoute": "/archive",
+      "dataRoute": "/archive.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -26,6 +31,11 @@
       ]
     },
     "/": {
+      "initialHeaders": {
+        "x-nextjs-stale-time": "4294967294",
+        "x-nextjs-prerender": "1",
+        "x-next-cache-tags": "_N_T_/layout,_N_T_/page,_N_T_/"
+      },
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -49,7 +59,12 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/archive": {
+    "/about": {
+      "initialHeaders": {
+        "x-nextjs-stale-time": "4294967294",
+        "x-nextjs-prerender": "1",
+        "x-next-cache-tags": "_N_T_/layout,_N_T_/about/layout,_N_T_/about/page,_N_T_/about"
+      },
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -62,8 +77,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/archive",
-      "dataRoute": "/archive.rsc",
+      "srcRoute": "/about",
+      "dataRoute": "/about.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -77,8 +92,8 @@
   "dynamicRoutes": {},
   "notFoundRoutes": [],
   "preview": {
-    "previewModeId": "757f9f20d7510d90272b385f140c9eec",
-    "previewModeSigningKey": "e273d92d52a6fe5231a2f0b2016179e7a5fab8eb863ee81d144c8c4633ac8f0f",
-    "previewModeEncryptionKey": "c9cae9a15b1c6eab657ff373c5af3d2f201b43167d327ea0ee6713aa41ece879"
+    "previewModeId": "4c4d2065641d5e57b4a5d6016166f381",
+    "previewModeSigningKey": "08849aeab814ba7c5e833190a3fb97365c8f069f7a44cdf68f3ff7a435edab2e",
+    "previewModeEncryptionKey": "176b654f3b668233884c8a0d1759bc443a2139d786ce7df848c12413be3203b3"
   }
 }

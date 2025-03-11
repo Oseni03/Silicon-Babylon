@@ -2,8 +2,8 @@
   "/_not-found/page": "app/_not-found/page.js",
   "/api/articles/route": "app/api/articles/route.js",
   "/api/process-feed/route": "app/api/process-feed/route.js",
-  "/about/page": "app/about/page.js",
   "/archive/page": "app/archive/page.js",
+  "/about/page": "app/about/page.js",
   "/article/[slug]/page": "app/article/[slug]/page.js",
   "/page": "app/page.js"
 }
