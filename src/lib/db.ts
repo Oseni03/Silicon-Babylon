@@ -41,3 +41,18 @@ export async function getArticlesByCategory(categorySlug: string) {
 		},
 	});
 }
+
+export async function subscribeToNewsletter(email: string) {
+	return prisma.newsletter.create({
+		data: {
+			email,
+		},
+	});
+}
+
+export async function isEmailSubscribed(email: string) {
+	const subscriber = await prisma.newsletter.findUnique({
+		where: { email },
+	});
+	return !!subscriber;
+}
