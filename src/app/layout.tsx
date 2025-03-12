@@ -20,12 +20,12 @@ function RootLayout({ children }: PropsWithChildren) {
 		<html lang="en" suppressHydrationWarning>
 			<body className={inter.className}>
 				<ThemeProvider>
-					<QueryClientProvider client={queryClient}>
-						<TooltipProvider>
-							<Toaster />
-							{children}
-						</TooltipProvider>
-					</QueryClientProvider>
+					{/* <QueryClientProvider client={queryClient}> */}
+					<TooltipProvider>
+						<Toaster />
+						{children}
+					</TooltipProvider>
+					{/* </QueryClientProvider> */}
 				</ThemeProvider>
 			</body>
 		</html>

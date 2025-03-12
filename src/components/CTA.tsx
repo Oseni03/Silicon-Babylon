@@ -1,9 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 
 const CTA = () => {
-	const { toast } = useToast();
 	const [isVisible, setIsVisible] = useState(false);
 	const ctaRef = useRef<HTMLDivElement>(null);
 	const [email, setEmail] = useState("");
@@ -55,20 +54,20 @@ const CTA = () => {
 			setEmail("");
 
 			// Show success toast
-			toast({
-				title: "Successfully subscribed! 🎉",
+			toast("Successfully subscribed! 🎉", {
 				description:
 					"Get ready for satirical tech insights in your inbox",
-				variant: "default",
 			});
 		} catch (error) {
-			toast({
-				title: "Subscription failed",
+			toast.error("Subscription failed", {
 				description:
 					error instanceof Error
 						? error.message
 						: "Failed to subscribe",
-				variant: "destructive",
+				action: {
+					label: "Undo",
+					onClick: () => console.log("Undo"),
+				},
 			});
 		}
 	};
