@@ -20,6 +20,7 @@ build
 out
 
 # Next.js
+.next
 .next/
 out/
 
@@ -37,3 +38,6 @@ coverage
 *.sln
 *.sw?
 .vercel
+
+.env
+.env.*
