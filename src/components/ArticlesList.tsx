@@ -5,14 +5,6 @@ import ArticleCard from "./ArticleCard";
 import { getArticles } from "@/lib/db";
 import { type Article } from "@/types/types";
 
-interface Category {
-	id: string;
-	name: string;
-	slug: string;
-}
-
-// Removed the Article interface as it is now imported from "@/types/types"
-
 const ArticlesList = () => {
 	const [articles, setArticles] = useState<Article[]>([]);
 	const [isLoading, setIsLoading] = useState(true);

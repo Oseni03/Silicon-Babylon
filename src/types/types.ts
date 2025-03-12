@@ -1,12 +1,10 @@
 // Article Related Types
 export interface Category {
-	id: string;
 	name: string;
 	slug: string;
 }
 
 export interface Article {
-	id: string;
 	slug: string;
 	title: string;
 	content: string;
@@ -14,6 +12,7 @@ export interface Article {
 	originalTitle?: string;
 	publishedAt: Date;
 	categories: Category[];
+	keywords: string[];
 }
 
 export interface ArticleCardProps {

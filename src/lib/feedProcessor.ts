@@ -3,7 +3,12 @@ import { OpenAI } from "openai";
 import { generateSlug } from "./utils";
 import logger from "./logger";
 import { prisma } from "./prisma";
-import { type TechCrunchItem, type SatiricalResult } from "@/types/types";
+import {
+	type TechCrunchItem,
+	type SatiricalResult,
+	type Category,
+} from "@/types/types";
+import { createArticle, createCategory } from "./db";
 
 const parser = new Parser();
 const openai = new OpenAI({
@@ -103,19 +108,17 @@ async function generateSatiricalVersion(
 }
 
 // Add this function before fetchAndProcessFeeds
-async function ensureCategories(categories: string[]): Promise<void> {
+async function ensureCategories(categories: string[]): Promise<Category[]> {
 	logger.debug("Ensuring categories exist", { categories });
+	const categoryObjects = [];
+
 	for (const category of categories) {
 		const slug = generateSlug(category);
-		await prisma.category.upsert({
-			where: { slug },
-			update: {},
-			create: {
-				name: category,
-				slug,
-			},
-		});
+		const categoryObject = await createCategory({ name: category, slug });
+		categoryObjects.push(categoryObject);
 	}
+
+	return categoryObjects;
 }
 
 async function fetchAndProcessFeeds() {
@@ -157,7 +160,9 @@ async function fetchAndProcessFeeds() {
 				batch.map(async (item) => {
 					try {
 						// Ensure categories exist before creating/updating article
-						await ensureCategories(item.categories);
+						const categories = await ensureCategories(
+							item.categories
+						);
 
 						// Generate satirical version with keywords
 						const satirical = await generateSatiricalVersion(
@@ -166,40 +171,15 @@ async function fetchAndProcessFeeds() {
 						);
 
 						// Updated upsert command
-						await prisma.article.upsert({
-							where: {
-								originalUrl: item.link,
-							},
-							update: {
-								slug: generateSlug(satirical.title), // Add slug to update
-								title: satirical.title,
-								content: satirical.content,
-								keywords: satirical.keywords,
-								publishedAt: new Date(item.isoDate),
-								categories: {
-									connect: item.categories.map(
-										(category) => ({
-											slug: generateSlug(category),
-										})
-									),
-								},
-							},
-							create: {
-								slug: generateSlug(satirical.title),
-								title: satirical.title,
-								content: satirical.content,
-								keywords: satirical.keywords,
-								originalUrl: item.link,
-								originalTitle: item.title,
-								publishedAt: new Date(item.isoDate),
-								categories: {
-									connect: item.categories.map(
-										(category) => ({
-											slug: generateSlug(category),
-										})
-									),
-								},
-							},
+						await createArticle({
+							title: satirical.title,
+							slug: generateSlug(satirical.title),
+							content: satirical.content,
+							keywords: satirical.keywords,
+							publishedAt: new Date(item.isoDate),
+							categories: categories,
+							originalUrl: item.link,
+							originalTitle: item.title,
 						});
 
 						logger.info("Successfully processed article", {

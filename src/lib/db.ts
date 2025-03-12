@@ -1,4 +1,44 @@
+"use server";
+
+import { type Article, type Category } from "@/types/types";
 import { prisma } from "./prisma";
+
+export async function createArticle(data: Article) {
+	return prisma.article.upsert({
+		where: {
+			originalUrl: data.originalUrl,
+		},
+		update: {
+			slug: data.slug, // Add slug to update
+			title: data.title,
+			content: data.content,
+			keywords: data.keywords,
+			publishedAt: new Date(data.publishedAt),
+			categories: {
+				connect: data.categories.map((category) => ({
+					slug: category.slug,
+				})),
+			},
+		},
+		create: {
+			slug: data.slug,
+			title: data.title,
+			content: data.content,
+			keywords: data.keywords,
+			originalUrl: data.originalUrl,
+			originalTitle: data.originalTitle,
+			publishedAt: new Date(data.publishedAt),
+			categories: {
+				connect: data.categories.map((category) => ({
+					slug: category.slug,
+				})),
+			},
+		},
+		include: {
+			categories: true,
+		},
+	});
+}
 
 export async function getArticles() {
 	return prisma.article.findMany({
@@ -16,6 +56,17 @@ export async function getArticleBySlug(slug: string) {
 		where: { slug },
 		include: {
 			categories: true,
+		},
+	});
+}
+
+export async function createCategory(data: Category) {
+	return prisma.category.upsert({
+		where: { slug: data.slug },
+		update: {},
+		create: {
+			name: data.name,
+			slug: data.slug,
 		},
 	});
 }
@@ -55,4 +106,15 @@ export async function isEmailSubscribed(email: string) {
 		where: { email },
 	});
 	return !!subscriber;
+}
+
+export async function createContactMessage(data: {
+	name: string;
+	email: string;
+	subject: string;
+	message: string;
+}) {
+	return prisma.contact.create({
+		data,
+	});
 }

@@ -2,18 +2,18 @@ import "@/app/index.css";
 import { Inter } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+// import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "@/providers";
 import type { PropsWithChildren } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
-// export const metadata = {
-// 	title: "SatiricTech",
-// 	description: "AI-Generated Satire Based on Real Tech News",
-// };
+export const metadata = {
+	title: "SatiricTech",
+	description: "AI-Generated Satire Based on Real Tech News",
+};
 
-const queryClient = new QueryClient();
+// const queryClient = new QueryClient();
 
 function RootLayout({ children }: PropsWithChildren) {
 	return (

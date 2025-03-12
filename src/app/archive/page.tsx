@@ -114,6 +114,7 @@ const Page = () => {
 							</div>
 
 							<select
+								aria-label="Filter articles by category"
 								className="px-4 py-2 rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
 								value={selectedCategory || ""}
 								onChange={(e) =>
