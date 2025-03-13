@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 import ArticleCard from "@/components/ArticleCard";
 import { getArticles, getAllCategories } from "@/lib/db";
 import { type Article, type Category } from "@/types/types";
-import { siteName } from "@/lib/config";
+import { siteName, siteKeywords } from "@/lib/config";
 
 const Page = () => {
 	const [articles, setArticles] = useState<Article[]>([]);
@@ -28,11 +28,34 @@ const Page = () => {
 				setArticles(articlesData);
 				setFilteredArticles(articlesData);
 				setCategories(categoriesData);
+
+				// Update meta tags with categories
+				const categoryKeywords = categoriesData.map((cat) =>
+					cat.name.toLowerCase()
+				);
+				const metaKeywords = [
+					...categoryKeywords,
+					"tech satire archive",
+					"satirical tech articles",
+					"tech news parody collection",
+					...siteKeywords,
+				];
+				updateMetaTags(metaKeywords);
 			} catch (error) {
 				console.error("Failed to fetch data:", error);
 			} finally {
 				setIsLoading(false);
 			}
+		}
+
+		function updateMetaTags(keywords: string[]) {
+			let metaKeywords = document.querySelector('meta[name="keywords"]');
+			if (!metaKeywords) {
+				metaKeywords = document.createElement("meta");
+				metaKeywords.setAttribute("name", "keywords");
+				document.head.appendChild(metaKeywords);
+			}
+			metaKeywords.setAttribute("content", keywords.join(", "));
 		}
 
 		loadData();

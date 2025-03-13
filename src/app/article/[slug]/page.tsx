@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 import Disclaimer from "@/components/Disclaimer";
 import { getArticleBySlug } from "@/lib/db";
 import CTA from "@/components/CTA";
+import { siteName } from "@/lib/config";
 
 interface Category {
 	id: string;
@@ -37,7 +38,24 @@ const Page = () => {
 				const data = await getArticleBySlug(slug as string);
 				if (data) {
 					setArticle(data);
+					// Update metadata
+					const metaKeywords = [
+						...data.keywords,
+						...data.categories.map((cat) => cat.name.toLowerCase()),
+						"satire",
+						"tech news",
+						"parody",
+						siteName,
+					];
 					document.title = `${data.title} - SatiricTech`;
+
+					// Strip HTML tags for meta description
+					const tempDiv = document.createElement("div");
+					tempDiv.innerHTML = data.content;
+					const plainText =
+						tempDiv.textContent || tempDiv.innerText || "";
+
+					updateMetaTags(metaKeywords, plainText.substring(0, 160));
 				} else {
 					document.title = "Article Not Found - SatiricTech";
 				}
@@ -46,6 +64,28 @@ const Page = () => {
 			} finally {
 				setIsLoading(false);
 			}
+		}
+
+		function updateMetaTags(keywords: string[], description: string) {
+			// Update keywords meta tag
+			let metaKeywords = document.querySelector('meta[name="keywords"]');
+			if (!metaKeywords) {
+				metaKeywords = document.createElement("meta");
+				metaKeywords.setAttribute("name", "keywords");
+				document.head.appendChild(metaKeywords);
+			}
+			metaKeywords.setAttribute("content", keywords.join(", "));
+
+			// Update description meta tag
+			let metaDescription = document.querySelector(
+				'meta[name="description"]'
+			);
+			if (!metaDescription) {
+				metaDescription = document.createElement("meta");
+				metaDescription.setAttribute("name", "description");
+				document.head.appendChild(metaDescription);
+			}
+			metaDescription.setAttribute("content", description);
 		}
 
 		if (slug) {

@@ -5,12 +5,14 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 // import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "@/providers";
 import type { PropsWithChildren } from "react";
+import { siteName, siteKeywords } from "@/lib/config";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-	title: "SatiricTech",
+	title: siteName,
 	description: "AI-Generated Satire Based on Real Tech News",
+	keywords: siteKeywords.join(", "),
 };
 
 // const queryClient = new QueryClient();
