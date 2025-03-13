@@ -60,6 +60,15 @@ export async function getArticleBySlug(slug: string) {
 	});
 }
 
+export async function getArticleByOriginalUrl(url: string) {
+	return prisma.article.findFirst({
+		where: { originalUrl: url },
+		include: {
+			categories: true,
+		},
+	});
+}
+
 export async function createCategory(data: Category) {
 	return prisma.category.upsert({
 		where: { slug: data.slug },

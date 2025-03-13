@@ -7,7 +7,7 @@ import {
 	type SatiricalResult,
 	type Category,
 } from "@/types/types";
-import { createArticle, createCategory } from "./db";
+import { createArticle, createCategory, getArticleByOriginalUrl } from "./db";
 
 const parser = new Parser();
 const openai = new OpenAI({
@@ -169,17 +169,29 @@ async function fetchAndProcessFeeds() {
 			});
 		});
 
-		logger.info(`Retrieved ${allItems.length} items from today's feeds`);
+		// Filter out articles that already exist in the database
+		const newItems = await Promise.all(
+			allItems.map(async (item) => {
+				const exists = await getArticleByOriginalUrl(item.link);
+				return { item, exists };
+			})
+		).then((results) =>
+			results.filter(({ exists }) => !exists).map(({ item }) => item)
+		);
 
-		if (allItems.length === 0) {
+		logger.info(
+			`Retrieved ${newItems.length} new items from today's feeds`
+		);
+
+		if (newItems.length === 0) {
 			logger.info("No new articles to process today");
 			return;
 		}
 
 		const BATCH_SIZE = 3;
 
-		for (let i = 0; i < allItems.length; i += BATCH_SIZE) {
-			const batch = allItems.slice(i, i + BATCH_SIZE);
+		for (let i = 0; i < newItems.length; i += BATCH_SIZE) {
+			const batch = newItems.slice(i, i + BATCH_SIZE);
 			logger.debug(`Processing batch ${i / BATCH_SIZE + 1}`, {
 				batchSize: batch.length,
 			});
@@ -224,15 +236,15 @@ async function fetchAndProcessFeeds() {
 				})
 			);
 
-			if (i + BATCH_SIZE < allItems.length) {
+			if (i + BATCH_SIZE < newItems.length) {
 				await new Promise((resolve) => setTimeout(resolve, 1500));
 			}
 		}
 
 		logger.info(`Feed processing completed`, {
-			totalArticles: allItems.length,
+			totalArticles: newItems.length,
 		});
-		console.log(`Successfully processed ${allItems.length} articles`);
+		console.log(`Successfully processed ${newItems.length} articles`);
 	} catch (error) {
 		logger.error("Error in fetchAndProcessFeeds", { error });
 		console.error("Error in fetchAndProcessFeeds:", error);
