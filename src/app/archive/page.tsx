@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import ArticleCard from "@/components/ArticleCard";
 import { getArticles, getAllCategories } from "@/lib/db";
 import { type Article, type Category } from "@/types/types";
+import { siteName } from "@/lib/config";
 
 const Page = () => {
 	const [articles, setArticles] = useState<Article[]>([]);
@@ -35,7 +36,7 @@ const Page = () => {
 		}
 
 		loadData();
-		document.title = "Archive - SatiricTech";
+		document.title = `Archive - ${siteName}`;
 	}, []);
 
 	useEffect(() => {

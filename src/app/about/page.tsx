@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { cn } from "@/lib/utils";
+import { siteName } from "@/lib/config";
 
 const Page = () => {
 	const [isVisible, setIsVisible] = useState({
@@ -17,7 +18,7 @@ const Page = () => {
 	const section3Ref = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
-		document.title = "About - SatiricTech";
+		document.title = `About - ${siteName}`;
 
 		const observer = new IntersectionObserver(
 			(entries) => {
@@ -73,7 +74,7 @@ const Page = () => {
 								About Us
 							</div>
 							<h1 className="text-4xl font-medium tracking-tight">
-								The Story Behind SatiricTech
+								The Story Behind {siteName}
 							</h1>
 							<p className="text-lg text-muted-foreground">
 								Where AI meets satire and tech news gets twisted
@@ -92,8 +93,8 @@ const Page = () => {
 									Our Mission
 								</h2>
 								<p>
-									SatiricTech was born from a simple idea:
-									what if we could use AI to create satirical
+									{siteName} was born from a simple idea: what
+									if we could use AI to create satirical
 									content based on real tech news? In a world
 									where technology advances at breakneck
 									speed, sometimes we all need to take a step
@@ -123,7 +124,7 @@ const Page = () => {
 									How It Works
 								</h2>
 								<p>
-									SatiricTech uses advanced AI algorithms to
+									{siteName} uses advanced AI algorithms to
 									analyze real technology news from trusted
 									sources like TechCrunch. Our system
 									identifies key trends, announcements, and

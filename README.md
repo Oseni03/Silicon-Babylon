@@ -1,4 +1,6 @@
-# Welcome to your Lovable project
+# SatiricTech
+
+A satirical tech news platform powered by AI.
 
 ## Project info
 
