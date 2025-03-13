@@ -71,9 +71,12 @@ const ArticleCard = ({
 					{title}
 				</h3>
 
-				<p className="text-muted-foreground text-sm line-clamp-2">
-					{excerpt}
-				</p>
+				<div
+					className="text-muted-foreground text-sm line-clamp-2"
+					dangerouslySetInnerHTML={{
+						__html: excerpt,
+					}}
+				/>
 
 				<div className="pt-2">
 					<Link
