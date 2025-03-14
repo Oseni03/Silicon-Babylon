@@ -15,6 +15,22 @@ const openai = new OpenAI({
 	apiKey: process.env.DEEPSEEK_API_KEY,
 });
 
+const FEED_TIMEOUT = 10000; // 10 seconds timeout
+
+async function fetchFeedWithTimeout(feedUrl: string) {
+	const controller = new AbortController();
+	const timeoutId = setTimeout(() => controller.abort(), FEED_TIMEOUT);
+
+	try {
+		const feed = await parser.parseURL(feedUrl);
+		clearTimeout(timeoutId);
+		return feed;
+	} catch (error) {
+		logger.warn(`Failed to fetch feed: ${feedUrl}`, { error });
+		return null;
+	}
+}
+
 async function generateSatiricalVersion(
 	originalTitle: string,
 	originalContent: string
@@ -149,34 +165,38 @@ async function fetchAndProcessFeeds() {
 			"https://techcrunch.com/category/media-entertainment/feed/",
 		];
 
-		const feedPromises = TECHCRUNCH_FEEDS.map((feedUrl) =>
-			parser.parseURL(feedUrl)
+		// Fetch all feeds in parallel with timeout
+		const feedResults = await Promise.allSettled(
+			TECHCRUNCH_FEEDS.map(fetchFeedWithTimeout)
 		);
-		const feeds = await Promise.all(feedPromises);
 
-		const allItems: TechCrunchItem[] = feeds.flatMap((feed) => {
-			const items = feed.items as TechCrunchItem[];
-			return items.filter((item) => {
-				const pubDate = new Date(item.isoDate);
-				const isCurrentDay = isToday(pubDate);
-				if (!isCurrentDay) {
-					logger.debug("Skipping older article", {
-						title: item.title,
-						publishedAt: item.isoDate,
-					});
-				}
-				return isCurrentDay;
+		// Extract successful feeds and filter items
+		const allItems: TechCrunchItem[] = feedResults
+			.filter(
+				(
+					result
+				): result is PromiseFulfilledResult<
+					Parser.Output<TechCrunchItem>
+				> => result.status === "fulfilled" && result.value !== null
+			)
+			.flatMap((result) => {
+				const items = result.value.items;
+				return items.filter((item) => isToday(new Date(item.isoDate)));
 			});
-		});
 
-		// Filter out articles that already exist in the database
-		const newItems = await Promise.all(
-			allItems.map(async (item) => {
-				const exists = await getArticleByOriginalUrl(item.link);
-				return { item, exists };
-			})
-		).then((results) =>
-			results.filter(({ exists }) => !exists).map(({ item }) => item)
+		// Batch check for existing articles
+		const existingUrls = new Set(
+			await Promise.all(
+				Array.from(new Set(allItems.map((item) => item.link))).map(
+					(url) => getArticleByOriginalUrl(url)
+				)
+			).then((results) =>
+				results.filter(Boolean).map((article) => article.originalUrl)
+			)
+		);
+
+		const newItems = allItems.filter(
+			(item) => !existingUrls.has(item.link)
 		);
 
 		logger.info(
