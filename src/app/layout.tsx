@@ -1,5 +1,6 @@
 import "@/app/index.css";
 import { Inter } from "next/font/google";
+import Script from "next/script";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 // import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -21,6 +22,18 @@ function RootLayout({ children }: PropsWithChildren) {
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<body className={inter.className}>
+				<Script
+					src="https://www.googletagmanager.com/gtag/js?id=G-SQ27NNXZ74"
+					strategy="afterInteractive"
+				/>
+				<Script id="google-analytics" strategy="afterInteractive">
+					{`
+						window.dataLayer = window.dataLayer || [];
+						function gtag(){dataLayer.push(arguments);}
+						gtag('js', new Date());
+						gtag('config', 'G-SQ27NNXZ74');
+					`}
+				</Script>
 				<ThemeProvider>
 					{/* <QueryClientProvider client={queryClient}> */}
 					<TooltipProvider>
