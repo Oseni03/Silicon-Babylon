@@ -11,7 +11,7 @@ import Footer from "@/components/Footer";
 const Page = () => {
 	useEffect(() => {
 		document.title =
-			"SatiricTech - AI-Generated Satire Based on Real Tech News";
+			"SatiricTech - AI-Crafted Commentary Inspired by Real Tech Headlines";
 
 		// Observer for animate-on-scroll elements
 		const observer = new IntersectionObserver(

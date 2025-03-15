@@ -12,7 +12,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
 	title: siteName,
-	description: "AI-Generated Satire Based on Real Tech News",
+	description: "AI-Crafted Commentary Inspired by Real Tech Headlines",
 	keywords: siteKeywords.join(", "),
 };
 
