@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { ModeToggle } from "./ModeToggle";
 
 const Header = () => {
 	const [scrolled, setScrolled] = useState(false);
@@ -68,10 +69,12 @@ const Header = () => {
 					>
 						Archive
 					</Link>
+					<ModeToggle />
 				</nav>
 
 				{/* Mobile Menu Button */}
-				<div className="md:hidden">
+				<div className="flex md:hidden">
+					<ModeToggle />
 					<button
 						className="w-10 h-10 flex items-center justify-center rounded-md hover:bg-secondary transition-colors"
 						aria-label="Toggle menu"
