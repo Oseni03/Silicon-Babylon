@@ -22,6 +22,10 @@ function RootLayout({ children }: PropsWithChildren) {
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<head>
+				<meta
+					name="google-adsense-account"
+					content="ca-pub-4433921260204256"
+				/>
 				<Script
 					src="https://www.googletagmanager.com/gtag/js?id=G-SQ27NNXZ74"
 					strategy="afterInteractive"
@@ -34,11 +38,6 @@ function RootLayout({ children }: PropsWithChildren) {
 						gtag('config', 'G-SQ27NNXZ74');
 					`}
 				</Script>
-				<Script
-					src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4433921260204256"
-					strategy="afterInteractive"
-					crossOrigin="anonymous"
-				/>
 			</head>
 			<body className={inter.className}>
 				<ThemeProvider>
