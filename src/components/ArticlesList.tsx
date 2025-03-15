@@ -46,7 +46,7 @@ const ArticlesList = () => {
 					Latest Articles
 				</h2>
 				<p className="text-muted-foreground">
-					Fresh satirical takes on the most recent tech developments
+					Playful Perspectives on the Latest Tech Trends
 				</p>
 			</div>
 

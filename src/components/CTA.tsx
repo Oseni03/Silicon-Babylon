@@ -59,7 +59,7 @@ const CTA = () => {
 			// Show success toast
 			toast("Successfully subscribed! 🎉", {
 				description:
-					"Get ready for satirical tech insights in your inbox",
+					"Get ready for playful tech insights delivered straight to your inbox.",
 			});
 		} catch (error) {
 			toast.error("Subscription failed", {
@@ -93,7 +93,7 @@ const CTA = () => {
 						</h2>
 						<p className="text-muted-foreground">
 							Subscribe to our newsletter for a weekly dose of
-							satirical tech insights. No spam, just laughs.
+							playful tech insights. No spam, just fun.
 						</p>
 
 						<form
@@ -117,8 +117,8 @@ const CTA = () => {
 						</form>
 
 						<p className="text-xs text-muted-foreground mt-4">
-							By subscribing, you agree to receive satirical
-							content and accept our privacy policy.
+							By subscribing, you agree to receive lighthearted,
+							imaginative content and accept our privacy policy.
 						</p>
 					</div>
 				</div>
