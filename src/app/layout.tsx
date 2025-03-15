@@ -27,6 +27,12 @@ function RootLayout({ children }: PropsWithChildren) {
 					content="ca-pub-4433921260204256"
 				/>
 				<Script
+					async
+					src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4433921260204256"
+					crossOrigin="anonymous"
+					strategy="afterInteractive"
+				/>
+				<Script
 					src="https://www.googletagmanager.com/gtag/js?id=G-SQ27NNXZ74"
 					strategy="afterInteractive"
 				/>
