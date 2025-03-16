@@ -2,6 +2,7 @@ import Parser from "rss-parser";
 import { OpenAI } from "openai";
 import { generateSlug } from "./utils";
 import logger from "./logger";
+import { postTweet } from "./twitter";
 import {
 	type TechCrunchItem,
 	type SatiricalResult,
@@ -228,9 +229,10 @@ async function fetchAndProcessFeeds() {
 							item.content
 						);
 
-						await createArticle({
+						const slug = generateSlug(satirical.title);
+						const article = await createArticle({
 							title: satirical.title,
-							slug: generateSlug(satirical.title),
+							slug,
 							content: satirical.content,
 							keywords: satirical.keywords,
 							publishedAt: new Date(item.isoDate),
@@ -239,10 +241,19 @@ async function fetchAndProcessFeeds() {
 							originalTitle: item.title,
 						});
 
-						logger.info("Successfully processed article", {
-							title: satirical.title,
-						});
-						console.log(`Processed: ${satirical.title}`);
+						// Post new article to Twitter
+						await postTweet(
+							satirical.title,
+							slug,
+							satirical.content
+						);
+
+						logger.info(
+							"Successfully processed article and posted to Twitter",
+							{
+								title: satirical.title,
+							}
+						);
 					} catch (error) {
 						logger.error("Error processing article", {
 							title: item.title,
