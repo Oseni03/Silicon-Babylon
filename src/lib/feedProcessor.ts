@@ -158,7 +158,7 @@ async function fetchAndProcessFeeds() {
 	try {
 		logger.info("Starting feed processing");
 		const TECHCRUNCH_FEEDS = [
-			"https://techcrunch.com/category/commerce//feed/",
+			"https://techcrunch.com/category/commerce/feed/",
 			"https://techcrunch.com/category/artificial-intelligence/feed/",
 			"https://techcrunch.com/category/cryptocurrency/feed/",
 			"https://techcrunch.com/category/fundraising/feed/",
@@ -241,12 +241,32 @@ async function fetchAndProcessFeeds() {
 							originalTitle: item.title,
 						});
 
-						// Post new article to Twitter
-						await postTweet(
-							satirical.title,
-							slug,
-							satirical.content
-						);
+						try {
+							// Make tweet posting optional - if it fails, we still consider the article processing successful
+							await postTweet(
+								satirical.title,
+								slug,
+								satirical.content
+							).catch((error) => {
+								logger.warn("Twitter posting skipped", {
+									title: satirical.title,
+									error: error?.message,
+								});
+							});
+
+							logger.info("Article processed successfully", {
+								title: satirical.title,
+								tweetAttempted: true,
+							});
+						} catch (twitterError) {
+							logger.warn(
+								"Twitter posting failed but article was saved",
+								{
+									title: satirical.title,
+									error: twitterError?.message,
+								}
+							);
+						}
 
 						logger.info(
 							"Successfully processed article and posted to Twitter",
