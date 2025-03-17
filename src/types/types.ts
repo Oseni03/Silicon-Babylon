@@ -13,6 +13,7 @@ export interface Article {
 	publishedAt: Date;
 	categories: Category[];
 	keywords: string[];
+	isAffiliate?: boolean;
 }
 
 export interface ArticleCardProps {
@@ -22,6 +23,8 @@ export interface ArticleCardProps {
 	category: string;
 	index: number;
 	slug: string;
+	isAffiliate?: boolean;
+	originalUrl?: string;
 }
 
 // API Response Types
@@ -37,4 +40,11 @@ export interface TechCrunchItem {
 	content: string;
 	isoDate: string;
 	categories: string[];
+}
+
+export interface AffiliateProgram {
+	title: string;
+	content: string;
+	keywords: string[];
+	url: string;
 }

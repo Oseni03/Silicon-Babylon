@@ -10,6 +10,8 @@ const ArticleCard = ({
 	category,
 	index,
 	slug,
+	isAffiliate,
+	originalUrl,
 }: ArticleCardProps) => {
 	const [isVisible, setIsVisible] = useState(false);
 	const cardRef = useRef<HTMLDivElement>(null);
@@ -54,12 +56,20 @@ const ArticleCard = ({
 				"animate-on-scroll fade-in",
 				isVisible && "active",
 				"transition-all duration-500 ease-out",
-				`animation-delay-${Math.min(index * 100, 600)}`
+				`animation-delay-${Math.min(index * 100, 600)}`,
+				isAffiliate && "border-primary/20"
 			)}
 		>
 			<div className="p-6 space-y-4">
 				<div className="flex items-center justify-between mb-3">
-					<span className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-secondary text-secondary-foreground">
+					<span
+						className={cn(
+							"text-xs font-medium px-2.5 py-0.5 rounded-full",
+							isAffiliate
+								? "bg-primary/10 text-primary"
+								: "bg-secondary text-secondary-foreground"
+						)}
+					>
 						{category}
 					</span>
 					<span className="text-xs text-muted-foreground">
@@ -72,32 +82,56 @@ const ArticleCard = ({
 				</h3>
 
 				<div
-					className="text-muted-foreground text-sm line-clamp-2"
+					className="text-muted-foreground text-sm line-clamp-4"
 					dangerouslySetInnerHTML={{
 						__html: excerpt,
 					}}
 				/>
 
 				<div className="pt-2">
-					<Link
-						href={`/article/${slug}`}
-						className="inline-flex items-center text-sm font-medium text-primary"
-					>
-						Read more
-						<svg
-							className="ml-1 h-4 w-4 transform transition-transform group-hover:translate-x-1"
-							xmlns="http://www.w3.org/2000/svg"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							strokeWidth="2"
-							strokeLinecap="round"
-							strokeLinejoin="round"
+					{isAffiliate ? (
+						<a
+							href={originalUrl}
+							target="_blank"
+							rel="noopener noreferrer sponsored"
+							className="inline-flex items-center text-sm font-medium text-primary"
 						>
-							<line x1="5" y1="12" x2="19" y2="12" />
-							<polyline points="12 5 19 12 12 19" />
-						</svg>
-					</Link>
+							Learn more
+							<svg
+								className="ml-1 h-4 w-4 transform transition-transform group-hover:translate-x-1"
+								xmlns="http://www.w3.org/2000/svg"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								strokeWidth="2"
+								strokeLinecap="round"
+								strokeLinejoin="round"
+							>
+								<line x1="5" y1="12" x2="19" y2="12" />
+								<polyline points="12 5 19 12 12 19" />
+							</svg>
+						</a>
+					) : (
+						<Link
+							href={`/article/${slug}`}
+							className="inline-flex items-center text-sm font-medium text-primary"
+						>
+							Read more
+							<svg
+								className="ml-1 h-4 w-4 transform transition-transform group-hover:translate-x-1"
+								xmlns="http://www.w3.org/2000/svg"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								strokeWidth="2"
+								strokeLinecap="round"
+								strokeLinejoin="round"
+							>
+								<line x1="5" y1="12" x2="19" y2="12" />
+								<polyline points="12 5 19 12 12 19" />
+							</svg>
+						</Link>
+					)}
 				</div>
 			</div>
 		</div>

@@ -7,6 +7,7 @@ import ArticleCard from "@/components/ArticleCard";
 import { getArticles, getAllCategories } from "@/lib/db";
 import { type Article, type Category } from "@/types/types";
 import { siteName, siteKeywords } from "@/lib/config";
+import { getRandomAffiliate } from "@/lib/affiliates";
 
 const Page = () => {
 	const [articles, setArticles] = useState<Article[]>([]);
@@ -25,8 +26,18 @@ const Page = () => {
 					getArticles(),
 					getAllCategories(),
 				]);
-				setArticles(articlesData);
-				setFilteredArticles(articlesData);
+
+				// Insert affiliate content every 4 articles
+				const withAffiliates = [];
+				for (let i = 0; i < articlesData.length; i++) {
+					withAffiliates.push(articlesData[i]);
+					if ((i + 1) % 4 === 0) {
+						withAffiliates.push(getRandomAffiliate());
+					}
+				}
+
+				setArticles(withAffiliates);
+				setFilteredArticles(withAffiliates);
 				setCategories(categoriesData);
 
 				// Update meta tags with categories
@@ -170,15 +181,20 @@ const Page = () => {
 						{filteredArticles.length > 0 ? (
 							filteredArticles.map((article, index) => (
 								<ArticleCard
-									key={article.slug}
+									key={`${article.slug}-${index}`}
 									title={article.title}
-									excerpt={article.content}
+									excerpt={
+										article.content.substring(0, 200) +
+										"..."
+									}
 									date={article.publishedAt.toString()}
 									category={article.categories
 										.map((category) => category.name)
 										.join(", ")}
 									index={index}
 									slug={article.slug}
+									isAffiliate={article.isAffiliate}
+									originalUrl={article.originalUrl}
 								/>
 							))
 						) : (

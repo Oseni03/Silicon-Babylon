@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import ArticleCard from "./ArticleCard";
 import { getArticles } from "@/lib/db";
 import { type Article } from "@/types/types";
+import { getRandomAffiliate } from "@/lib/affiliates";
 
 const ArticlesList = () => {
 	const [articles, setArticles] = useState<Article[]>([]);
@@ -13,7 +14,15 @@ const ArticlesList = () => {
 		async function loadArticles() {
 			try {
 				const data = await getArticles();
-				setArticles(data);
+				// Insert affiliate content every 4 articles
+				const withAffiliates = [];
+				for (let i = 0; i < data.length; i++) {
+					withAffiliates.push(data[i]);
+					if ((i + 1) % 4 === 0) {
+						withAffiliates.push(getRandomAffiliate());
+					}
+				}
+				setArticles(withAffiliates);
 			} catch (error) {
 				console.error("Failed to fetch articles:", error);
 			} finally {
@@ -53,15 +62,17 @@ const ArticlesList = () => {
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 				{articles.map((article, index) => (
 					<ArticleCard
-						key={article.slug}
+						key={`${article.slug}-${index}`}
 						slug={article.slug}
 						title={article.title}
-						excerpt={article.content.substring(0, 150) + "..."}
+						excerpt={article.content.substring(0, 200) + "..."}
 						date={article.publishedAt.toISOString()}
 						category={
 							article.categories[0]?.name || "Uncategorized"
 						}
 						index={index}
+						isAffiliate={article.isAffiliate}
+						originalUrl={article.originalUrl}
 					/>
 				))}
 			</div>
