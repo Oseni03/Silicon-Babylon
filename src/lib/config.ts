@@ -1,6 +1,5 @@
 export const siteName = "SatiricTech";
-export const siteUrl =
-	process.env.NEXT_PUBLIC_SITE_URL || "https://satirictech.com";
+export const siteUrl = "https://satiric-tech.info";
 export const siteKeywords = [
 	"tech satire",
 	"technology humor",
@@ -10,5 +9,9 @@ export const siteKeywords = [
 	"tech industry commentary",
 	"funny tech news",
 	"tech journalism satire",
+	"satiricTech",
+	"satiric",
+	"satiric-tech",
+	"satirical-tech",
 	siteName,
 ];
