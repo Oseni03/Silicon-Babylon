@@ -35,6 +35,7 @@ export default function AuthModal({
 					queryParams: {
 						access_type: "offline",
 						prompt: "consent",
+						flowType: "pkce", // Add this line to use PKCE flow
 					},
 				},
 			});

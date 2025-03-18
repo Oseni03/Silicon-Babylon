@@ -6,20 +6,27 @@ export async function GET(request: Request) {
 	const { searchParams, origin } = new URL(request.url);
 	const code = searchParams.get("code");
 	const next = searchParams.get("next") ?? "/";
+	const redirectTo = `${origin}${next}`;
 
 	if (code) {
 		const cookieStore = cookies();
 		const supabase = createRouteHandlerClient({
 			cookies: () => cookieStore,
 		});
-		const { error } = await supabase.auth.exchangeCodeForSession(code);
-		console.log("error", error);
 
-		if (!error) {
-			return NextResponse.redirect(`${origin}${next}`);
+		try {
+			const { error } = await supabase.auth.exchangeCodeForSession(code);
+			if (!error) {
+				return NextResponse.redirect(redirectTo);
+			}
+			console.error("Auth error:", error);
+			return NextResponse.redirect(`${origin}/auth/error`);
+		} catch (error) {
+			console.error("Exchange error:", error);
+			return NextResponse.redirect(`${origin}/auth/error`);
 		}
 	}
 
-	// return NextResponse.redirect(`${origin}/auth/auth-code-error`);
-	return NextResponse.redirect(`${origin}${next}`);
+	// Return to home page if no code is present
+	return NextResponse.redirect(redirectTo);
 }
