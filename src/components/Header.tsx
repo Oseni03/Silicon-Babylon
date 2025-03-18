@@ -44,6 +44,8 @@ const Header = () => {
 			toast.error("Error signing out", {
 				description: "There was a problem signing you out.",
 			});
+		} else {
+			toast.success("Signed out successfully");
 		}
 	};
 

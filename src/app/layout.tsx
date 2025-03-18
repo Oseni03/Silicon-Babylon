@@ -49,12 +49,10 @@ function RootLayout({ children }: PropsWithChildren) {
 			<body className={inter.className}>
 				<ThemeProvider>
 					<AuthProvider>
-						{/* <QueryClientProvider client={queryClient}> */}
 						<TooltipProvider>
 							<Toaster />
 							{children}
 						</TooltipProvider>
-						{/* </QueryClientProvider> */}
 					</AuthProvider>
 				</ThemeProvider>
 				<Script type="text/javascript" strategy="afterInteractive">

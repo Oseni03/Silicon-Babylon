@@ -8,7 +8,7 @@ import {
 	DialogTitle,
 	DialogDescription,
 } from "@/components/ui/dialog";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "sonner"; // Update import
 import Image from "next/image";
 import { siteName } from "@/lib/config";
 import { useRouter } from "next/navigation";
@@ -48,15 +48,12 @@ export default function AuthModal({
 				router.push(redirectPath);
 			}
 
-			toast({
-				title: "Successfully signed in",
+			toast.success("Successfully signed in!", {
 				description: `Welcome to ${siteName}!`,
 			});
 		} catch (error) {
 			console.error("Authentication error:", error);
-			toast({
-				variant: "destructive",
-				title: "Authentication failed",
+			toast.error("Authentication failed", {
 				description: "There was a problem signing you in.",
 			});
 		}
