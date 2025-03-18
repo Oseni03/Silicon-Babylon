@@ -14,6 +14,7 @@ interface Comment {
 	id: string;
 	content: string;
 	userId: string;
+	username?: string; // Make username optional
 	createdAt: Date;
 }
 
@@ -29,6 +30,7 @@ export function Comments({ articleSlug, articleId }: CommentsProps) {
 	const { trigger, showAuthModal, setShowAuthModal, redirectAfterAuth } =
 		useProtectedAction();
 	const { user } = useAuth();
+	console.log("Authenticated user", user);
 
 	useEffect(() => {
 		loadComments();
@@ -52,6 +54,8 @@ export function Comments({ articleSlug, articleId }: CommentsProps) {
 			await createComment({
 				content: comment,
 				userId: user!.id,
+				username:
+					user!.name || user!.email?.split("@")[0] || "Anonymous", // Add username
 				articleId,
 			});
 
@@ -125,7 +129,7 @@ export function Comments({ articleSlug, articleId }: CommentsProps) {
 							>
 								<div className="flex items-center justify-between mb-2">
 									<div className="text-sm text-muted-foreground">
-										Anonymous User
+										{comment.username}
 									</div>
 									<time className="text-xs text-muted-foreground">
 										{format(
