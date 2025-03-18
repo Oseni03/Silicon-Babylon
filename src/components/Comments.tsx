@@ -8,6 +8,7 @@ import { useAuth } from "@/context/AuthContext";
 import { createComment, getArticleComments } from "@/lib/db/comments";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface Comment {
 	id: string;
@@ -74,7 +75,11 @@ export function Comments({ articleSlug, articleId }: CommentsProps) {
 
 	return (
 		<div className="mt-16 pt-8 border-t border-border" id="comments">
-			<h2 className="text-2xl font-semibold mb-4">Comments</h2>
+			<h2 className="text-2xl font-semibold mb-4">
+				{comments.length > 0
+					? `Comments (${comments.length})`
+					: "Comments"}
+			</h2>
 
 			{/* Comment Form */}
 			<div className="space-y-4 mb-8">
@@ -110,32 +115,37 @@ export function Comments({ articleSlug, articleId }: CommentsProps) {
 			</div>
 
 			{/* Comments List */}
-			<div className="space-y-6">
-				{comments.map((comment) => (
-					<div
-						key={comment.id}
-						className="border-b border-border pb-4"
-					>
-						<div className="flex items-center justify-between mb-2">
-							<div className="text-sm text-muted-foreground">
-								Anonymous User
+			{comments.length > 0 ? (
+				<ScrollArea className="h-[400px] rounded-md border p-4">
+					<div className="space-y-6">
+						{comments.map((comment) => (
+							<div
+								key={comment.id}
+								className="border-b border-border pb-4"
+							>
+								<div className="flex items-center justify-between mb-2">
+									<div className="text-sm text-muted-foreground">
+										Anonymous User
+									</div>
+									<time className="text-xs text-muted-foreground">
+										{format(
+											new Date(comment.createdAt),
+											"MMM d, yyyy"
+										)}
+									</time>
+								</div>
+								<p className="text-sm">{comment.content}</p>
 							</div>
-							<time className="text-xs text-muted-foreground">
-								{format(
-									new Date(comment.createdAt),
-									"MMM d, yyyy"
-								)}
-							</time>
-						</div>
-						<p className="text-sm">{comment.content}</p>
+						))}
 					</div>
-				))}
-				{comments.length === 0 && (
-					<p className="text-center text-muted-foreground">
+				</ScrollArea>
+			) : (
+				<div className="text-center py-8 bg-secondary/30 rounded-lg">
+					<p className="text-muted-foreground">
 						No comments yet. Be the first to share your thoughts!
 					</p>
-				)}
-			</div>
+				</div>
+			)}
 
 			<AuthModal
 				isOpen={showAuthModal}

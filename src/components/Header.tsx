@@ -15,6 +15,7 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { siteName } from "@/lib/config";
 
 const Header = () => {
 	const [scrolled, setScrolled] = useState(false);
@@ -71,30 +72,34 @@ const Header = () => {
 							scrolled ? "opacity-100" : "opacity-100"
 						)}
 					>
-						SatiricTech
+						{siteName}
 					</span>
 				</Link>
 
 				{/* Desktop Navigation */}
-				<nav className="hidden md:flex items-center space-x-8">
-					<Link
-						href="/"
-						className="text-sm font-medium hover:text-primary/80 transition-colors underline-animate"
-					>
-						Home
-					</Link>
-					<Link
-						href="/about"
-						className="text-sm font-medium hover:text-primary/80 transition-colors underline-animate"
-					>
-						About
-					</Link>
-					<Link
-						href="/archive"
-						className="text-sm font-medium hover:text-primary/80 transition-colors underline-animate"
-					>
-						Archive
-					</Link>
+				<div className="hidden md:flex items-center flex-1 justify-center">
+					<nav className="flex items-center space-x-8">
+						<Link
+							href="/"
+							className="text-sm font-medium hover:text-primary/80 transition-colors underline-animate"
+						>
+							Home
+						</Link>
+						<Link
+							href="/about"
+							className="text-sm font-medium hover:text-primary/80 transition-colors underline-animate"
+						>
+							About
+						</Link>
+						<Link
+							href="/archive"
+							className="text-sm font-medium hover:text-primary/80 transition-colors underline-animate"
+						>
+							Archive
+						</Link>
+					</nav>
+				</div>
+				<div className="hidden md:flex items-center space-x-4">
 					<ModeToggle />
 					{loading ? (
 						<div className="w-8 h-8 rounded-full bg-secondary animate-pulse" />
@@ -136,7 +141,7 @@ const Header = () => {
 							Sign In
 						</Button>
 					)}
-				</nav>
+				</div>
 
 				{/* Mobile Menu Button */}
 				<div className="flex md:hidden items-center space-x-2">
