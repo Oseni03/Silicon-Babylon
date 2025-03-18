@@ -22,8 +22,9 @@ model Article {
   originalUrl   String      @unique
   originalTitle String
   publishedAt   DateTime
-  keywords      String[]    // Add this line for keywords
-  categories    Category[]  // Change this to a relation
+  keywords      String[]
+  categories    Category[]
+  comments      Comment[]
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
 }
@@ -33,6 +34,19 @@ model Category {
   name     String    @unique
   slug     String    @unique
   articles Article[]
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String   @db.Text
+  userId    String
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([articleId])
+  @@index([userId])
 }
 
 model Newsletter {

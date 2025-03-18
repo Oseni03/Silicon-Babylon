@@ -18,6 +18,7 @@ interface Category {
 }
 
 interface Article {
+	id: string;
 	slug: string;
 	title: string;
 	content: string;
@@ -204,7 +205,10 @@ const Page = () => {
 								/>
 
 								{/* Add Comments section before navigation */}
-								<Comments articleSlug={article.slug} />
+								<Comments
+									articleSlug={article.slug}
+									articleId={article.id}
+								/>
 
 								{/* Bottom navigation */}
 								<div className="mt-16 pt-8 border-t border-border flex justify-between items-center">
