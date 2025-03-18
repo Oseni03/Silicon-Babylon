@@ -7,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/providers";
 import type { PropsWithChildren } from "react";
 import { siteName, siteKeywords } from "@/lib/config";
+import { AuthProvider } from "@/context/AuthContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -47,12 +48,14 @@ function RootLayout({ children }: PropsWithChildren) {
 			</head>
 			<body className={inter.className}>
 				<ThemeProvider>
-					{/* <QueryClientProvider client={queryClient}> */}
-					<TooltipProvider>
-						<Toaster />
-						{children}
-					</TooltipProvider>
-					{/* </QueryClientProvider> */}
+					<AuthProvider>
+						{/* <QueryClientProvider client={queryClient}> */}
+						<TooltipProvider>
+							<Toaster />
+							{children}
+						</TooltipProvider>
+						{/* </QueryClientProvider> */}
+					</AuthProvider>
 				</ThemeProvider>
 				<Script type="text/javascript" strategy="afterInteractive">
 					{`var infolinks_pid = 3434068; var infolinks_wsid = 0;`}

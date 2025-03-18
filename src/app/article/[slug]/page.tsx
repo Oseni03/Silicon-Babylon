@@ -9,6 +9,7 @@ import Disclaimer from "@/components/Disclaimer";
 import { getArticleBySlug } from "@/lib/db";
 import CTA from "@/components/CTA";
 import { siteName } from "@/lib/config";
+import { Comments } from "@/components/Comments";
 
 interface Category {
 	id: string;
@@ -201,6 +202,9 @@ const Page = () => {
 										__html: article.content,
 									}}
 								/>
+
+								{/* Add Comments section before navigation */}
+								<Comments articleSlug={article.slug} />
 
 								{/* Bottom navigation */}
 								<div className="mt-16 pt-8 border-t border-border flex justify-between items-center">

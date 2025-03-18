@@ -1,11 +1,26 @@
+"use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { ModeToggle } from "./ModeToggle";
+import { useAuth } from "@/context/AuthContext";
+import { supabase } from "@/lib/supabase/client";
+import AuthModal from "./AuthModal";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 const Header = () => {
 	const [scrolled, setScrolled] = useState(false);
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const [isAuthOpen, setIsAuthOpen] = useState(false);
+	const { user, loading } = useAuth();
 
 	const toggleMenu = () => {
 		setIsMenuOpen(!isMenuOpen);
@@ -22,6 +37,15 @@ const Header = () => {
 			window.removeEventListener("scroll", handleScroll);
 		};
 	}, []);
+
+	const handleSignOut = async () => {
+		const { error } = await supabase.auth.signOut();
+		if (error) {
+			toast.error("Error signing out", {
+				description: "There was a problem signing you out.",
+			});
+		}
+	};
 
 	return (
 		<header
@@ -70,11 +94,101 @@ const Header = () => {
 						Archive
 					</Link>
 					<ModeToggle />
+					{loading ? (
+						<div className="w-8 h-8 rounded-full bg-secondary animate-pulse" />
+					) : user ? (
+						<DropdownMenu>
+							<DropdownMenuTrigger asChild>
+								<Button
+									variant="ghost"
+									className="relative h-8 w-8 rounded-full p-0"
+								>
+									<Avatar>
+										<AvatarImage
+											src={user.user_metadata?.avatar_url}
+											alt={
+												user.user_metadata?.full_name ||
+												"User avatar"
+											}
+										/>
+										<AvatarFallback>
+											{(
+												user.user_metadata
+													?.full_name?.[0] || "U"
+											).toUpperCase()}
+										</AvatarFallback>
+									</Avatar>
+								</Button>
+							</DropdownMenuTrigger>
+							<DropdownMenuContent align="end">
+								<DropdownMenuItem onClick={handleSignOut}>
+									Sign Out
+								</DropdownMenuItem>
+							</DropdownMenuContent>
+						</DropdownMenu>
+					) : (
+						<Button
+							variant="default"
+							onClick={() => setIsAuthOpen(true)}
+						>
+							Sign In
+						</Button>
+					)}
 				</nav>
 
 				{/* Mobile Menu Button */}
-				<div className="flex md:hidden">
+				<div className="flex md:hidden items-center space-x-2">
 					<ModeToggle />
+					{!loading && (
+						<>
+							{user ? (
+								<DropdownMenu>
+									<DropdownMenuTrigger asChild>
+										<Button
+											variant="ghost"
+											className="relative h-8 w-8 rounded-full p-0"
+										>
+											<Avatar>
+												<AvatarImage
+													src={
+														user.user_metadata
+															?.avatar_url
+													}
+													alt={
+														user.user_metadata
+															?.full_name ||
+														"User avatar"
+													}
+												/>
+												<AvatarFallback>
+													{(
+														user.user_metadata
+															?.full_name?.[0] ||
+														"U"
+													).toUpperCase()}
+												</AvatarFallback>
+											</Avatar>
+										</Button>
+									</DropdownMenuTrigger>
+									<DropdownMenuContent align="end">
+										<DropdownMenuItem
+											onClick={handleSignOut}
+										>
+											Sign Out
+										</DropdownMenuItem>
+									</DropdownMenuContent>
+								</DropdownMenu>
+							) : (
+								<Button
+									variant="default"
+									size="sm"
+									onClick={() => setIsAuthOpen(true)}
+								>
+									Sign In
+								</Button>
+							)}
+						</>
+					)}
 					<button
 						className="w-10 h-10 flex items-center justify-center rounded-md hover:bg-secondary transition-colors"
 						aria-label="Toggle menu"
@@ -136,6 +250,11 @@ const Header = () => {
 					</nav>
 				</div>
 			)}
+
+			<AuthModal
+				isOpen={isAuthOpen}
+				onClose={() => setIsAuthOpen(false)}
+			/>
 		</header>
 	);
 };
