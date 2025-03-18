@@ -263,7 +263,10 @@ async function fetchAndProcessFeeds() {
 								"Twitter posting failed but article was saved",
 								{
 									title: satirical.title,
-									error: twitterError?.message,
+									error:
+										twitterError instanceof Error
+											? twitterError.message
+											: "Unknown error occurred",
 								}
 							);
 						}
