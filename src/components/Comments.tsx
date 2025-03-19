@@ -9,13 +9,21 @@ import { createComment, getArticleComments } from "@/lib/db/comments";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import logger from "@/lib/logger";
+
+interface CommentUser {
+	username: string | null;
+	email: string;
+}
 
 interface Comment {
 	id: string;
 	content: string;
 	userId: string;
-	username?: string; // Make username optional
+	articleId: string;
 	createdAt: Date;
+	updatedAt: Date;
+	user: CommentUser;
 }
 
 interface CommentsProps {
@@ -38,8 +46,8 @@ export function Comments({ articleSlug, articleId }: CommentsProps) {
 
 	const loadComments = async () => {
 		try {
-			const comments = await getArticleComments(articleId);
-			setComments(comments);
+			const fetchedComments = await getArticleComments(articleId);
+			setComments(fetchedComments as Comment[]);
 		} catch (error) {
 			console.error("Error loading comments:", error);
 			toast.error("Failed to load comments");
@@ -54,8 +62,6 @@ export function Comments({ articleSlug, articleId }: CommentsProps) {
 			await createComment({
 				content: comment,
 				userId: user!.id,
-				username:
-					user!.name || user!.email?.split("@")[0] || "Anonymous", // Add username
 				articleId,
 			});
 
@@ -129,7 +135,8 @@ export function Comments({ articleSlug, articleId }: CommentsProps) {
 							>
 								<div className="flex items-center justify-between mb-2">
 									<div className="text-sm text-muted-foreground">
-										{comment.username}
+										{comment.user.username ||
+											comment.user.email.split("@")[0]}
 									</div>
 									<time className="text-xs text-muted-foreground">
 										{format(

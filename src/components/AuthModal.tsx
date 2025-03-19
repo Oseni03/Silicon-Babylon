@@ -1,5 +1,6 @@
 "use client";
-import { supabase } from "@/lib/supabase/client";
+
+import { signInWithGoogle } from "@/lib/supabase/actions";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -8,10 +9,9 @@ import {
 	DialogTitle,
 	DialogDescription,
 } from "@/components/ui/dialog";
-import { toast } from "sonner"; // Update import
+import { toast } from "sonner";
 import Image from "next/image";
 import { siteName } from "@/lib/config";
-import { useRouter } from "next/navigation";
 
 interface AuthModalProps {
 	isOpen: boolean;
@@ -24,31 +24,10 @@ export default function AuthModal({
 	onClose,
 	redirectPath,
 }: AuthModalProps) {
-	const router = useRouter();
-
 	const handleGoogleSignIn = async () => {
 		try {
-			const { data, error } = await supabase.auth.signInWithOAuth({
-				provider: "google",
-				options: {
-					redirectTo: `${window.location.origin}/auth/callback`,
-					queryParams: {
-						access_type: "offline",
-						prompt: "consent",
-						flowType: "pkce", // Add this line to use PKCE flow
-					},
-				},
-			});
-
-			if (error) throw error;
-
-			console.log("User data:", data);
-
+			await signInWithGoogle(redirectPath);
 			onClose();
-			if (redirectPath) {
-				router.push(redirectPath);
-			}
-
 			toast.success("Successfully signed in!", {
 				description: `Welcome to ${siteName}!`,
 			});

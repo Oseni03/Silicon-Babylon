@@ -7,7 +7,7 @@ import {
 	useState,
 	ReactNode,
 } from "react";
-import { supabase } from "@/lib/supabase/client";
+import { createClient } from "@/lib/supabase/client";
 
 interface AuthContextType {
 	user: User | null;
@@ -23,6 +23,8 @@ interface AuthProviderProps {
 export function AuthProvider({ children }: AuthProviderProps) {
 	const [user, setUser] = useState<User | null>(null);
 	const [loading, setLoading] = useState(true);
+
+	const supabase = createClient();
 
 	useEffect(() => {
 		// Get initial session

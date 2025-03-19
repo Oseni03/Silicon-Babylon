@@ -4,7 +4,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { ModeToggle } from "./ModeToggle";
 import { useAuth } from "@/context/AuthContext";
-import { supabase } from "@/lib/supabase/client";
+import { createClient } from "@/lib/supabase/client";
 import AuthModal from "./AuthModal";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -22,6 +22,8 @@ const Header = () => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [isAuthOpen, setIsAuthOpen] = useState(false);
 	const { user, loading } = useAuth();
+
+	const supabase = createClient();
 
 	const toggleMenu = () => {
 		setIsMenuOpen(!isMenuOpen);
