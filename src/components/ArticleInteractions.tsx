@@ -198,8 +198,181 @@ export default function ArticleInteractions({
 					</Button>
 				</form>
 
-				<ScrollArea className="h-[400px] w-full rounded-md border p-4">
-					<div className="space-y-4">
+				{comments.length === 0 ? (
+					<div className="text-center p-8 border rounded-md text-muted-foreground">
+						<p>
+							No comments yet. Be the first to share your
+							thoughts!
+						</p>
+					</div>
+				) : comments.length > 2 ? (
+					<ScrollArea className="h-[400px] w-full rounded-md border p-4">
+						<div className="space-y-4">
+							{comments.map((comment: any) => (
+								<Card key={comment.id}>
+									<CardContent className="p-4">
+										<div className="flex items-start gap-4">
+											<Avatar>
+												<AvatarFallback>
+													{comment.user.username?.charAt(
+														0
+													) || "U"}
+												</AvatarFallback>
+											</Avatar>
+											<div className="flex-1">
+												<div className="flex items-center gap-2">
+													<span className="font-semibold">
+														{comment.user
+															.username ||
+															"Anonymous"}
+													</span>
+													<span className="text-sm text-muted-foreground">
+														{formatDate(
+															comment.createdAt
+														)}
+													</span>
+												</div>
+												<p className="mt-2 text-sm text-foreground">
+													{comment.content}
+												</p>
+												<div className="mt-2 flex items-center gap-2">
+													<Button
+														variant="ghost"
+														size="sm"
+														onClick={() =>
+															handleLike(
+																comment.id
+															)
+														}
+														className={`text-muted-foreground ${
+															comment.likes.some(
+																(like: any) =>
+																	like.userId ===
+																	user?.id
+															)
+																? "text-primary"
+																: ""
+														}`}
+													>
+														👍{" "}
+														{comment.likes.length}
+													</Button>
+													<Dialog>
+														<DialogTrigger asChild>
+															<Button
+																variant="ghost"
+																size="sm"
+																onClick={() =>
+																	setReplyingTo(
+																		comment.id
+																	)
+																}
+																className="text-muted-foreground"
+															>
+																💬{" "}
+																{
+																	comment
+																		.replies
+																		.length
+																}
+															</Button>
+														</DialogTrigger>
+														<DialogContent>
+															<DialogHeader>
+																<DialogTitle>
+																	Reply to
+																	comment
+																</DialogTitle>
+															</DialogHeader>
+															<form
+																onSubmit={
+																	handleReply
+																}
+																className="space-y-4"
+															>
+																<Textarea
+																	value={
+																		replyContent
+																	}
+																	onChange={(
+																		e
+																	) =>
+																		setReplyContent(
+																			e
+																				.target
+																				.value
+																		)
+																	}
+																	placeholder="Write your reply..."
+																	className="min-h-[100px]"
+																/>
+																<Button
+																	type="submit"
+																	disabled={
+																		replyLoading ||
+																		!user
+																	}
+																>
+																	{replyLoading
+																		? "Posting..."
+																		: "Post Reply"}
+																</Button>
+															</form>
+														</DialogContent>
+													</Dialog>
+												</div>
+												{comment.replies.length > 0 && (
+													<div className="mt-4 space-y-3 pl-4 border-l">
+														{comment.replies.map(
+															(reply: any) => (
+																<div
+																	key={
+																		reply.id
+																	}
+																	className="flex gap-2"
+																>
+																	<Avatar className="h-6 w-6">
+																		<AvatarFallback className="text-xs">
+																			{reply.user.username?.charAt(
+																				0
+																			) ||
+																				"U"}
+																		</AvatarFallback>
+																	</Avatar>
+																	<div>
+																		<div className="flex items-center gap-2">
+																			<span className="font-semibold text-sm">
+																				{reply
+																					.user
+																					.username ||
+																					"Anonymous"}
+																			</span>
+																			<span className="text-xs text-muted-foreground">
+																				{formatDate(
+																					reply.createdAt
+																				)}
+																			</span>
+																		</div>
+																		<p className="text-sm">
+																			{
+																				reply.content
+																			}
+																		</p>
+																	</div>
+																</div>
+															)
+														)}
+													</div>
+												)}
+											</div>
+										</div>
+									</CardContent>
+								</Card>
+							))}
+						</div>
+					</ScrollArea>
+				) : (
+					<div className="space-y-4 w-full rounded-md border p-4">
 						{comments.map((comment: any) => (
 							<Card key={comment.id}>
 								<CardContent className="p-4">
@@ -351,7 +524,7 @@ export default function ArticleInteractions({
 							</Card>
 						))}
 					</div>
-				</ScrollArea>
+				)}
 			</div>
 			<AuthModal
 				isOpen={showAuthModal}
