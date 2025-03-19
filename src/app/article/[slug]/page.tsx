@@ -9,7 +9,7 @@ import Disclaimer from "@/components/Disclaimer";
 import { getArticleBySlug } from "@/lib/db";
 import CTA from "@/components/CTA";
 import { siteName } from "@/lib/config";
-import { Comments } from "@/components/Comments";
+import ArticleInteractions from "@/components/ArticleInteractions";
 
 interface Category {
 	id: string;
@@ -204,11 +204,7 @@ const Page = () => {
 									}}
 								/>
 
-								{/* Add Comments section before navigation */}
-								<Comments
-									articleSlug={article.slug}
-									articleId={article.id}
-								/>
+								<ArticleInteractions articleId={article.id} />
 
 								{/* Bottom navigation */}
 								<div className="mt-16 pt-8 border-t border-border flex justify-between items-center">
