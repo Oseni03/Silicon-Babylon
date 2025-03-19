@@ -230,7 +230,7 @@ async function fetchAndProcessFeeds() {
 						);
 
 						const slug = generateSlug(satirical.title);
-						const article = await createArticle({
+						await createArticle({
 							title: satirical.title,
 							slug,
 							content: satirical.content,

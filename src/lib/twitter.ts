@@ -1,14 +1,73 @@
-import { TwitterApi } from "twitter-api-v2";
 import logger from "./logger";
 import { siteUrl } from "./config";
+import crypto from "crypto";
 
-// Initialize Twitter client
-const client = new TwitterApi({
-	appKey: process.env.TWITTER_API_KEY!,
-	appSecret: process.env.TWITTER_API_SECRET!,
-	accessToken: process.env.TWITTER_ACCESS_TOKEN!,
-	accessSecret: process.env.TWITTER_ACCESS_SECRET!,
-});
+// Twitter API v2 endpoint
+const TWITTER_API_URL = "https://api.twitter.com/2/tweets";
+
+function generateOAuthSignature(
+	method: string,
+	url: string,
+	params: Record<string, string>
+) {
+	const oauthParams = {
+		oauth_consumer_key: process.env.TWITTER_API_KEY!,
+		oauth_token: process.env.TWITTER_ACCESS_TOKEN!,
+		oauth_signature_method: "HMAC-SHA1",
+		oauth_timestamp: Math.floor(Date.now() / 1000).toString(),
+		oauth_nonce: crypto.randomBytes(16).toString("base64"),
+		oauth_version: "1.0",
+	};
+
+	// Combine all parameters
+	const allParams = { ...params, ...oauthParams };
+
+	// Create signature base string
+	const paramString = Object.keys(allParams)
+		.sort()
+		.map(
+			(key) =>
+				`${encodeURIComponent(key)}=${encodeURIComponent(
+					allParams[key]
+				)}`
+		)
+		.join("&");
+
+	const signatureBaseString = `${method.toUpperCase()}&${encodeURIComponent(
+		url
+	)}&${encodeURIComponent(paramString)}`;
+
+	// Create signing key
+	const signingKey = `${encodeURIComponent(
+		process.env.TWITTER_API_SECRET!
+	)}&${encodeURIComponent(process.env.TWITTER_ACCESS_SECRET!)}`;
+
+	// Generate signature
+	const signature = crypto
+		.createHmac("sha1", signingKey)
+		.update(signatureBaseString)
+		.digest("base64");
+
+	oauthParams.oauth_signature = signature;
+
+	// Create Authorization header
+	return (
+		"OAuth " +
+		Object.keys(oauthParams)
+			.map(
+				(key) =>
+					`${encodeURIComponent(key)}="${encodeURIComponent(
+						oauthParams[key]
+					)}"`
+			)
+			.join(", ")
+	);
+}
+
+// Replace getAuthHeader with proper OAuth signature generation
+function getAuthHeader(): string {
+	return generateOAuthSignature("POST", TWITTER_API_URL, {});
+}
 
 /**
  * Posts a tweet with the article title, excerpt, and URL.
@@ -22,14 +81,30 @@ export async function postTweet(
 	excerpt: string
 ): Promise<void> {
 	const maxRetries = 3;
-	const retryDelay = 1000; // 1 second
+	const retryDelay = 1000;
 
 	for (let attempt = 1; attempt <= maxRetries; attempt++) {
 		try {
 			const url = `${siteUrl}/article/${slug}`;
 			const tweet = formatTweet(title, excerpt, url);
 
-			await client.v2.tweet(tweet);
+			const response = await fetch(TWITTER_API_URL, {
+				method: "POST",
+				headers: {
+					Authorization: getAuthHeader(),
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ text: tweet }),
+			});
+
+			if (!response.ok) {
+				const error = await response.json();
+				throw {
+					code: response.status,
+					error: error,
+				};
+			}
+
 			logger.info("Successfully posted tweet", { title, slug });
 			return;
 		} catch (error: any) {
