@@ -20,6 +20,9 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { formatDate } from "@/lib/utils";
+import { useProtectedAction } from "@/hooks/useProtectedAction";
+import AuthModal from "@/components/AuthModal";
 
 interface ArticleInteractionsProps {
 	articleId: string;
@@ -46,6 +49,7 @@ export default function ArticleInteractions({
 	const [replyingTo, setReplyingTo] = useState<string | null>(null);
 	const [replyContent, setReplyContent] = useState("");
 	const [replyLoading, setReplyLoading] = useState(false);
+	const { trigger, showAuthModal, setShowAuthModal } = useProtectedAction();
 
 	const fetchComments = async () => {
 		const response = await fetch(`/api/articles/${articleId}/comments`);
@@ -60,73 +64,82 @@ export default function ArticleInteractions({
 	};
 
 	const handleReaction = async (type: string) => {
-		if (!user) return;
-		try {
-			await fetch(`/api/articles/${articleId}/reactions`, {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ type }),
-			});
-			await fetchReactionCounts(); // Refresh counts after reaction
-		} catch (error) {
-			console.error("Error adding reaction:", error);
-		}
+		trigger(async () => {
+			try {
+				await fetch(`/api/articles/${articleId}/reactions`, {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ type }),
+				});
+				await fetchReactionCounts(); // Refresh counts after reaction
+			} catch (error) {
+				console.error("Error adding reaction:", error);
+			}
+		});
 	};
 
 	const handleComment = async (e: React.FormEvent) => {
 		e.preventDefault();
-		if (!user || !newComment.trim()) return;
+		if (!newComment.trim()) return;
 
-		setLoading(true);
-		try {
-			await fetch(`/api/articles/${articleId}/comments`, {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ content: newComment }),
-			});
-			setNewComment("");
-			await fetchComments();
-		} catch (error) {
-			console.error("Error adding comment:", error);
-		} finally {
-			setLoading(false);
-		}
+		trigger(async () => {
+			setLoading(true);
+			try {
+				await fetch(`/api/articles/${articleId}/comments`, {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ content: newComment }),
+				});
+				setNewComment("");
+				await fetchComments();
+			} catch (error) {
+				console.error("Error adding comment:", error);
+			} finally {
+				setLoading(false);
+			}
+		});
 	};
 
 	const handleLike = async (commentId: string) => {
-		if (!user) return;
-		try {
-			const response = await fetch(`/api/comments/${commentId}/likes`, {
-				method: "POST",
-			});
-			if (!response.ok && response.status !== 400) {
-				throw new Error("Failed to like");
+		trigger(async () => {
+			try {
+				const response = await fetch(
+					`/api/comments/${commentId}/likes`,
+					{
+						method: "POST",
+					}
+				);
+				if (!response.ok && response.status !== 400) {
+					throw new Error("Failed to like");
+				}
+				await fetchComments();
+			} catch (error) {
+				console.error("Error liking comment:", error);
 			}
-			await fetchComments();
-		} catch (error) {
-			console.error("Error liking comment:", error);
-		}
+		});
 	};
 
 	const handleReply = async (e: React.FormEvent) => {
 		e.preventDefault();
-		if (!user || !replyContent.trim() || !replyingTo) return;
+		if (!replyContent.trim() || !replyingTo) return;
 
-		setReplyLoading(true);
-		try {
-			await fetch(`/api/comments/${replyingTo}/replies`, {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ content: replyContent }),
-			});
-			setReplyContent("");
-			setReplyingTo(null);
-			await fetchComments();
-		} catch (error) {
-			console.error("Error adding reply:", error);
-		} finally {
-			setReplyLoading(false);
-		}
+		trigger(async () => {
+			setReplyLoading(true);
+			try {
+				await fetch(`/api/comments/${replyingTo}/replies`, {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ content: replyContent }),
+				});
+				setReplyContent("");
+				setReplyingTo(null);
+				await fetchComments();
+			} catch (error) {
+				console.error("Error adding reply:", error);
+			} finally {
+				setReplyLoading(false);
+			}
+		});
 	};
 
 	useEffect(() => {
@@ -205,9 +218,9 @@ export default function ArticleInteractions({
 														"Anonymous"}
 												</span>
 												<span className="text-sm text-muted-foreground">
-													{new Date(
+													{formatDate(
 														comment.createdAt
-													).toLocaleDateString()}
+													)}
 												</span>
 											</div>
 											<p className="mt-2 text-sm text-foreground">
@@ -316,9 +329,9 @@ export default function ArticleInteractions({
 																				"Anonymous"}
 																		</span>
 																		<span className="text-xs text-muted-foreground">
-																			{new Date(
+																			{formatDate(
 																				reply.createdAt
-																			).toLocaleDateString()}
+																			)}
 																		</span>
 																	</div>
 																	<p className="text-sm">
@@ -340,6 +353,10 @@ export default function ArticleInteractions({
 					</div>
 				</ScrollArea>
 			</div>
+			<AuthModal
+				isOpen={showAuthModal}
+				onClose={() => setShowAuthModal(false)}
+			/>
 		</div>
 	);
 }

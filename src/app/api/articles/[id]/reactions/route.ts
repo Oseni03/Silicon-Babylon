@@ -4,8 +4,10 @@ import { prisma } from "@/lib/prisma";
 
 export async function POST(
 	request: Request,
-	{ params }: { params: { id: string } }
+	context: { params: { id: string } }
 ) {
+	const { id: articleId } = await context.params;
+
 	try {
 		const supabase = await createClientForServer();
 		const {
@@ -16,7 +18,6 @@ export async function POST(
 		}
 
 		const { type } = await request.json();
-		const articleId = params.id;
 
 		const reaction = await prisma.articleReaction.upsert({
 			where: {
@@ -43,13 +44,15 @@ export async function POST(
 
 export async function GET(
 	request: Request,
-	{ params }: { params: { id: string } }
+	context: { params: { id: string } }
 ) {
+	const { id: articleId } = await context.params;
+
 	try {
 		const reactions = await prisma.articleReaction.groupBy({
 			by: ["type"],
 			where: {
-				articleId: params.id,
+				articleId,
 			},
 			_count: {
 				type: true,
