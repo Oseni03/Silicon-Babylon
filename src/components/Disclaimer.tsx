@@ -63,11 +63,10 @@ const Disclaimer = () => {
 							Important Disclaimer
 						</h3>
 						<p className="mt-2 text-muted-foreground">
-							This content is AI-generated and inspired by real
-							tech news. It is intended for entertainment purposes
-							only and may include fictional or exaggerated
-							elements. Please do not interpret it as factual or
-							serious reporting.
+							This content is created for entertainment purposes
+							and may include fictional or exaggerated elements.
+							Please do not interpret it as factual or serious
+							reporting.
 						</p>
 					</div>
 				</div>

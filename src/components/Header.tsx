@@ -100,6 +100,12 @@ const Header = () => {
 						>
 							Archive
 						</Link>
+						<Link
+							href="/contact"
+							className="text-sm font-medium hover:text-primary/80 transition-colors underline-animate"
+						>
+							Contact
+						</Link>
 					</nav>
 				</div>
 				<div className="hidden md:flex items-center space-x-4">
@@ -256,6 +262,13 @@ const Header = () => {
 							onClick={() => setIsMenuOpen(false)}
 						>
 							Archive
+						</Link>
+						<Link
+							href="/contact"
+							className="text-base font-medium py-2 hover:text-primary transition-colors"
+							onClick={() => setIsMenuOpen(false)}
+						>
+							Contact
 						</Link>
 					</nav>
 				</div>

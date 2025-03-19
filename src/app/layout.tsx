@@ -55,14 +55,6 @@ function RootLayout({ children }: PropsWithChildren) {
 						</TooltipProvider>
 					</AuthProvider>
 				</ThemeProvider>
-				<Script type="text/javascript" strategy="afterInteractive">
-					{`var infolinks_pid = 3434068; var infolinks_wsid = 0;`}
-				</Script>
-				<Script
-					type="text/javascript"
-					src="//resources.infolinks.com/js/infolinks_main.js"
-					strategy="afterInteractive"
-				/>
 			</body>
 		</html>
 	);
