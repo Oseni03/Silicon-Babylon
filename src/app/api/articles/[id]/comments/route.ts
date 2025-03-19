@@ -4,9 +4,9 @@ import { prisma } from "@/lib/prisma";
 
 export async function POST(
 	request: Request,
-	{ params }: { params: { id: string } }
+	context: { params: { id: string } }
 ) {
-	const { id: articleId } = await params;
+	const { id: articleId } = await context.params;
 
 	try {
 		const supabase = await createClientForServer();
@@ -38,9 +38,9 @@ export async function POST(
 
 export async function GET(
 	request: NextRequest,
-	{ params }: { params: { id: string } }
+	context: { params: { id: string } }
 ) {
-	const { id: articleId } = await params;
+	const { id: articleId } = context.params;
 
 	try {
 		const comments = await prisma.comment.findMany({
