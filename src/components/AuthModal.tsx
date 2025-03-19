@@ -28,9 +28,6 @@ export default function AuthModal({
 		try {
 			await signInWithGoogle(redirectPath);
 			onClose();
-			toast.success("Successfully signed in!", {
-				description: `Welcome to ${siteName}!`,
-			});
 		} catch (error) {
 			console.error("Authentication error:", error);
 			toast.error("Authentication failed", {

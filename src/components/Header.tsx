@@ -16,13 +16,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { siteName } from "@/lib/config";
+import { usePathname } from "next/navigation";
 
 const Header = () => {
 	const [scrolled, setScrolled] = useState(false);
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [isAuthOpen, setIsAuthOpen] = useState(false);
 	const { user, loading } = useAuth();
-
+	const pathname = usePathname();
 	const supabase = createClient();
 
 	const toggleMenu = () => {
@@ -263,6 +264,7 @@ const Header = () => {
 			<AuthModal
 				isOpen={isAuthOpen}
 				onClose={() => setIsAuthOpen(false)}
+				redirectPath={pathname}
 			/>
 		</header>
 	);

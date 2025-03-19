@@ -11,16 +11,14 @@ export async function signInWithGoogle(redirectTo?: string) {
 	const { data, error } = await supabase.auth.signInWithOAuth({
 		provider: "google",
 		options: {
-			redirectTo: `${siteUrl}/auth/callback`,
+			redirectTo: `${siteUrl}/auth/callback?next=${encodeURIComponent(
+				redirectTo || "/"
+			)}`,
 		},
 	});
 
 	if (error) {
 		throw new Error("Authentication failed");
-	}
-
-	if (redirectTo) {
-		redirect(redirectTo);
 	}
 
 	logger.info("Sign in with Google", { data });
