@@ -1,12 +1,12 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createClientForServer } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
 
 export async function POST(
 	request: Request,
-	context: { params: { id: string } }
+	{ params }: { params: { id: string } }
 ) {
-	const { id: articleId } = await context.params;
+	const { id: articleId } = await params;
 
 	try {
 		const supabase = await createClientForServer();
@@ -37,10 +37,10 @@ export async function POST(
 }
 
 export async function GET(
-	request: Request,
-	context: { params: { id: string } }
+	request: NextRequest,
+	{ params }: { params: { id: string } }
 ) {
-	const { id: articleId } = await context.params;
+	const { id: articleId } = await params;
 
 	try {
 		const comments = await prisma.comment.findMany({
