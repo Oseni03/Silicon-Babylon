@@ -23,6 +23,14 @@ import {
 import { formatDate } from "@/lib/utils";
 import { useProtectedAction } from "@/hooks/useProtectedAction";
 import AuthModal from "@/components/AuthModal";
+import {
+	getComments,
+	getReactionCounts,
+	addReaction,
+	addComment,
+	toggleCommentLike,
+	addReply,
+} from "@/lib/db/articleInteractions";
 
 interface ArticleInteractionsProps {
 	articleId: string;
@@ -52,26 +60,21 @@ export default function ArticleInteractions({
 	const { trigger, showAuthModal, setShowAuthModal } = useProtectedAction();
 
 	const fetchComments = async () => {
-		const response = await fetch(`/api/articles/${articleId}/comments`);
-		const data = await response.json();
+		const data = await getComments(articleId);
 		setComments(data);
 	};
 
 	const fetchReactionCounts = async () => {
-		const response = await fetch(`/api/articles/${articleId}/reactions`);
-		const data = await response.json();
+		const data = await getReactionCounts(articleId);
 		setReactionCounts(data);
 	};
 
 	const handleReaction = async (type: string) => {
 		trigger(async () => {
 			try {
-				await fetch(`/api/articles/${articleId}/reactions`, {
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({ type }),
-				});
-				await fetchReactionCounts(); // Refresh counts after reaction
+				if (!user?.id) return;
+				await addReaction(articleId, type, user.id);
+				await fetchReactionCounts();
 			} catch (error) {
 				console.error("Error adding reaction:", error);
 			}
@@ -80,16 +83,12 @@ export default function ArticleInteractions({
 
 	const handleComment = async (e: React.FormEvent) => {
 		e.preventDefault();
-		if (!newComment.trim()) return;
+		if (!newComment.trim() || !user?.id) return;
 
 		trigger(async () => {
 			setLoading(true);
 			try {
-				await fetch(`/api/articles/${articleId}/comments`, {
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({ content: newComment }),
-				});
+				await addComment(articleId, newComment, user.id);
 				setNewComment("");
 				await fetchComments();
 			} catch (error) {
@@ -103,15 +102,8 @@ export default function ArticleInteractions({
 	const handleLike = async (commentId: string) => {
 		trigger(async () => {
 			try {
-				const response = await fetch(
-					`/api/comments/${commentId}/likes`,
-					{
-						method: "POST",
-					}
-				);
-				if (!response.ok && response.status !== 400) {
-					throw new Error("Failed to like");
-				}
+				if (!user?.id) return;
+				await toggleCommentLike(commentId, user.id);
 				await fetchComments();
 			} catch (error) {
 				console.error("Error liking comment:", error);
@@ -121,16 +113,12 @@ export default function ArticleInteractions({
 
 	const handleReply = async (e: React.FormEvent) => {
 		e.preventDefault();
-		if (!replyContent.trim() || !replyingTo) return;
+		if (!replyContent.trim() || !replyingTo || !user?.id) return;
 
 		trigger(async () => {
 			setReplyLoading(true);
 			try {
-				await fetch(`/api/comments/${replyingTo}/replies`, {
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({ content: replyContent }),
-				});
+				await addReply(replyingTo, replyContent, user.id);
 				setReplyContent("");
 				setReplyingTo(null);
 				await fetchComments();

@@ -25,6 +25,7 @@ interface Article {
 	originalUrl: string;
 	originalTitle: string;
 	publishedAt: Date;
+	keywords: string[];
 	categories: Category[];
 }
 
