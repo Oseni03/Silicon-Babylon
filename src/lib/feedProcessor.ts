@@ -3,6 +3,7 @@ import { OpenAI } from "openai";
 import { generateSlug } from "./utils";
 import logger from "./logger";
 import { postTweet } from "./twitter";
+// import { postToFacebook } from "./facebook";
 import {
 	type TechCrunchItem,
 	type SatiricalResult,

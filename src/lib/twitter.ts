@@ -27,10 +27,18 @@ export async function postTweet(
 	for (let attempt = 1; attempt <= maxRetries; attempt++) {
 		try {
 			const url = `${siteUrl}/article/${slug}`;
-			const tweet = formatTweet(title, excerpt, url);
+			const { mainTweet, replyText } = formatTweet(title, excerpt);
 
-			await client.v2.tweet(tweet);
-			logger.info("Successfully posted tweet", { title, slug });
+			// Post main tweet
+			const mainTweetResponse = await client.v2.tweet(mainTweet);
+
+			// Post reply with the link
+			await client.v2.reply(
+				`${replyText}\n${url}`,
+				mainTweetResponse.data.id
+			);
+
+			logger.info("Successfully posted tweet thread", { title, slug });
 			return;
 		} catch (error: any) {
 			const isRateLimitError = error?.code === 429;
@@ -92,28 +100,24 @@ export async function postTweet(
  * Ensures the tweet does not exceed 280 characters.
  * @param title - The title of the article.
  * @param excerpt - A short excerpt from the article.
- * @param url - The URL of the article.
  * @returns Formatted tweet string.
  */
-function formatTweet(title: string, excerpt: string, url: string): string {
-	const maxTweetLength = 280;
-	const urlLength = url.length + 1; // +1 for the newline
-	const maxContentLength = maxTweetLength - urlLength;
+function formatTweet(
+	title: string,
+	excerpt: string
+): { mainTweet: string; replyText: string } {
+	const instruction = "\n\nCheck out the full article in the comments! 👇";
+	const baseLength = title.length + instruction.length;
+	let contentSlice = excerpt;
 
-	// Combine title and excerpt
-	let content = `${title}\n\n${excerpt}`;
-
-	// Truncate content if it exceeds the maximum length
-	if (content.length > maxContentLength) {
-		const truncationIndicator = "...";
-		const maxTruncatedLength =
-			maxContentLength - truncationIndicator.length;
-		content = `${content.substring(
-			0,
-			maxTruncatedLength
-		)}${truncationIndicator}`;
+	// Truncate content if needed (280 character limit)
+	if (baseLength + excerpt.length > 280) {
+		const allowedContentLength = 280 - baseLength - 4; // -4 for ellipsis
+		contentSlice = excerpt.slice(0, allowedContentLength) + "...";
 	}
 
-	// Add the URL
-	return `${content}\n${url}`;
+	return {
+		mainTweet: `${title}\n\n${contentSlice}${instruction}`,
+		replyText: "Read the full article here:",
+	};
 }
