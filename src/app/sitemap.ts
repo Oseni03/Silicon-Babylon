@@ -10,8 +10,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 	const articleUrls = articles.map((article) => ({
 		url: `${siteUrl}/article/${article.slug}`,
 		lastModified: new Date(article.publishedAt),
-		changeFrequency: "weekly" as const,
-		priority: 0.7,
+		changeFrequency: "daily" as const,
+		priority: 0.9,
 	}));
 
 	// Define static routes
@@ -26,7 +26,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 			url: `${siteUrl}/about`,
 			lastModified: new Date(),
 			changeFrequency: "monthly" as const,
-			priority: 0.8,
+			priority: 0.9,
 		},
 		{
 			url: `${siteUrl}/archive`,
@@ -38,7 +38,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 			url: `${siteUrl}/contact`,
 			lastModified: new Date(),
 			changeFrequency: "monthly" as const,
-			priority: 0.5,
+			priority: 0.9,
 		},
 		{
 			url: `${siteUrl}/privacy`,
