@@ -1,8 +1,6 @@
 export const siteName = "SatiricTech";
 export const siteUrl =
-	process.env.NODE_ENV === "development"
-		? "http://localhost:3000"
-		: "https://www.satiric-tech.info";
+	process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 export const siteKeywords = [
 	"tech satire",
 	"technology humor",
