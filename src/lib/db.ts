@@ -127,3 +127,31 @@ export async function createContactMessage(data: {
 		data,
 	});
 }
+
+export async function getRelatedArticles(
+	articleId: string,
+	categoryIds: string[],
+	limit = 3
+) {
+	return prisma.article.findMany({
+		where: {
+			AND: [
+				{ id: { not: articleId } },
+				{
+					categories: {
+						some: {
+							id: { in: categoryIds },
+						},
+					},
+				},
+			],
+		},
+		include: {
+			categories: true,
+		},
+		take: limit,
+		orderBy: {
+			publishedAt: "desc",
+		},
+	});
+}

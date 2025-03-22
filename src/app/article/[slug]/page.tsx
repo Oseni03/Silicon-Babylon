@@ -1,4 +1,4 @@
-import { getArticleBySlug } from "@/lib/db";
+import { getArticleBySlug, getRelatedArticles } from "@/lib/db";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { siteKeywords, siteName } from "@/lib/config";
@@ -24,38 +24,25 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-	try {
-		const { slug } = await Promise.resolve(params);
-		const article = await getArticleBySlug(slug);
+	const { slug } = await Promise.resolve(params);
+	const article = await getArticleBySlug(slug);
 
-		if (!article) {
-			return {
-				title: `Article Not Found - ${siteName}`,
-			};
-		}
-
-		// Create temporary div server-side
-		const div = new DOMParser().parseFromString(
-			article.content,
-			"text/html"
-		);
-		const plainText = div.body.textContent || "";
-
+	if (!article) {
 		return {
-			title: `${article.title} - ${siteName}`,
-			description: plainText.substring(0, 160),
-			keywords: [
-				...article.keywords,
-				...article.categories.map((cat) => cat.name.toLowerCase()),
-				...siteKeywords,
-				siteName,
-			].join(", "),
-		};
-	} catch (error) {
-		return {
-			title: `Error - ${siteName}`,
+			title: `Article Not Found - ${siteName}`,
 		};
 	}
+
+	return {
+		title: `${article.title}`,
+		description: article.content.substring(0, 160),
+		keywords: [
+			...article.keywords,
+			...article.categories.map((cat) => cat.name.toLowerCase()),
+			...siteKeywords,
+			siteName,
+		].join(", "),
+	};
 }
 
 const Page = async ({ params }: Props) => {
@@ -67,11 +54,19 @@ const Page = async ({ params }: Props) => {
 			notFound();
 		}
 
+		const relatedArticles = await getRelatedArticles(
+			article.id,
+			article.categories.map((cat) => cat.id)
+		);
+
 		return (
 			<div className="flex flex-col min-h-screen">
 				<Header />
 				<main className="flex-grow pt-24">
-					<ArticleView article={article} />
+					<ArticleView
+						article={article}
+						relatedArticles={relatedArticles}
+					/>
 				</main>
 				<Footer />
 			</div>

@@ -8,9 +8,10 @@ import { type Article } from "@/types/types";
 
 interface ArticleViewProps {
 	article: Article;
+	relatedArticles?: Article[];
 }
 
-const ArticleView = ({ article }: ArticleViewProps) => {
+const ArticleView = ({ article, relatedArticles }: ArticleViewProps) => {
 	return (
 		<>
 			<article className="container mx-auto px-6 py-16">
@@ -91,6 +92,49 @@ const ArticleView = ({ article }: ArticleViewProps) => {
 					/>
 
 					<ArticleInteractions articleId={article.id} />
+
+					{/* Related Articles Section */}
+					{relatedArticles && relatedArticles.length > 0 && (
+						<div className="mt-16 pt-8 border-t border-border">
+							<h2 className="text-2xl font-medium mb-6">
+								Related Articles
+							</h2>
+							<div className="grid gap-6">
+								{relatedArticles.map((related) => (
+									<Link
+										key={related.id}
+										href={`/article/${related.slug}`}
+										className="group block p-6 bg-secondary/30 rounded-lg transition-colors hover:bg-secondary"
+									>
+										<h3 className="text-lg font-medium mb-2 group-hover:text-primary">
+											{related.title}
+										</h3>
+										<div className="flex items-center text-sm text-muted-foreground">
+											<time
+												dateTime={related.publishedAt.toISOString()}
+											>
+												{new Date(
+													related.publishedAt
+												).toLocaleDateString("en-US", {
+													year: "numeric",
+													month: "long",
+													day: "numeric",
+												})}
+											</time>
+											<span className="px-3 py-1 ml-4 text-xs rounded-full bg-secondary">
+												{related.categories
+													.map(
+														(category) =>
+															category.name
+													)
+													.join(", ")}
+											</span>
+										</div>
+									</Link>
+								))}
+							</div>
+						</div>
+					)}
 
 					{/* Bottom navigation */}
 					<div className="mt-16 pt-8 border-t border-border flex justify-between items-center">
