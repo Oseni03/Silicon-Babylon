@@ -19,10 +19,9 @@ const ArticleView = ({ article, relatedArticles }: ArticleViewProps) => {
 					{/* Top disclaimer */}
 					<div className="mb-10 p-4 border border-border rounded-lg bg-secondary/30">
 						<p className="text-sm text-muted-foreground text-center">
-							This is AI-generated satire based on real tech news.
-							Don't take it seriously! All content is
-							algorithmically created for entertainment purposes
-							only.
+							This is AI-generated content inspired by real tech
+							news. Created for entertainment and creative
+							exploration.
 						</p>
 					</div>
 
