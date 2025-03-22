@@ -1,18 +1,13 @@
-import { getArticleBySlug, getRelatedArticles } from "@/lib/db";
+import { getArticleBySlug, getArticles, getRelatedArticles } from "@/lib/db";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { siteKeywords, siteName } from "@/lib/config";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ArticleView from "@/components/ArticleView";
-import { prisma } from "@/lib/prisma";
 
 export async function generateStaticParams() {
-	const articles = await prisma.article.findMany({
-		select: {
-			slug: true,
-		},
-	});
+	const articles = await getArticles();
 
 	return articles.map((article) => ({
 		slug: article.slug,
@@ -20,11 +15,14 @@ export async function generateStaticParams() {
 }
 
 interface Props {
-	params: { slug: string };
+	params: {
+		slug: string;
+	};
+	searchParams?: { [key: string]: string | string[] | undefined };
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-	const { slug } = await Promise.resolve(params);
+	const { slug } = params;
 	const article = await getArticleBySlug(slug);
 
 	if (!article) {
@@ -47,7 +45,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 const Page = async ({ params }: Props) => {
 	try {
-		const { slug } = await Promise.resolve(params);
+		const { slug } = params;
 		const article = await getArticleBySlug(slug);
 
 		if (!article) {

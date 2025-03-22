@@ -179,7 +179,7 @@ export default function ArticleInteractions({
 					/>
 					<Button
 						type="submit"
-						disabled={loading || !user}
+						onClick={() => !user && setShowAuthModal(true)}
 						className="w-full sm:w-auto"
 					>
 						{loading ? "Posting..." : "Post Comment"}
