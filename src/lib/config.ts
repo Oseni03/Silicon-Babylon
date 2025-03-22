@@ -9,10 +9,13 @@ export const siteKeywords = [
 	"AI-generated satire",
 	"tech industry commentary",
 	"funny tech news",
+	"tech news",
 	"tech journalism satire",
 	"satiricTech",
 	"satiric",
 	"satiric-tech",
 	"satirical-tech",
+	"tech satire",
+	"satire tech",
 	siteName,
 ];

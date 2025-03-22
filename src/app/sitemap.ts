@@ -1,19 +1,7 @@
 import { siteUrl } from "@/lib/config";
-import { getArticles } from "@/lib/db";
 import { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-	// Get all dynamic articles
-	const articles = await getArticles();
-
-	// Generate article URLs
-	const articleUrls = articles.map((article) => ({
-		url: `${siteUrl}/article/${article.slug}`,
-		lastModified: new Date(article.publishedAt),
-		changeFrequency: "daily" as const,
-		priority: 0.9,
-	}));
-
 	// Define static routes
 	const staticRoutes = [
 		{
@@ -55,5 +43,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 	];
 
 	// Combine static and dynamic routes
-	return [...staticRoutes, ...articleUrls];
+	return [...staticRoutes];
 }

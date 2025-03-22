@@ -12,9 +12,30 @@ import { AuthProvider } from "@/context/AuthContext";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-	title: siteName,
-	description: "AI-Crafted Commentary Inspired by Real Tech Headlines",
-	keywords: siteKeywords.join(", "),
+	title: {
+		template: `%s | ${siteName}`,
+		default: `${siteName} - Funny Tech News`,
+	},
+	description:
+		"Stay ahead with commentary and humorous insights inspired by real tech headlines. Explore the lighter side of technology today.",
+	keywords: `${siteKeywords.join(
+		", "
+	)}, tech humor, funny tech insights, future of technology`,
+	robots: "index, follow",
+	author: `${siteName} Team`,
+	openGraph: {
+		title: `${siteName} - funny Tech Insights`,
+		description:
+			"Explore commentary and humorous insights inspired by real tech headlines.",
+		url: "https://www.satirical-techscape.com",
+		type: "website",
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: `${siteName} - Funny Tech Insights`,
+		description:
+			"Stay ahead with commentary and humorous insights inspired by real tech headlines.",
+	},
 };
 
 // const queryClient = new QueryClient();
