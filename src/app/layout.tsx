@@ -47,7 +47,7 @@ function RootLayout({ children }: PropsWithChildren) {
 				<meta
 					name="google-adsense-account"
 					content="ca-pub-4433921260204256"
-				/>
+				></meta>
 				<Script
 					async
 					src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4433921260204256"
