@@ -14,15 +14,8 @@ export async function generateStaticParams() {
 	}));
 }
 
-interface Props {
-	params: {
-		slug: string;
-	};
-	searchParams?: { [key: string]: string | string[] | undefined };
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-	const { slug } = params;
+export async function generateMetadata({ params }): Promise<Metadata> {
+	const { slug } = await Promise.resolve(params);
 	const article = await getArticleBySlug(slug);
 
 	if (!article) {
@@ -43,9 +36,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 	};
 }
 
-const Page = async ({ params }: Props) => {
+const Page = async ({ params }) => {
 	try {
-		const { slug } = params;
+		const { slug } = await Promise.resolve(params);
 		const article = await getArticleBySlug(slug);
 
 		if (!article) {
