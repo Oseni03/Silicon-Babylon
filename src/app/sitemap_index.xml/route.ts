@@ -4,7 +4,7 @@ import { getAllCategories } from "@/lib/db";
 import { MetadataRoute } from "next";
 import logger from "@/lib/logger";
 
-export async function generateSitemaps() {
+async function generateSitemaps() {
 	const categories = await getAllCategories();
 	const sitemaps = categories.map((category) => ({
 		id: category.slug,
