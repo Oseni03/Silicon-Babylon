@@ -7,13 +7,13 @@ import { siteUrl } from "../config";
 
 export async function signInWithGoogle(redirectTo?: string) {
 	const supabase = await createClientForServer();
+	const callbackUrl = new URL("/auth/callback", siteUrl);
+	callbackUrl.searchParams.set("next", redirectTo || "/");
 
 	const { data, error } = await supabase.auth.signInWithOAuth({
 		provider: "google",
 		options: {
-			redirectTo: `${siteUrl}/auth/callback?next=${encodeURIComponent(
-				redirectTo || "/"
-			)}`,
+			redirectTo: callbackUrl.toString(),
 		},
 	});
 
