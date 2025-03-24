@@ -8,10 +8,12 @@ import { ThemeProvider } from "@/providers";
 import type { PropsWithChildren } from "react";
 import { siteName, siteKeywords } from "@/lib/config";
 import { AuthProvider } from "@/context/AuthContext";
+import { Metadata } from "next";
+import { siteUrl } from "@/lib/config";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata = {
+export const metadata: Metadata = {
 	title: {
 		template: `%s | ${siteName}`,
 		default: `${siteName} - Funny Tech News`,
@@ -22,19 +24,21 @@ export const metadata = {
 		", "
 	)}, tech humor, funny tech insights, future of technology`,
 	robots: "index, follow",
-	author: `${siteName} Team`,
+	authors: [{ name: "Oseni03", url: "https://x.com/Oseni03" }],
 	openGraph: {
 		title: `${siteName} - funny Tech Insights`,
 		description:
 			"Explore commentary and humorous insights inspired by real tech headlines.",
-		url: "https://www.satirical-techscape.com",
+		url: new URL(siteUrl),
 		type: "website",
+		images: ["/og-image.png"],
 	},
 	twitter: {
 		card: "summary_large_image",
 		title: `${siteName} - Funny Tech Insights`,
 		description:
 			"Stay ahead with commentary and humorous insights inspired by real tech headlines.",
+		images: "/og-image.png",
 	},
 };
 

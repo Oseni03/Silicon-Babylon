@@ -66,6 +66,19 @@ export const programmes: AffiliateProgram[] = [
 		],
 		url: "https://go.nordpass.io/aff_c?offer_id=754&aff_id=119891",
 	},
+	{
+		title: "Skylum's Luminar & X-Membership: Because Your Selfies Deserve a Red Carpet Entrance",
+		content:
+			"<p>In an era where your camera roll looks like a tragic comedy, Skylum’s Luminar teams up with the exclusive X-Membership to transform your humble snapshots into blockbuster-worthy works of art—because who wouldn’t want a VIP pass to the world of over-the-top photo magic?</p>",
+		keywords: [
+			"Skylum",
+			"Luminar",
+			"X-Membership",
+			"photo editing",
+			"satire",
+		],
+		url: "https://skylum.com/x-membership?utm_campaign=rakuten&utm_medium=cpa&utm_source=WqKKIY0Hyg0&ranMID=46644&ranEAID=WqKKIY0Hyg0&ranSiteID=WqKKIY0Hyg0-MbVIC1htyu6W6eyC1d7CLw",
+	},
 ];
 
 let currentProgramIndex = 0;

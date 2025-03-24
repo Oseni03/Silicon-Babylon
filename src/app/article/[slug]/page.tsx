@@ -5,6 +5,9 @@ import { siteKeywords, siteName } from "@/lib/config";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ArticleView from "@/components/ArticleView";
+import { cache } from "react";
+
+const getArticle = cache(getArticleBySlug);
 
 export async function generateStaticParams() {
 	const articles = await getArticles();
@@ -16,7 +19,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }): Promise<Metadata> {
 	const { slug } = await Promise.resolve(params);
-	const article = await getArticleBySlug(slug);
+	const article = await getArticle(slug);
 
 	if (!article) {
 		return {
@@ -39,7 +42,7 @@ export async function generateMetadata({ params }): Promise<Metadata> {
 const Page = async ({ params }) => {
 	try {
 		const { slug } = await Promise.resolve(params);
-		const article = await getArticleBySlug(slug);
+		const article = await getArticle(slug);
 
 		if (!article) {
 			notFound();
