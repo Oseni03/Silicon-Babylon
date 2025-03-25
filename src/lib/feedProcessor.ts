@@ -43,9 +43,9 @@ async function generateSatiricalVersion(
 		const systemPrompt = `You are a witty and sarcastic tech journalist. You will create satirical versions of tech news articles.
 	Always respond with valid JSON that matches this format exactly:
 	{
-	  "title": "The satirical title",
-	  "content": "The satirical content in HTML format (around 500 words, with paragraphs wrapped in <p> tags and other HTML elements as needed)",
-	  "keywords": ["keyword1", "keyword2", "keyword3", "keyword4", "keyword5"]
+	  "title": "The SEO optimized funny title",
+	  "content": "The SEO optimized satirical/funny content in HTML format (around 500 words, with paragraphs wrapped in <p> tags and other HTML elements as needed)",
+	  "keywords": ["keyword1", "keyword2", "keyword3", "keyword4", "keyword5", ...]
 	}`;
 
 		// User prompt with the specific article context
@@ -56,9 +56,9 @@ async function generateSatiricalVersion(
 
 	Respond with ONLY valid JSON in this exact format:
 	{
-	"title": "The satirical title",
-	"content": "The satirical content in HTML format (around 500 words, with paragraphs wrapped in <p> tags and other HTML elements as needed)",
-	"keywords": ["keyword1", "keyword2", "keyword3", "keyword4", "keyword5"]
+	"title": "The SEO optimized satirical/funny title",
+	"content": "The SEO optimized satirical/funny content in HTML format (around 500 words, with paragraphs wrapped in <p> tags and other HTML elements as needed)",
+	"keywords": ["keyword1", "keyword2", "keyword3", "keyword4", "keyword5", ...]
 	}
 
 	The keywords should be SEO-optimized terms related to the article that would help with search engine ranking.`;

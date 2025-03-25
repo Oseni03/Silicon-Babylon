@@ -22,18 +22,31 @@ export async function postTweet(
 	excerpt: string
 ): Promise<void> {
 	const maxRetries = 3;
-	const retryDelay = 1000; // 1 second
+	const retryDelay = 5000; // Increased to 5 seconds base delay
 
 	for (let attempt = 1; attempt <= maxRetries; attempt++) {
 		try {
+			// Add initial delay to prevent rate limiting
+			if (attempt > 1) {
+				// Exponential backoff: 5s, 10s, 15s
+				await new Promise((resolve) =>
+					setTimeout(resolve, retryDelay * attempt)
+				);
+			}
+
 			const url = `${siteUrl}/article/${slug}`;
 			const { mainTweet, replyText } = formatTweet(title, excerpt);
 
 			// Post main tweet
-			const mainTweetResponse = await client.v2.tweet(mainTweet);
+			const mainTweetResponse = await client.readWrite.v2.tweet(
+				mainTweet
+			);
+
+			// Add delay between tweets
+			await new Promise((resolve) => setTimeout(resolve, 2000));
 
 			// Post reply with the link
-			await client.v2.reply(
+			await client.readWrite.v2.reply(
 				`${replyText}\n${url}`,
 				mainTweetResponse.data.id
 			);
@@ -52,11 +65,24 @@ export async function postTweet(
 					type: error?.error?.type,
 					detail: error?.error?.detail,
 					title: error?.error?.title,
+					headers: error?.headers,
+					rateLimit: error?.rateLimit,
 				},
 				attempt,
 				articleTitle: title,
 				slug,
 			});
+
+			if (isForbiddenError) {
+				logger.error(
+					"Twitter API Forbidden error - check app permissions and tokens",
+					{
+						error: error?.error,
+					}
+				);
+				// Don't retry on 403 errors
+				return;
+			}
 
 			// If it's an OAuth error, don't retry
 			if (isOAuthError) {
