@@ -1,5 +1,4 @@
 "use client";
-import { User } from "@supabase/supabase-js";
 import {
 	createContext,
 	useContext,
@@ -7,56 +6,69 @@ import {
 	useState,
 	ReactNode,
 } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { onAuthStateChanged, signOut as firebaseSignOut } from "firebase/auth";
+import { auth } from "@/lib/firebase/config";
+import { upsertUser } from "@/lib/db/users";
 
 interface AuthContextType {
-	user: User | null;
+	user: { id: string; email: string; username?: string } | null;
 	loading: boolean;
+	signOut: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType>({
+	user: null,
+	loading: true,
+	signOut: async () => {},
+});
 
-interface AuthProviderProps {
-	children: ReactNode;
-}
+export const useAuth = () => useContext(AuthContext);
 
-export function AuthProvider({ children }: AuthProviderProps) {
-	const [user, setUser] = useState<User | null>(null);
+export function AuthProvider({ children }: { children: ReactNode }) {
+	const [user, setUser] = useState<AuthContextType["user"]>(null);
 	const [loading, setLoading] = useState(true);
 
-	const supabase = createClient();
+	const signOut = async () => {
+		try {
+			await firebaseSignOut(auth);
+		} catch (error) {
+			console.error("Error signing out:", error);
+		}
+	};
 
 	useEffect(() => {
-		// Get initial session
-		supabase.auth.getSession().then(({ data: { session } }) => {
-			setUser(session?.user ?? null);
+		const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+			if (firebaseUser) {
+				try {
+					// First upsert the user to ensure we have a record
+					const dbUser = await upsertUser({
+						id: firebaseUser.uid,
+						email: firebaseUser.email!,
+						username: firebaseUser.displayName || undefined,
+					});
+
+					// Combine Firebase user with Prisma user data
+					setUser({
+						id: dbUser.id,
+						email: dbUser.email,
+						username: dbUser?.username,
+					});
+				} catch (error) {
+					console.error("Error syncing user data:", error);
+					setUser(null);
+				}
+			} else {
+				setUser(null);
+			}
 			setLoading(false);
 		});
 
-		// Listen for auth changes
-		const {
-			data: { subscription },
-		} = supabase.auth.onAuthStateChange((event, session) => {
-			setUser(session?.user ?? null);
-			setLoading(false);
-		});
-
-		return () => {
-			subscription.unsubscribe();
-		};
+		return () => unsubscribe();
 	}, []);
 
 	return (
-		<AuthContext.Provider value={{ user, loading }}>
+		<AuthContext.Provider value={{ user, loading, signOut }}>
 			{children}
 		</AuthContext.Provider>
 	);
 }
-
-export const useAuth = (): AuthContextType => {
-	const context = useContext(AuthContext);
-	if (context === undefined) {
-		throw new Error("useAuth must be used within an AuthProvider");
-	}
-	return context;
-};

@@ -14,6 +14,7 @@ import { siteUrl } from "@/lib/config";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+	metadataBase: new URL(siteUrl),
 	title: {
 		template: `%s | ${siteName}`,
 		default: `${siteName} - Funny Tech News`,
@@ -29,7 +30,7 @@ export const metadata: Metadata = {
 		title: `${siteName} - funny Tech Insights`,
 		description:
 			"Explore commentary and humorous insights inspired by real tech headlines.",
-		url: new URL(siteUrl),
+		url: siteUrl,
 		type: "website",
 		images: ["/og-image.png"],
 	},

@@ -4,7 +4,6 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { ModeToggle } from "./ModeToggle";
 import { useAuth } from "@/context/AuthContext";
-import { createClient } from "@/lib/supabase/client";
 import AuthModal from "./AuthModal";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -22,9 +21,8 @@ const Header = () => {
 	const [scrolled, setScrolled] = useState(false);
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [isAuthOpen, setIsAuthOpen] = useState(false);
-	const { user, loading } = useAuth();
+	const { user, loading, signOut } = useAuth();
 	const pathname = usePathname();
-	const supabase = createClient();
 
 	const toggleMenu = () => {
 		setIsMenuOpen(!isMenuOpen);
@@ -43,13 +41,13 @@ const Header = () => {
 	}, []);
 
 	const handleSignOut = async () => {
-		const { error } = await supabase.auth.signOut();
-		if (error) {
+		try {
+			await signOut();
+			toast.success("Signed out successfully");
+		} catch (error) {
 			toast.error("Error signing out", {
 				description: "There was a problem signing you out.",
 			});
-		} else {
-			toast.success("Signed out successfully");
 		}
 	};
 
@@ -121,16 +119,15 @@ const Header = () => {
 								>
 									<Avatar>
 										<AvatarImage
-											src={user.user_metadata?.avatar_url}
+											src={user.photoURL || undefined}
 											alt={
-												user.user_metadata?.full_name ||
+												user.displayName ||
 												"User avatar"
 											}
 										/>
 										<AvatarFallback>
 											{(
-												user.user_metadata
-													?.full_name?.[0] || "U"
+												user.displayName?.[0] || "U"
 											).toUpperCase()}
 										</AvatarFallback>
 									</Avatar>
@@ -167,19 +164,17 @@ const Header = () => {
 											<Avatar>
 												<AvatarImage
 													src={
-														user.user_metadata
-															?.avatar_url
+														user.photoURL ||
+														undefined
 													}
 													alt={
-														user.user_metadata
-															?.full_name ||
+														user.displayName ||
 														"User avatar"
 													}
 												/>
 												<AvatarFallback>
 													{(
-														user.user_metadata
-															?.full_name?.[0] ||
+														user.displayName?.[0] ||
 														"U"
 													).toUpperCase()}
 												</AvatarFallback>

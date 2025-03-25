@@ -1,6 +1,7 @@
 "use client";
 
-import { signInWithGoogle } from "@/lib/supabase/actions";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "@/lib/firebase/config";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -26,8 +27,12 @@ export default function AuthModal({
 }: AuthModalProps) {
 	const handleGoogleSignIn = async () => {
 		try {
-			await signInWithGoogle(redirectPath);
+			const provider = new GoogleAuthProvider();
+			await signInWithPopup(auth, provider);
 			onClose();
+			if (redirectPath) {
+				window.location.href = redirectPath;
+			}
 		} catch (error) {
 			console.error("Authentication error:", error);
 			toast.error("Authentication failed", {

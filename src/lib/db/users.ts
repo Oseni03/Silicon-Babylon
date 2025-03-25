@@ -15,10 +15,10 @@ export async function upsertUser({
 	logger.info("Upserting user", { userId: id, email });
 	try {
 		const user = await prisma.user.upsert({
-			where: { id },
+			where: { email },
 			update: {
-				email,
-				username,
+				id,
+				username, // Only update username, not email
 			},
 			create: {
 				id,

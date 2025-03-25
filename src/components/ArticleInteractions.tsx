@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -58,6 +59,7 @@ export default function ArticleInteractions({
 	const [replyContent, setReplyContent] = useState("");
 	const [replyLoading, setReplyLoading] = useState(false);
 	const { trigger, showAuthModal, setShowAuthModal } = useProtectedAction();
+	const pathname = usePathname();
 
 	const fetchComments = async () => {
 		const data = await getComments(articleId);
@@ -236,7 +238,7 @@ export default function ArticleInteractions({
 															comment.likes.some(
 																(like: any) =>
 																	like.userId ===
-																	user?.id
+																	user?.uid
 															)
 																? "text-primary"
 																: ""
@@ -517,6 +519,7 @@ export default function ArticleInteractions({
 			<AuthModal
 				isOpen={showAuthModal}
 				onClose={() => setShowAuthModal(false)}
+				redirectPath={pathname}
 			/>
 		</div>
 	);
