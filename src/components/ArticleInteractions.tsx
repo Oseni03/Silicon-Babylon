@@ -238,7 +238,7 @@ export default function ArticleInteractions({
 															comment.likes.some(
 																(like: any) =>
 																	like.userId ===
-																	user?.uid
+																	user?.id
 															)
 																? "text-primary"
 																: ""
