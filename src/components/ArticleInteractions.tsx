@@ -204,9 +204,8 @@ export default function ArticleInteractions({
 										<div className="flex items-start gap-4">
 											<Avatar>
 												<AvatarFallback>
-													{comment.user.username?.charAt(
-														0
-													) || "U"}
+													{comment.user
+														.username?.[0] || "U"}
 												</AvatarFallback>
 											</Avatar>
 											<div className="flex-1">
@@ -323,9 +322,9 @@ export default function ArticleInteractions({
 																>
 																	<Avatar className="h-6 w-6">
 																		<AvatarFallback className="text-xs">
-																			{reply.user.username?.charAt(
-																				0
-																			) ||
+																			{reply
+																				.user
+																				.username?.[0] ||
 																				"U"}
 																		</AvatarFallback>
 																	</Avatar>
@@ -369,9 +368,8 @@ export default function ArticleInteractions({
 									<div className="flex items-start gap-4">
 										<Avatar>
 											<AvatarFallback>
-												{comment.user.username?.charAt(
-													0
-												) || "U"}
+												{comment.user.username?.[0] ||
+													"U"}
 											</AvatarFallback>
 										</Avatar>
 										<div className="flex-1">
@@ -477,9 +475,9 @@ export default function ArticleInteractions({
 															>
 																<Avatar className="h-6 w-6">
 																	<AvatarFallback className="text-xs">
-																		{reply.user.username?.charAt(
-																			0
-																		) ||
+																		{reply
+																			.user
+																			.username?.[0] ||
 																			"U"}
 																	</AvatarFallback>
 																</Avatar>

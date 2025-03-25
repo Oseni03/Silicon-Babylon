@@ -119,15 +119,12 @@ const Header = () => {
 								>
 									<Avatar>
 										<AvatarImage
-											src={user.photoURL || undefined}
-											alt={
-												user.displayName ||
-												"User avatar"
-											}
+											src={undefined}
+											alt={user.username || "User avatar"}
 										/>
 										<AvatarFallback>
 											{(
-												user.displayName?.[0] || "U"
+												user.username?.[0] || "U"
 											).toUpperCase()}
 										</AvatarFallback>
 									</Avatar>
@@ -163,18 +160,15 @@ const Header = () => {
 										>
 											<Avatar>
 												<AvatarImage
-													src={
-														user.photoURL ||
-														undefined
-													}
+													src={undefined}
 													alt={
-														user.displayName ||
+														user.username ||
 														"User avatar"
 													}
 												/>
 												<AvatarFallback>
 													{(
-														user.displayName?.[0] ||
+														user.username?.[0] ||
 														"U"
 													).toUpperCase()}
 												</AvatarFallback>

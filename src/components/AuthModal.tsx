@@ -13,6 +13,7 @@ import {
 import { toast } from "sonner";
 import Image from "next/image";
 import { siteName } from "@/lib/config";
+import logger from "@/lib/logger";
 
 interface AuthModalProps {
 	isOpen: boolean;
@@ -34,7 +35,7 @@ export default function AuthModal({
 				window.location.href = redirectPath;
 			}
 		} catch (error) {
-			console.error("Authentication error:", error);
+			logger.error("Authentication error:", error);
 			toast.error("Authentication failed", {
 				description: "There was a problem signing you in.",
 			});
