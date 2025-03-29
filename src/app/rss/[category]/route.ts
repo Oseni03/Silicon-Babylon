@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { getArticlesByCategory, getAllCategories } from "@/lib/db";
 import { siteName, siteUrl } from "@/lib/config";
 import { escapeXml, stripHtml } from "@/lib/utils/xml";
@@ -11,9 +11,9 @@ export async function generateStaticParams() {
 }
 
 export async function GET(
-	request: Request,
+	request: NextRequest,
 	{ params }: { params: { category: string } }
-) {
+): Promise<NextResponse> {
 	try {
 		const { category } = await Promise.resolve(params);
 		const articles = await getArticlesByCategory(category);
