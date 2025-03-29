@@ -1,0 +1,35 @@
+import React from 'react'
+import ArticleCard from './ArticleCard'
+import { type Article } from '@/types/types'
+
+const ArticlesGrid = ({ filteredArticles }: { filteredArticles: Article[] }) => {
+    return (
+        < div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" >
+            {
+                filteredArticles.length > 0 ? (
+                    filteredArticles.map((article, index) => (
+                        <ArticleCard
+                            key={`${article.slug}-${index}`}
+                            title={article.title}
+                            excerpt={article.content.substring(0, 200) + "..."}
+                            date={article.publishedAt.toString()}
+                            category={article.categories
+                                .map((category) => category.name)
+                                .join(", ")}
+                            index={index}
+                            slug={article.slug}
+                            isAffiliate={article.isAffiliate}
+                            originalUrl={article.originalUrl}
+                        />
+                    ))
+                ) : (
+                    <div className="col-span-full text-center py-12">
+                        {/* ... existing no results UI code ... */}
+                    </div>
+                )
+            }
+        </ div>
+    )
+}
+
+export default ArticlesGrid

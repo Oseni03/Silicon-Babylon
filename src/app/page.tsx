@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import ArticlesList from "@/components/ArticlesList";
+import CategoryGrid from "@/components/CategoryGrid";
 import Disclaimer from "@/components/Disclaimer";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
@@ -12,6 +13,7 @@ const Page = () => {
 			<main className="flex-grow">
 				<Hero />
 				<Disclaimer />
+				<CategoryGrid />
 				<ArticlesList />
 				<CTA />
 			</main>
