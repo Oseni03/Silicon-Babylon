@@ -1,4 +1,5 @@
 import { siteUrl } from "@/lib/config";
+import { getAllCategories } from "@/lib/db";
 import { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -48,6 +49,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		},
 	];
 
+	const categories = await getAllCategories();
+
+	const categoryRssRoutes = categories.map((category) => ({
+		url: `${siteUrl}/rss/${category.slug}`,
+		lastModified: new Date(),
+		changeFrequency: "hourly" as const,
+		priority: 0.7,
+	}));
+
 	// Combine static and dynamic routes
-	return [...staticRoutes];
+	return [...staticRoutes, ...categoryRssRoutes];
 }

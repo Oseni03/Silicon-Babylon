@@ -1,22 +1,42 @@
 import { NextResponse } from "next/server";
-import { getArticles } from "@/lib/db";
+import { getArticlesByCategory, getAllCategories } from "@/lib/db";
 import { siteName, siteUrl } from "@/lib/config";
-import { type Article } from "@/types/types";
 import { escapeXml, stripHtml } from "@/lib/utils/xml";
 
-export async function GET() {
-	const articles = await getArticles();
-	const rssXml = generateRssFeed(articles);
-
-	return new NextResponse(rssXml, {
-		headers: {
-			"Content-Type": "application/rss+xml",
-			"Cache-Control": "public, max-age=3600",
-		},
-	});
+export async function generateStaticParams() {
+	const categories = await getAllCategories();
+	return categories.map((category) => ({
+		category: category.slug,
+	}));
 }
 
-function generateRssFeed(articles: Article[]): string {
+export async function GET(
+	request: Request,
+	{ params }: { params: { category: string } }
+) {
+	try {
+		const { category } = await Promise.resolve(params);
+		const articles = await getArticlesByCategory(category);
+
+		if (!articles.length) {
+			return new NextResponse("Not Found", { status: 404 });
+		}
+
+		const categoryName = articles[0]?.categories[0]?.name || category;
+		const rssXml = generateCategoryFeed(articles, categoryName);
+
+		return new NextResponse(rssXml, {
+			headers: {
+				"Content-Type": "application/rss+xml",
+				"Cache-Control": "public, max-age=3600",
+			},
+		});
+	} catch (error) {
+		return new NextResponse("Internal Server Error", { status: 500 });
+	}
+}
+
+function generateCategoryFeed(articles: any[], categoryName: string): string {
 	const latestPost = articles[0];
 	const lastBuildDate = new Date(
 		latestPost?.publishedAt || new Date()
@@ -25,13 +45,13 @@ function generateRssFeed(articles: Article[]): string {
 	return `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
   <channel>
-    <title>${escapeXml(siteName)}</title>
-    <link>${escapeXml(siteUrl)}</link>
-    <description>Satirical takes on the latest tech news and trends</description>
+    <title>${escapeXml(`${siteName} - ${categoryName}`)}</title>
+    <link>${escapeXml(`${siteUrl}/archive?category=${categoryName}`)}</link>
+    <description>Satirical takes on ${categoryName} news and trends</description>
     <language>en</language>
     <lastBuildDate>${lastBuildDate}</lastBuildDate>
     <atom:link href="${escapeXml(
-		`${siteUrl}/rss.xml`
+		`${siteUrl}/rss/${categoryName}.xml`
 	)}" rel="self" type="application/rss+xml"/>
     ${articles
 		.map((article) => {
