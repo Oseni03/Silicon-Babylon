@@ -1,17 +1,10 @@
 import { NextResponse } from "next/server";
-import { getArticlesByCategory, getAllCategories } from "@/lib/db";
+import { getArticlesByCategory } from "@/lib/db"; // Removed getAllCategories since it's not needed
 import { siteName, siteUrl } from "@/lib/config";
 import { escapeXml, stripHtml } from "@/lib/utils/xml";
 
-export const dynamic = "force-dynamic";
-export const dynamicParams = true;
-
-export async function generateStaticParams() {
-	const categories = await getAllCategories();
-	return categories.map((category) => ({
-		category: category.slug,
-	}));
-}
+export const dynamic = "force-dynamic"; // Keep this for dynamic rendering
+export const dynamicParams = true; // Allow all dynamic params (no pre-defined list)
 
 type Props = {
 	params: {
@@ -24,14 +17,14 @@ export async function GET(
 	{ params }: Props
 ): Promise<Response> {
 	try {
-		const articles = await getArticlesByCategory(params.category);
+		const { category } = await params; // Destructure params safely
+		const articles = await getArticlesByCategory(category);
 
 		if (!articles.length) {
 			return new NextResponse("Not Found", { status: 404 });
 		}
 
-		const categoryName =
-			articles[0]?.categories[0]?.name || params.category;
+		const categoryName = articles[0]?.categories[0]?.name || category;
 		const rssXml = generateCategoryFeed(articles, categoryName);
 
 		return new NextResponse(rssXml, {
@@ -41,6 +34,7 @@ export async function GET(
 			},
 		});
 	} catch (error) {
+		console.error("Error generating RSS feed:", error);
 		return new NextResponse("Internal Server Error", { status: 500 });
 	}
 }
