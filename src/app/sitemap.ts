@@ -40,6 +40,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 			changeFrequency: "monthly" as const,
 			priority: 0.3,
 		},
+		{
+			url: `${siteUrl}/rss.xml`,
+			lastModified: new Date(),
+			changeFrequency: "hourly" as const,
+			priority: 0.8,
+		},
 	];
 
 	// Combine static and dynamic routes

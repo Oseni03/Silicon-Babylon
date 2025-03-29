@@ -75,6 +75,12 @@ function RootLayout({ children }: PropsWithChildren) {
 						gtag('config', 'G-SQ27NNXZ74');
 					`}
 				</Script>
+				<link
+					rel="alternate"
+					type="application/rss+xml"
+					title={`${siteName} RSS Feed`}
+					href="/rss.xml"
+				/>
 			</head>
 			<body className={inter.className}>
 				<ThemeProvider>
