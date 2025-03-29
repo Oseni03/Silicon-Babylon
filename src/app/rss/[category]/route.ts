@@ -2,47 +2,40 @@ import { NextResponse } from "next/server";
 import { getArticlesByCategory } from "@/lib/db";
 import { siteName, siteUrl } from "@/lib/config";
 import { escapeXml, stripHtml } from "@/lib/utils/xml";
+import { Article } from "@/types/types"; // Assuming this is your Article type
 
-// Force this route to be fully dynamic (no static generation)
+// Force dynamic rendering for this route
 export const dynamic = "force-dynamic";
-// Allow all dynamic category slugs
-export const dynamicParams = true;
 
-// Type for the params object in a dynamic route
-interface RouteParams {
-	params: {
-		category: string;
-	};
-}
+export async function GET(_request: Request, { params }) {
+	const { category } = await params;
+	const articles = await getArticlesByCategory(category);
 
-export async function GET(
-	_request: Request,
-	{ params }: RouteParams // Use RouteParams instead of Props
-): Promise<Response> {
-	try {
-		const { category } = await params; // Destructure params safely
-		const articles = await getArticlesByCategory(category);
-
-		if (!articles.length) {
-			return new NextResponse("Not Found", { status: 404 });
-		}
-
-		const categoryName = articles[0]?.categories[0]?.name || category;
-		const rssXml = generateCategoryFeed(articles, categoryName);
-
-		return new NextResponse(rssXml, {
+	if (!articles.length) {
+		return new NextResponse("Not Found", {
+			status: 404,
 			headers: {
-				"Content-Type": "application/rss+xml",
-				"Cache-Control": "public, max-age=3600",
+				"Content-Type": "text/plain",
 			},
 		});
-	} catch (error) {
-		console.error("Error generating RSS feed:", error);
-		return new NextResponse("Internal Server Error", { status: 500 });
 	}
+
+	const categoryName = articles[0]?.categories[0]?.name || category;
+	const rssXml = generateCategoryFeed(articles, categoryName);
+
+	return new NextResponse(rssXml, {
+		status: 200,
+		headers: {
+			"Content-Type": "application/rss+xml;charset=utf-8",
+			"Cache-Control": "public, max-age=3600",
+		},
+	});
 }
 
-function generateCategoryFeed(articles: any[], categoryName: string): string {
+function generateCategoryFeed(
+	articles: Article[],
+	categoryName: string
+): string {
 	const latestPost = articles[0];
 	const lastBuildDate = new Date(
 		latestPost?.publishedAt || new Date()

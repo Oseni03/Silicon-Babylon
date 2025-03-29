@@ -1,4 +1,3 @@
-import { NextResponse } from "next/server";
 import { getArticles } from "@/lib/db";
 import { siteName, siteUrl } from "@/lib/config";
 import { type Article } from "@/types/types";
@@ -8,9 +7,9 @@ export async function GET() {
 	const articles = await getArticles();
 	const rssXml = generateRssFeed(articles);
 
-	return new NextResponse(rssXml, {
+	return new Response(rssXml, {
 		headers: {
-			"Content-Type": "application/rss+xml",
+			"Content-Type": "application/xml;charset=utf-8",
 			"Cache-Control": "public, max-age=3600",
 		},
 	});
