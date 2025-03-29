@@ -1,20 +1,23 @@
 import { NextResponse } from "next/server";
-import { getArticlesByCategory } from "@/lib/db"; // Removed getAllCategories since it's not needed
+import { getArticlesByCategory } from "@/lib/db";
 import { siteName, siteUrl } from "@/lib/config";
 import { escapeXml, stripHtml } from "@/lib/utils/xml";
 
-export const dynamic = "force-dynamic"; // Keep this for dynamic rendering
-export const dynamicParams = true; // Allow all dynamic params (no pre-defined list)
+// Force this route to be fully dynamic (no static generation)
+export const dynamic = "force-dynamic";
+// Allow all dynamic category slugs
+export const dynamicParams = true;
 
-type Props = {
+// Type for the params object in a dynamic route
+interface RouteParams {
 	params: {
 		category: string;
 	};
-};
+}
 
 export async function GET(
 	_request: Request,
-	{ params }: Props
+	{ params }: RouteParams // Use RouteParams instead of Props
 ): Promise<Response> {
 	try {
 		const { category } = await params; // Destructure params safely
