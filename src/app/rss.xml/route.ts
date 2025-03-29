@@ -9,7 +9,7 @@ export async function GET() {
 
 	return new NextResponse(rssXml, {
 		headers: {
-			"Content-Type": "application/xml",
+			"Content-Type": "application/rss+xml",
 			"Cache-Control": "public, max-age=3600",
 		},
 	});
@@ -35,7 +35,7 @@ function generateRssFeed(articles: Article[]): string {
 	).toUTCString();
 
 	return `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
   <channel>
     <title>${escapeXml(siteName)}</title>
     <link>${escapeXml(siteUrl)}</link>
@@ -52,6 +52,9 @@ function generateRssFeed(articles: Article[]): string {
 				plainTextContent.length > 500
 					? plainTextContent.substring(0, 497) + "..."
 					: plainTextContent;
+			const imageUrl = `${siteUrl}/api/og?title=${encodeURIComponent(
+				article.title
+			)}`;
 
 			return `
     <item>
@@ -62,6 +65,13 @@ function generateRssFeed(articles: Article[]): string {
 		)}</guid>
       <pubDate>${new Date(article.publishedAt).toUTCString()}</pubDate>
       <description>${escapeXml(summary)}</description>
+      <media:content 
+        url="${escapeXml(imageUrl)}"
+        medium="image"
+        type="image/png"
+        width="1000"
+        height="1500"
+      />
       ${article.categories
 			.map((cat) => `<category>${escapeXml(cat.name)}</category>`)
 			.join("")}
