@@ -1,7 +1,10 @@
-import { NextResponse, NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import { getArticlesByCategory, getAllCategories } from "@/lib/db";
 import { siteName, siteUrl } from "@/lib/config";
 import { escapeXml, stripHtml } from "@/lib/utils/xml";
+
+export const dynamic = "force-dynamic";
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
 	const categories = await getAllCategories();
@@ -10,19 +13,25 @@ export async function generateStaticParams() {
 	}));
 }
 
+type Props = {
+	params: {
+		category: string;
+	};
+};
+
 export async function GET(
-	request: NextRequest,
-	{ params }: { params: { category: string } }
-): Promise<NextResponse> {
+	_request: Request,
+	{ params }: Props
+): Promise<Response> {
 	try {
-		const { category } = await Promise.resolve(params);
-		const articles = await getArticlesByCategory(category);
+		const articles = await getArticlesByCategory(params.category);
 
 		if (!articles.length) {
 			return new NextResponse("Not Found", { status: 404 });
 		}
 
-		const categoryName = articles[0]?.categories[0]?.name || category;
+		const categoryName =
+			articles[0]?.categories[0]?.name || params.category;
 		const rssXml = generateCategoryFeed(articles, categoryName);
 
 		return new NextResponse(rssXml, {
