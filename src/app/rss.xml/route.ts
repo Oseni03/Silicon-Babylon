@@ -15,6 +15,19 @@ export async function GET() {
 	});
 }
 
+function escapeXml(unsafe: string): string {
+	return unsafe
+		.replace(/&/g, "&amp;")
+		.replace(/</g, "&lt;")
+		.replace(/>/g, "&gt;")
+		.replace(/"/g, "&quot;")
+		.replace(/'/g, "&apos;");
+}
+
+function stripHtml(html: string): string {
+	return html.replace(/<[^>]*>/g, "");
+}
+
 function generateRssFeed(articles: Article[]): string {
 	const latestPost = articles[0];
 	const lastBuildDate = new Date(
@@ -24,26 +37,36 @@ function generateRssFeed(articles: Article[]): string {
 	return `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>${siteName}</title>
-    <link>${siteUrl}</link>
+    <title>${escapeXml(siteName)}</title>
+    <link>${escapeXml(siteUrl)}</link>
     <description>Satirical takes on the latest tech news and trends</description>
     <language>en</language>
     <lastBuildDate>${lastBuildDate}</lastBuildDate>
-    <atom:link href="${siteUrl}/rss.xml" rel="self" type="application/rss+xml"/>
+    <atom:link href="${escapeXml(
+		`${siteUrl}/rss.xml`
+	)}" rel="self" type="application/rss+xml"/>
     ${articles
-		.map(
-			(article) => `
+		.map((article) => {
+			const plainTextContent = stripHtml(article.content);
+			const summary =
+				plainTextContent.length > 500
+					? plainTextContent.substring(0, 497) + "..."
+					: plainTextContent;
+
+			return `
     <item>
-      <title><![CDATA[${article.title}]]></title>
-      <link>${siteUrl}/article/${article.slug}</link>
-      <guid isPermaLink="true">${siteUrl}/article/${article.slug}</guid>
+      <title>${escapeXml(article.title)}</title>
+      <link>${escapeXml(`${siteUrl}/article/${article.slug}`)}</link>
+      <guid isPermaLink="true">${escapeXml(
+			`${siteUrl}/article/${article.slug}`
+		)}</guid>
       <pubDate>${new Date(article.publishedAt).toUTCString()}</pubDate>
-      <description><![CDATA[${article.content}]]></description>
+      <description>${escapeXml(summary)}</description>
       ${article.categories
-			.map((cat) => `<category>${cat.name}</category>`)
+			.map((cat) => `<category>${escapeXml(cat.name)}</category>`)
 			.join("")}
-    </item>`
-		)
+    </item>`;
+		})
 		.join("")}
   </channel>
 </rss>`;
