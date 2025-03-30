@@ -57,6 +57,7 @@ function RootLayout({ children }: PropsWithChildren) {
 					name="p:domain_verify"
 					content="60456aee5155dfa58c050d796aa4a524"
 				/>
+				<meta name="p:domain_verify" content="7a8310954ab418e7c719b29e9dc972e3" />
 				<Script
 					async
 					src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4433921260204256"
