@@ -2,8 +2,6 @@ import Parser from "rss-parser";
 import { OpenAI } from "openai";
 import { generateSlug } from "./utils";
 import logger from "./logger";
-import { postTweet } from "./twitter";
-// import { postToFacebook } from "./facebook";
 import {
 	type TechCrunchItem,
 	type SatiricalResult,
@@ -242,42 +240,9 @@ async function fetchAndProcessFeeds() {
 							originalTitle: item.title,
 						});
 
-						try {
-							// Make tweet posting optional - if it fails, we still consider the article processing successful
-							await postTweet(
-								satirical.title,
-								slug,
-								satirical.content
-							).catch((error) => {
-								logger.warn("Twitter posting skipped", {
-									title: satirical.title,
-									error: error?.message,
-								});
-							});
-
-							logger.info("Article processed successfully", {
-								title: satirical.title,
-								tweetAttempted: true,
-							});
-						} catch (twitterError) {
-							logger.warn(
-								"Twitter posting failed but article was saved",
-								{
-									title: satirical.title,
-									error:
-										twitterError instanceof Error
-											? twitterError.message
-											: "Unknown error occurred",
-								}
-							);
-						}
-
-						logger.info(
-							"Successfully processed article and posted to Twitter",
-							{
-								title: satirical.title,
-							}
-						);
+						logger.info("Successfully processed article", {
+							title: satirical.title,
+						});
 					} catch (error) {
 						logger.error("Error processing article", {
 							title: item.title,

@@ -18,10 +18,7 @@ export async function generateStaticParams(): Promise<{ slug: string }[]> {
 		}));
 }
 
-export async function GET(
-	request: Request,
-	{ params }: { params: { slug: string } }
-) {
+export async function GET(request: Request, { params }) {
 	try {
 		const { slug } = await params;
 		const articles = await getArticlesByCategory(slug);
