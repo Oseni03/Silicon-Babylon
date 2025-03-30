@@ -8,6 +8,8 @@ export async function GET(request: NextRequest) {
 	try {
 		const { searchParams } = new URL(request.url);
 		const title = searchParams.get("title");
+		const width = parseInt(searchParams.get("width") ?? "1000", 10);
+		const height = parseInt(searchParams.get("height") ?? "1500", 10);
 
 		if (!title) {
 			return new Response("Missing title parameter", { status: 400 });
@@ -59,8 +61,8 @@ export async function GET(request: NextRequest) {
 				</div>
 			),
 			{
-				width: 1000,
-				height: 1500,
+				width,
+				height,
 			}
 		);
 	} catch (e) {

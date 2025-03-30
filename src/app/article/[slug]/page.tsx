@@ -1,7 +1,7 @@
 import { getArticleBySlug, getArticles, getRelatedArticles } from "@/lib/db";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { siteKeywords, siteName } from "@/lib/config";
+import { siteKeywords, siteName, siteUrl } from "@/lib/config";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ArticleView from "@/components/ArticleView";
@@ -27,6 +27,10 @@ export async function generateMetadata({ params }): Promise<Metadata> {
 		};
 	}
 
+	const ogImageUrl = `${siteUrl}/api/og?title=${encodeURIComponent(
+		article.title
+	)}&width=1200&height=630`;
+
 	return {
 		title: `${article.title}`,
 		description: article.content.substring(0, 160),
@@ -36,6 +40,16 @@ export async function generateMetadata({ params }): Promise<Metadata> {
 			...siteKeywords,
 			siteName,
 		].join(", "),
+		openGraph: {
+			title: article.title,
+			description: article.content.substring(0, 160),
+			images: [{
+				url: ogImageUrl.toString(),
+				width: 1200,
+				height: 630,
+				alt: article.title
+			}]
+		}
 	};
 }
 

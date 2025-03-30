@@ -37,3 +37,19 @@ export function formatDate(date: Date | string) {
 		minute: "numeric",
 	});
 }
+
+export async function buildSitemapXML(entries: any[]) {
+	let xml = '<?xml version="1.0" encoding="UTF-8"?>';
+	xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+
+	for (const entry of entries) {
+		xml += "<url>";
+		xml += `<loc>${entry.url}</loc>`;
+		xml += `<lastmod>${entry.lastModified}</lastmod>`;
+		xml += `<changefreq>${entry.changeFrequency}</changefreq>`;
+		xml += `<priority>${entry.priority}</priority>`;
+		xml += "</url>";
+	}
+	xml += "</urlset>";
+	return xml;
+}

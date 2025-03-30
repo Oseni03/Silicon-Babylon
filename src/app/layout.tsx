@@ -27,7 +27,10 @@ export const metadata: Metadata = {
 	robots: "index, follow",
 	authors: [{ name: "Oseni03", url: "https://x.com/Oseni03" }],
 	openGraph: {
-		title: `${siteName} - funny Tech Insights`,
+		title: {
+			template: `%s | ${siteName}`,
+			default: `${siteName} - Funny Tech News`,
+		},
 		description:
 			"Explore commentary and humorous insights inspired by real tech headlines.",
 		url: siteUrl,
@@ -36,7 +39,10 @@ export const metadata: Metadata = {
 	},
 	twitter: {
 		card: "summary_large_image",
-		title: `${siteName} - Funny Tech Insights`,
+		title: {
+			template: `%s | ${siteName}`,
+			default: `${siteName} - Funny Tech Insights`,
+		},
 		description:
 			"Stay ahead with commentary and humorous insights inspired by real tech headlines.",
 		images: "/og-image.png",

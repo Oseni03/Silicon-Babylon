@@ -1,16 +1,17 @@
 import { NextResponse } from "next/server";
 import { siteUrl } from "@/lib/config";
 import { getAllCategories } from "@/lib/db";
-import { MetadataRoute } from "next";
+import { buildSitemapXML } from "@/lib/utils";
 import logger from "@/lib/logger";
 
 async function generateSitemaps() {
 	const categories = await getAllCategories();
-	const sitemaps = categories.map((category) => ({
-		id: category.slug,
+	return categories.map((category) => ({
 		url: `${siteUrl}/archive/sitemap/${category.slug}.xml`,
+		lastModified: new Date().toISOString(),
+		changeFrequency: "daily",
+		priority: 0.8,
 	}));
-	return sitemaps;
 }
 
 export async function GET() {
@@ -18,8 +19,13 @@ export async function GET() {
 		const dynamicSitemaps = await generateSitemaps();
 
 		const sitemaps = [
-			`${siteUrl}/sitemap.xml`,
-			...dynamicSitemaps.map((sitemap) => sitemap.url),
+			{
+				url: `${siteUrl}/sitemap.xml`,
+				lastModified: new Date().toISOString(),
+				changeFrequency: "daily",
+				priority: 0.8,
+			},
+			...dynamicSitemaps,
 		];
 
 		if (!sitemaps.length) {
@@ -27,9 +33,9 @@ export async function GET() {
 			return new NextResponse(null, { status: 404 });
 		}
 
-		logger.info("generated sitemaps: ", sitemaps);
+		logger.info("Sitemap generated");
 
-		const sitemapIndexXML = await buildSitemapIndex(sitemaps);
+		const sitemapIndexXML = await buildSitemapXML(sitemaps);
 
 		return new NextResponse(sitemapIndexXML, {
 			headers: {
@@ -41,19 +47,4 @@ export async function GET() {
 		logger.error("Error generating sitemap index: ", error);
 		return NextResponse.error();
 	}
-}
-
-async function buildSitemapIndex(sitemaps) {
-	const currentDate = new Date().toISOString();
-	let xml = '<?xml version="1.0" encoding="UTF-8"?>';
-	xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
-
-	for (const sitemap of sitemaps) {
-		xml += "<url>";
-		xml += `<loc>${sitemap}</loc>`;
-		xml += `<lastmod>${currentDate}</lastmod>`;
-		xml += "</url>";
-	}
-	xml += "</urlset>";
-	return xml;
 }

@@ -131,7 +131,7 @@ export async function createContactMessage(data: {
 export async function getRelatedArticles(
 	articleId: string,
 	categoryIds: string[],
-	limit = 3
+	limit = 5
 ) {
 	return prisma.article.findMany({
 		where: {
