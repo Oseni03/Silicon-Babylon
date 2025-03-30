@@ -13,10 +13,25 @@ export async function generateStaticParams() {
   }));
 }
 
+const unslugify = (slug: string): string => {
+  // Special cases
+  const specialCases: Record<string, string> = {
+    'ai': 'AI'
+  };
+
+  if (specialCases[slug]) {
+    return specialCases[slug];
+  }
+
+  return slug
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+};
+
 export async function generateMetadata({ params }): Promise<Metadata> {
-  const { slug } = await params
-  const articles = await getArticlesByCategory(slug);
-  const categoryName = articles[0]?.categories[0]?.name || slug;
+  const { slug } = await params;
+  const categoryName = unslugify(slug);
 
   return {
     title: `${categoryName} Articles - ${siteName}`,
@@ -32,12 +47,12 @@ const Page = async ({ params }) => {
     notFound();
   }
 
-  const categoryName = articles[0]?.categories[0]?.name || slug;
+  const categoryName = unslugify(slug);
 
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-grow pt-24">
+      <main className="flex-grow pt-24 pb-16">
         <section className="container mx-auto px-6">
           <h1 className="text-4xl font-medium tracking-tight text-center mb-4">
             {categoryName} Articles

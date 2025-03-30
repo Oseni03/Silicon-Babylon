@@ -21,7 +21,7 @@ export interface ArticleCardProps {
 	title: string;
 	excerpt: string;
 	date: string;
-	category: string;
+	categories: Category[];
 	index: number;
 	slug: string;
 	isAffiliate?: boolean;

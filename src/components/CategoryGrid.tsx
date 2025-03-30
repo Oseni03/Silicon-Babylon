@@ -13,7 +13,7 @@ const categories: Category[] = [
     },
     {
         name: "Crypto Currency",
-        slug: "cryptocurrency"
+        slug: "crypto"
     },
     {
         name: "Fundraising",
@@ -26,6 +26,18 @@ const categories: Category[] = [
     {
         name: "Media Entertainment",
         slug: "media-entertainment"
+    },
+    {
+        name: "Startups",
+        slug: "startups"
+    },
+    {
+        name: "Apps",
+        slug: "apps"
+    },
+    {
+        name: "Enterprise",
+        slug: "enterprise"
     },
 ];
 

@@ -13,9 +13,7 @@ const ArticlesGrid = ({ filteredArticles }: { filteredArticles: Article[] }) => 
                             title={article.title}
                             excerpt={article.content.substring(0, 200) + "..."}
                             date={article.publishedAt.toString()}
-                            category={article.categories
-                                .map((category) => category.name)
-                                .join(", ")}
+                            categories={article.categories}
                             index={index}
                             slug={article.slug}
                             isAffiliate={article.isAffiliate}

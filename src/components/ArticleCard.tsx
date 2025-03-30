@@ -9,7 +9,7 @@ const ArticleCard = ({
 	title,
 	excerpt,
 	date,
-	category,
+	categories = [],
 	index,
 	slug,
 	isAffiliate,
@@ -64,16 +64,33 @@ const ArticleCard = ({
 		>
 			<div className="p-6 space-y-4">
 				<div className="flex items-center justify-between mb-3">
-					<span
-						className={cn(
-							"text-xs font-medium px-2.5 py-0.5 rounded-full",
-							isAffiliate
-								? "bg-primary/10 text-primary"
-								: "bg-secondary text-secondary-foreground"
+					<div className="flex gap-2 flex-wrap">
+						{categories?.length > 0 ? (
+							categories.map((cat) => (
+								<Link
+									key={cat.slug}
+									href={`/category/${cat.slug}`}
+									className={cn(
+										"text-xs font-medium px-2.5 py-0.5 rounded-full hover:opacity-80 transition-opacity",
+										isAffiliate
+											? "bg-primary/10 text-primary"
+											: "bg-secondary text-secondary-foreground"
+									)}
+								>
+									{cat.name}
+								</Link>
+							))
+						) : (
+							<span className={cn(
+								"text-xs font-medium px-2.5 py-0.5 rounded-full",
+								isAffiliate
+									? "bg-primary/10 text-primary"
+									: "bg-secondary text-secondary-foreground"
+							)}>
+								Uncategorized
+							</span>
 						)}
-					>
-						{category}
-					</span>
+					</div>
 					<span className="text-xs text-muted-foreground">
 						{formattedDate}
 					</span>

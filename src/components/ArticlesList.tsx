@@ -67,9 +67,7 @@ const ArticlesList = () => {
 						title={article.title}
 						excerpt={article.content.substring(0, 200) + "..."}
 						date={article.publishedAt.toISOString()}
-						category={
-							article.categories[0]?.name || "Uncategorized"
-						}
+						categories={article.categories}
 						index={index}
 						isAffiliate={article.isAffiliate}
 						originalUrl={article.originalUrl}
