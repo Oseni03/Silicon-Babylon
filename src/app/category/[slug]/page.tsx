@@ -1,7 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { getArticlesByCategory, getAllCategories } from "@/lib/db";
-import { siteName } from "@/lib/config";
+import { siteName, siteKeywords } from "@/lib/config";
 import { notFound } from "next/navigation";
 import { type Metadata } from "next";
 import ArticlesGrid from "@/components/ArticlesGrid";
@@ -32,10 +32,38 @@ const unslugify = (slug: string): string => {
 export async function generateMetadata({ params }): Promise<Metadata> {
   const { slug } = await params;
   const categoryName = unslugify(slug);
+  const title = `${categoryName} News`;
+  const description = `Explore our curated collection of satirical tech news about ${categoryName}. Get your daily dose of tech humor and insights.`;
+  const keywords = [
+    categoryName,
+    "satirical tech news",
+    "tech humor",
+    `${categoryName} articles`,
+    `${categoryName} news`,
+    `${categoryName} funny articles`,
+    `${categoryName} funny news`,
+    `${categoryName} satire articles`,
+    `${categoryName} satire news`,
+    `${categoryName} newsletter`,
+    "tech satire",
+    ...siteKeywords,
+  ].join(", ");
 
   return {
-    title: `${categoryName} Articles - ${siteName}`,
-    description: `Browse our collection of satirical articles about ${categoryName}`,
+    title,
+    description,
+    keywords,
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+      siteName,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    }
   };
 }
 
@@ -55,6 +83,9 @@ const Page = async ({ params }) => {
       <main className="flex-grow pt-24 pb-16">
         <section className="container mx-auto px-6">
           <h1 className="text-4xl font-medium tracking-tight text-center mb-4">
+            {categoryName} News
+          </h1>
+          <h1 className="hidden">
             {categoryName} Articles
           </h1>
           <p className="text-muted-foreground text-center mb-12">

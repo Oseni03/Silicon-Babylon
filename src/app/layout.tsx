@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 		default: `${siteName} - Funny Tech News`,
 	},
 	description:
-		"Stay ahead with commentary and humorous insights inspired by real tech headlines. Explore the lighter side of technology today.",
+		"Stay ahead with commentary and humorous insights inspired by real tech news headlines. Explore the lighter side of technology today.",
 	keywords: `${siteKeywords.join(
 		", "
 	)}, tech humor, funny tech insights, future of technology`,
