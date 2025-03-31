@@ -8,6 +8,8 @@ import {
 	type Category,
 } from "@/types/types";
 import { createArticle, createCategory, getArticleByOriginalUrl } from "./db";
+import { postToBluesky, createSession } from "./social/bluesky";
+import { type SessionResponse } from "./social/bluesky";
 
 const parser = new Parser();
 const openai = new OpenAI({
@@ -156,6 +158,15 @@ function isToday(date: Date): boolean {
 async function fetchAndProcessFeeds() {
 	try {
 		logger.info("Starting feed processing");
+		// Create Bluesky session once for all articles
+		let blueskySession: SessionResponse;
+		try {
+			blueskySession = await createSession();
+			logger.info("Successfully created Bluesky session");
+		} catch (error) {
+			logger.error("Failed to create Bluesky session", { error });
+		}
+
 		const TECHCRUNCH_FEEDS = [
 			"https://techcrunch.com/category/commerce/feed/",
 			"https://techcrunch.com/category/artificial-intelligence/feed/",
@@ -229,16 +240,38 @@ async function fetchAndProcessFeeds() {
 						);
 
 						const slug = generateSlug(satirical.title);
-						const article = await createArticle({
-							title: satirical.title,
-							slug,
-							content: satirical.content,
-							keywords: satirical.keywords,
-							publishedAt: new Date(item.isoDate),
-							categories: categories,
-							originalUrl: item.link,
-							originalTitle: item.title,
-						});
+						await Promise.all(
+							[
+								createArticle({
+									title: satirical.title,
+									slug,
+									content: satirical.content,
+									keywords: satirical.keywords,
+									publishedAt: new Date(item.isoDate),
+									categories: categories,
+									originalUrl: item.link,
+									originalTitle: item.title,
+								}),
+								// Post to Bluesky if session is available
+								blueskySession &&
+									postToBluesky(
+										satirical.title,
+										satirical.content
+											.replace(/<[^>]*>/g, "")
+											.substring(0, 300) + "...",
+										`${process.env.NEXT_PUBLIC_SITE_URL}/article/${slug}`,
+										blueskySession
+									).catch((blueskyError) => {
+										logger.error(
+											"Error posting to Bluesky",
+											{
+												title: satirical.title,
+												error: blueskyError,
+											}
+										);
+									}),
+							].filter(Boolean)
+						);
 
 						logger.info("Successfully processed article", {
 							title: satirical.title,

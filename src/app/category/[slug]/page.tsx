@@ -45,8 +45,7 @@ export async function generateMetadata({ params }): Promise<Metadata> {
     `${categoryName} satire articles`,
     `${categoryName} satire news`,
     `${categoryName} newsletter`,
-    "tech satire",
-    ...siteKeywords,
+    ...siteKeywords.splice(0, 5), // Limit to 5 keywords
   ].join(", ");
 
   return {
