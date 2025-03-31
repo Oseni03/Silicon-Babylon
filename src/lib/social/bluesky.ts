@@ -191,7 +191,9 @@ export async function postToBluesky(
 		console.log("Successfully posted to Bluesky!", result);
 		return result;
 	} catch (error) {
-		console.error("Error posting to Bluesky:", error.message);
+		const errorMessage =
+			error instanceof Error ? error.message : "Unknown error occurred";
+		console.error("Error posting to Bluesky:", errorMessage);
 		throw error;
 	}
 }
