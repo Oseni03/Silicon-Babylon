@@ -9,6 +9,7 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
 			attribute="class"
 			defaultTheme="system"
 			enableSystem
+			storageKey="theme"
 			{...props}
 		>
 			{children}
