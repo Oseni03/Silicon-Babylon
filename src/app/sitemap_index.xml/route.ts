@@ -7,7 +7,7 @@ import logger from "@/lib/logger";
 async function generateSitemaps() {
 	const categories = await getAllCategories();
 	return categories.map((category) => ({
-		url: `${siteUrl}/archive/sitemap/${category.slug}.xml`,
+		url: `${siteUrl}/category/${category.slug}/sitemap.xml`,
 		lastModified: new Date().toISOString(),
 		changeFrequency: "daily",
 		priority: 0.8,
