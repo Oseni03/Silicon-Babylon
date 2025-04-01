@@ -17,14 +17,14 @@ const ArticleView = ({ article, relatedArticles }: ArticleViewProps) => {
 			<article className="container mx-auto px-6 py-16">
 				<div className="max-w-3xl mx-auto">
 					{/* Top disclaimer */}
-					<div className="mb-10 p-4 border border-border rounded-lg bg-secondary/30">
+					{/* <div className="mb-10 p-4 border border-border rounded-lg bg-secondary/30">
 						<p className="text-sm text-muted-foreground text-center">
 							This is AI-generated satirical content inspired by
 							real tech news. It aims to entertain and provide a
 							humorous perspective while staying grounded in
 							truth.
 						</p>
-					</div>
+					</div> */}
 
 					{/* Article header */}
 					<header className="mb-10 space-y-6">
@@ -188,9 +188,9 @@ const ArticleView = ({ article, relatedArticles }: ArticleViewProps) => {
 			<CTA />
 
 			{/* Bottom disclaimer */}
-			<div className="container mx-auto px-6 pb-16">
+			{/* <div className="container mx-auto px-6 pb-16">
 				<Disclaimer />
-			</div>
+			</div> */}
 		</>
 	);
 };

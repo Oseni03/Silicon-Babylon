@@ -25,6 +25,7 @@ const Hero = () => {
 
 	return (
 		<section
+			id="hero"
 			ref={heroRef}
 			className="relative h-screen flex items-center justify-center overflow-hidden transition-all duration-300 ease-out"
 		>
