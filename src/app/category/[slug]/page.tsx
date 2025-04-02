@@ -5,6 +5,7 @@ import { siteName, siteKeywords } from "@/lib/config";
 import { notFound } from "next/navigation";
 import { type Metadata } from "next";
 import ArticlesGrid from "@/components/ArticlesGrid";
+import CTA from "@/components/CTA";
 
 export async function generateStaticParams() {
   const categories = await getAllCategories();
@@ -94,6 +95,7 @@ const Page = async ({ params }) => {
           <ArticlesGrid filteredArticles={articles} />
         </section>
       </main>
+      <CTA />
       <Footer />
     </div>
   );

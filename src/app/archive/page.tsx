@@ -4,6 +4,7 @@ import { getArticles, getAllCategories } from "@/lib/db";
 import { siteName } from "@/lib/config";
 import { getRandomAffiliate } from "@/lib/affiliates";
 import ArticleArchive from "@/components/ArticleArchive";
+import CTA from "@/components/CTA";
 
 export const metadata = {
 	title: `Archive - ${siteName}`,
@@ -33,6 +34,7 @@ const Page = async () => {
 					categories={categoriesData}
 				/>
 			</main>
+			<CTA />
 			<Footer />
 		</div>
 	);

@@ -6,9 +6,9 @@ import { toast } from "sonner";
 import { siteName } from "@/lib/config";
 
 const CTA = () => {
-	const [isVisible, setIsVisible] = useState(false);
-	const [isSticky, setIsSticky] = useState(true);
-	const [isInHero, setIsInHero] = useState(true);
+	const [isVisible, setIsVisible] = useState(true); // Changed to true by default
+	const [isSticky, setIsSticky] = useState(false); // Changed to false by default
+	const [isInHero, setIsInHero] = useState(false); // Changed to false by default
 	const ctaRef = useRef<HTMLDivElement>(null);
 	const heroRef = useRef<HTMLDivElement>(null);
 	const [email, setEmail] = useState("");
@@ -23,9 +23,6 @@ const CTA = () => {
 		const observer = new IntersectionObserver(
 			(entries) => {
 				entries.forEach(entry => {
-					if (entry.target === heroRef.current) {
-						setIsInHero(entry.isIntersecting);
-					}
 					if (entry.target === ctaRef.current) {
 						setIsVisible(entry.isIntersecting);
 						setIsSticky(!entry.isIntersecting);
@@ -43,18 +40,9 @@ const CTA = () => {
 			observer.observe(ctaRef.current);
 		}
 
-		const heroElement = document.getElementById('hero');
-		if (heroElement) {
-			heroRef.current = heroElement as HTMLDivElement;
-			observer.observe(heroElement);
-		}
-
 		return () => {
 			if (ctaRef.current) {
 				observer.unobserve(ctaRef.current);
-			}
-			if (heroRef.current) {
-				observer.unobserve(heroRef.current);
 			}
 		};
 	}, []);

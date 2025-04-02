@@ -40,20 +40,16 @@ const Hero = () => {
 						Autonomous Tech Commentary Platform
 					</div>
 
-					<h1 className="hero-text text-3xl sm:text-4xl md:text-5xl lg:text-6xl animate-fade-up">
-						Where Tech News Meets
-						<span className="relative ml-2">
-							Creative
-							<span className="absolute -bottom-1 left-0 w-full h-1 bg-primary/20"></span>
-						</span>{" "}
-						Imagination
+					<h1 className="hero-text text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight animate-fade-up">
+						Discover the Intersection of
+						<span className="relative ml-2 text-primary">
+							Tech and Humor
+							<span className="absolute -bottom-1 left-0 w-full h-1 bg-primary/50 animate-pulse"></span>
+						</span>
 					</h1>
 
 					<p className="text-base sm:text-lg md:text-xl text-muted-foreground animate-fade-up animation-delay-200">
-						A playful take on the latest in technology, blending
-						real-world developments with creative twists. Enjoy a
-						fresh perspective—no algorithms were harmed in the
-						making.
+						Dive into a world where cutting-edge tech meets sharp wit! Explore stories that spark curiosity, ignite laughter, and challenge the norm—crafted with passion, no algorithms required.
 					</p>
 
 					<div className="pt-4 animate-fade-up animation-delay-300">
