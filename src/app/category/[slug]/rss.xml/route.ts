@@ -1,18 +1,17 @@
-import { NextResponse } from "next/server";
 import { getArticlesByCategory } from "@/lib/db";
 import { siteName, siteUrl } from "@/lib/config";
 import { escapeXml, stripHtml } from "@/lib/utils/xml";
-import { Article } from "@/types/types"; // Assuming this is your Article type
+import { type Article } from "@/types/types";
 
 // Force dynamic rendering for this route
 export const dynamic = "force-dynamic";
 
 export async function GET(_request: Request, { params }) {
-	const { category } = await params;
-	const articles = await getArticlesByCategory(category);
+	const { slug } = await params;
+	const articles = await getArticlesByCategory(slug);
 
 	if (!articles.length) {
-		return new NextResponse("Not Found", {
+		return new Response("Not Found", {
 			status: 404,
 			headers: {
 				"Content-Type": "text/plain",
@@ -20,13 +19,11 @@ export async function GET(_request: Request, { params }) {
 		});
 	}
 
-	const categoryName = articles[0]?.categories[0]?.name || category;
-	const rssXml = generateCategoryFeed(articles, categoryName);
+	const rssXml = generateCategoryFeed(articles, slug);
 
-	return new NextResponse(rssXml, {
-		status: 200,
+	return new Response(rssXml, {
 		headers: {
-			"Content-Type": "application/rss+xml;charset=utf-8",
+			"Content-Type": "application/xml;charset=utf-8",
 			"Cache-Control": "public, max-age=3600",
 		},
 	});
@@ -45,12 +42,12 @@ function generateCategoryFeed(
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
   <channel>
     <title>${escapeXml(`${siteName} - ${categoryName}`)}</title>
-    <link>${escapeXml(`${siteUrl}/archive?category=${categoryName}`)}</link>
+    <link>${escapeXml(`${siteUrl}/category/${categoryName}`)}</link>
     <description>Satirical takes on ${categoryName} news and trends</description>
     <language>en</language>
     <lastBuildDate>${lastBuildDate}</lastBuildDate>
     <atom:link href="${escapeXml(
-		`${siteUrl}/rss/${categoryName}.xml`
+		`${siteUrl}/rss/${categoryName}`
 	)}" rel="self" type="application/rss+xml"/>
     ${articles
 		.map((article) => {
