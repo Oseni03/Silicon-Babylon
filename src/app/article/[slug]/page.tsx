@@ -38,7 +38,6 @@ export async function generateMetadata({ params }): Promise<Metadata> {
 		description: article.content.substring(0, 160),
 		keywords: [
 			...article.keywords,
-			...article.categories.map((cat) => cat.name.toLowerCase()),
 			...newKeywords.flat(),
 			siteName,
 		].join(", "),
