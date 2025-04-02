@@ -1,3 +1,5 @@
+import { siteName } from "../config";
+
 export interface BlobResponse {
 	blob: {
 		$type: string;
@@ -146,10 +148,16 @@ export async function postToBluesky(
 	title: string,
 	description: string,
 	link: string,
+	categories: string[],
 	session: SessionResponse
-): Promise<{ uri: string; cid: string }> {
+): Promise<void> {
 	try {
-		const text = `${title}\n${link}`;
+		const defaultHashtags = [siteName, "tech", "news", "TechNews"];
+		const hashtags = [...defaultHashtags, ...categories]
+			.map((cat) => `#${cat.replace(/[^a-zA-Z0-9]/g, "")}`)
+			.join(" ");
+
+		const text = `${title}\n\n${description}\n\n${link}\n\n${hashtags}`;
 		const facets = await parseFacets(text);
 
 		// Create embed
@@ -168,7 +176,7 @@ export async function postToBluesky(
 			createdAt: new Date().toISOString(),
 		};
 
-		const createResp = await fetch(
+		const response = await fetch(
 			"https://bsky.social/xrpc/com.atproto.repo.createRecord",
 			{
 				method: "POST",
@@ -184,12 +192,10 @@ export async function postToBluesky(
 			}
 		);
 
-		if (!createResp.ok)
-			throw new Error(`Failed to create post: ${createResp.statusText}`);
+		if (!response.ok)
+			throw new Error(`Failed to create post: ${response.statusText}`);
 
-		const result = await createResp.json();
-		console.log("Successfully posted to Bluesky!", result);
-		return result;
+		console.log("Successfully posted to Bluesky!", { title });
 	} catch (error) {
 		const errorMessage =
 			error instanceof Error ? error.message : "Unknown error occurred";
@@ -197,10 +203,3 @@ export async function postToBluesky(
 		throw error;
 	}
 }
-
-// Example usage:
-// postToBluesky(
-// 	"OpenAI Spends $40 Billion to Turn Your Cat Photos into Studio Ghibli Masterpieces",
-// 	"In a move that has left both tech enthusiasts and anime fans scratching their heads, OpenAI has reportedly secured a whopping $40 billion in funding. The goal? To achieve...",
-// 	"https://www.satiric-tech.info/article/openai-spends-40-billion-to-turn-your-cat-photos-into-studio-ghibli-masterpieces"
-// );

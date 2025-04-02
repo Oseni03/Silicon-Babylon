@@ -9,7 +9,9 @@ import {
 } from "@/types/types";
 import { createArticle, createCategory, getArticleByOriginalUrl } from "./db";
 import { postToBluesky, createSession } from "./social/bluesky";
+import { postToLinkedIn } from "./social/linkedin";
 import { type SessionResponse } from "./social/bluesky";
+import { siteUrl } from "./config";
 
 const parser = new Parser();
 const openai = new OpenAI({
@@ -167,6 +169,16 @@ async function fetchAndProcessFeeds() {
 			logger.error("Failed to create Bluesky session", { error });
 		}
 
+		// Check LinkedIn credentials
+		const linkedInAccessToken = process.env.LINKEDIN_ACCESS_TOKEN;
+		const linkedInUrn = process.env.LINKEDIN_URN;
+		const linkedInEnabled = !!(linkedInAccessToken && linkedInUrn);
+		if (!linkedInEnabled) {
+			logger.warn(
+				"LinkedIn credentials not configured, skipping LinkedIn posts"
+			);
+		}
+
 		const TECHCRUNCH_FEEDS = [
 			"https://techcrunch.com/category/commerce/feed/",
 			"https://techcrunch.com/category/artificial-intelligence/feed/",
@@ -240,6 +252,8 @@ async function fetchAndProcessFeeds() {
 						);
 
 						const slug = generateSlug(satirical.title);
+						const articleUrl = `${siteUrl}/article/${slug}`;
+
 						await Promise.all(
 							[
 								createArticle({
@@ -259,7 +273,8 @@ async function fetchAndProcessFeeds() {
 										satirical.content
 											.replace(/<[^>]*>/g, "")
 											.substring(0, 300) + "...",
-										`${process.env.NEXT_PUBLIC_SITE_URL}/article/${slug}`,
+										articleUrl,
+										item.categories,
 										blueskySession
 									).catch((blueskyError) => {
 										logger.error(
@@ -267,6 +282,26 @@ async function fetchAndProcessFeeds() {
 											{
 												title: satirical.title,
 												error: blueskyError,
+											}
+										);
+									}),
+								// Post to LinkedIn if enabled
+								linkedInEnabled &&
+									postToLinkedIn(
+										satirical.title,
+										articleUrl,
+										satirical.content
+											.replace(/<[^>]*>/g, "")
+											.substring(0, 300) + "...",
+										item.categories,
+										linkedInAccessToken!,
+										linkedInUrn!
+									).catch((linkedInError) => {
+										logger.error(
+											"Error posting to LinkedIn",
+											{
+												title: satirical.title,
+												error: linkedInError,
 											}
 										);
 									}),
