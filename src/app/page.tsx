@@ -12,7 +12,7 @@ const Page = () => {
 			<Header />
 			<main className="flex-grow">
 				<Hero />
-				{/* <Disclaimer /> */}
+				<Disclaimer />
 				<CategoryGrid />
 				<ArticlesList />
 				<CTA />

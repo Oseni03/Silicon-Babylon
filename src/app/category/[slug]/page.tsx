@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { type Metadata } from "next";
 import ArticlesGrid from "@/components/ArticlesGrid";
 import CTA from "@/components/CTA";
+import Disclaimer from "@/components/Disclaimer";
 
 export async function generateStaticParams() {
   const categories = await getAllCategories();
@@ -91,6 +92,8 @@ const Page = async ({ params }) => {
           <p className="text-muted-foreground text-center mb-12">
             Browse our collection of satirical articles about {categoryName}
           </p>
+
+          <Disclaimer />
 
           <ArticlesGrid filteredArticles={articles} />
         </section>
