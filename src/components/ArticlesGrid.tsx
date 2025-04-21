@@ -11,7 +11,7 @@ const ArticlesGrid = ({ filteredArticles }: { filteredArticles: Article[] }) => 
                         <ArticleCard
                             key={`${article.slug}-${index}`}
                             title={article.title}
-                            excerpt={article.content.substring(0, 200) + "..."}
+                            excerpt={article.description || article.content.substring(0, 200) + "..."}
                             date={article.publishedAt.toString()}
                             categories={article.categories}
                             index={index}

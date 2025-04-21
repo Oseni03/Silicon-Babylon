@@ -12,6 +12,7 @@ import { postToBluesky, createSession } from "./social/bluesky";
 import { postToLinkedIn } from "./social/linkedin";
 import { type SessionResponse } from "./social/bluesky";
 import { siteUrl } from "./config";
+import { stripHtml } from "./utils/xml";
 
 const parser = new Parser();
 const openai = new OpenAI({
@@ -47,6 +48,7 @@ async function generateSatiricalVersion(
 	{
 	  "title": "The SEO optimized funny title",
 	  "content": "The SEO optimized satirical/funny content in HTML format (around 500 words, with paragraphs wrapped in <p> tags and other HTML elements as needed)",
+	  "description": "The short SEO optimized and captivating meta description in without HTML formatting",
 	  "keywords": ["keyword1", "keyword2", "keyword3", "keyword4", "keyword5", ...]
 	}`;
 
@@ -60,6 +62,7 @@ async function generateSatiricalVersion(
 	{
 	"title": "The SEO optimized satirical/funny title",
 	"content": "The SEO optimized satirical/funny content in HTML format (around 500 words, with paragraphs wrapped in <p> tags and other HTML elements as needed)",
+	"description": "The SEO optimized, captivating meta description that interests people to read the full article",
 	"keywords": ["keyword1", "keyword2", "keyword3", "keyword4", "keyword5", ...]
 	}
 
@@ -115,6 +118,7 @@ async function generateSatiricalVersion(
 			title: response.title || originalTitle + " (Satirical Version)",
 			content:
 				response.content || "Failed to generate satirical content.",
+			description: response.description || "",
 			keywords:
 				Array.isArray(response.keywords) && response.keywords.length > 0
 					? response.keywords
@@ -130,6 +134,7 @@ async function generateSatiricalVersion(
 			title: originalTitle + " (Satirical Version)",
 			content:
 				"Our AI humorist is currently on coffee break. Please check back later for your satirical tech news.",
+			description: "",
 			keywords: ["satire", "tech", "humor"],
 		};
 	}
@@ -204,7 +209,7 @@ async function fetchAndProcessFeeds() {
 			)
 			.flatMap((result) => {
 				const items = result.value.items;
-				return items.filter((item) => isToday(new Date(item.isoDate)));
+				return items;
 			});
 
 		// Batch check for existing articles
@@ -222,12 +227,10 @@ async function fetchAndProcessFeeds() {
 			(item) => !existingUrls.has(item.link)
 		);
 
-		logger.info(
-			`Retrieved ${newItems.length} new items from today's feeds`
-		);
+		logger.info(`Retrieved ${newItems.length} new items from feeds`);
 
 		if (newItems.length === 0) {
-			logger.info("No new articles to process today");
+			logger.info("No new articles to process");
 			return;
 		}
 
@@ -260,6 +263,7 @@ async function fetchAndProcessFeeds() {
 									title: satirical.title,
 									slug,
 									content: satirical.content,
+									description: satirical.description,
 									keywords: satirical.keywords,
 									publishedAt: new Date(item.isoDate),
 									categories: categories,
@@ -270,9 +274,10 @@ async function fetchAndProcessFeeds() {
 								blueskySession &&
 									postToBluesky(
 										satirical.title,
-										satirical.content
-											.replace(/<[^>]*>/g, "")
-											.substring(0, 300) + "...",
+										satirical.description ||
+											stripHtml(
+												satirical.content
+											).substring(0, 300) + "...",
 										articleUrl,
 										item.categories,
 										blueskySession
@@ -290,9 +295,10 @@ async function fetchAndProcessFeeds() {
 									postToLinkedIn(
 										satirical.title,
 										articleUrl,
-										satirical.content
-											.replace(/<[^>]*>/g, "")
-											.substring(0, 300) + "...",
+										satirical.description ||
+											stripHtml(
+												satirical.content
+											).substring(0, 300) + "...",
 										item.categories,
 										linkedInAccessToken!,
 										linkedInUrn!

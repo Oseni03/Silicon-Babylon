@@ -65,7 +65,7 @@ const ArticlesList = () => {
 						key={`${article.slug}-${index}`}
 						slug={article.slug}
 						title={article.title}
-						excerpt={article.content.substring(0, 200) + "..."}
+						excerpt={article.description || article.content.substring(0, 200) + "..."}
 						date={article.publishedAt.toISOString()}
 						categories={article.categories}
 						index={index}

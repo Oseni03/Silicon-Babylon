@@ -2,6 +2,7 @@
 
 import { type Article, type Category } from "@/types/types";
 import { prisma } from "./prisma";
+import { stripHtml } from "./utils/xml";
 
 export async function createArticle(data: Article) {
 	return prisma.article.upsert({
@@ -12,6 +13,9 @@ export async function createArticle(data: Article) {
 			slug: data.slug, // Add slug to update
 			title: data.title,
 			content: data.content,
+			description:
+				data.description ||
+				stripHtml(data.content).substring(0, 300) + "...",
 			keywords: data.keywords,
 			publishedAt: new Date(data.publishedAt),
 			categories: {
@@ -24,6 +28,9 @@ export async function createArticle(data: Article) {
 			slug: data.slug,
 			title: data.title,
 			content: data.content,
+			description:
+				data.description ||
+				stripHtml(data.content).substring(0, 300) + "...",
 			keywords: data.keywords,
 			originalUrl: data.originalUrl,
 			originalTitle: data.originalTitle,

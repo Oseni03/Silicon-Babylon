@@ -24,12 +24,6 @@ export async function GET(request: Request, { params }) {
 		const articles = await getArticlesByCategory(slug);
 
 		const entries = [
-			{
-				url: `${siteUrl}/category/${slug}`,
-				lastModified: new Date().toISOString(),
-				changeFrequency: "daily",
-				priority: 0.8,
-			},
 			...articles.map((article) => ({
 				url: `${siteUrl}/article/${article.slug}`,
 				lastModified: (

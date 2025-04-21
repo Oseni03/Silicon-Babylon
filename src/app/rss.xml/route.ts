@@ -36,7 +36,7 @@ function generateRssFeed(articles: Article[]): string {
 		.map((article) => {
 			const plainTextContent = stripHtml(article.content);
 			const summary =
-				plainTextContent.length > 500
+				article.description || plainTextContent.length > 500
 					? plainTextContent.substring(0, 497) + "..."
 					: plainTextContent;
 			const imageUrl = `${siteUrl}/api/og?title=${encodeURIComponent(

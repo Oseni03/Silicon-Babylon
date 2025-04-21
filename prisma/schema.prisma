@@ -19,6 +19,7 @@ model Article {
   slug          String      @unique
   title         String      @db.VarChar(255)
   content       String      @db.Text
+  description   String?     @db.Text
   originalUrl   String      @unique
   originalTitle String
   publishedAt   DateTime

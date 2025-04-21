@@ -9,6 +9,7 @@ export interface Article {
 	slug: string;
 	title: string;
 	content: string;
+	description?: string;
 	originalUrl: string;
 	originalTitle?: string;
 	publishedAt: Date;
@@ -32,6 +33,7 @@ export interface ArticleCardProps {
 export interface SatiricalResult {
 	title: string;
 	content: string;
+	description: string;
 	keywords: string[];
 }
 
