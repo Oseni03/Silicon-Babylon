@@ -4,6 +4,65 @@ import { type Article, type Category } from "@/types/types";
 import { prisma } from "./prisma";
 import { stripHtml } from "./utils/xml";
 
+// Add retry utility
+async function withRetry<T>(
+	operation: () => Promise<T>,
+	retries = 3,
+	delay = 1000
+): Promise<T> {
+	let lastError;
+	for (let i = 0; i < retries; i++) {
+		try {
+			return await operation();
+		} catch (error) {
+			lastError = error;
+			if (i < retries - 1) {
+				await new Promise((resolve) =>
+					setTimeout(resolve, delay * (i + 1))
+				);
+			}
+		}
+	}
+	throw lastError;
+}
+
+// Add batch check function
+export async function checkExistingArticles(
+	urls: string[]
+): Promise<Set<string>> {
+	const batchSize = 10;
+	const existingUrls = new Set<string>();
+
+	for (let i = 0; i < urls.length; i += batchSize) {
+		const batch = urls.slice(i, i + batchSize);
+
+		const articles = await withRetry(() =>
+			prisma.article.findMany({
+				where: {
+					originalUrl: {
+						in: batch,
+					},
+				},
+				select: {
+					originalUrl: true,
+				},
+			})
+		);
+
+		articles.forEach((article) => {
+			if (article.originalUrl) {
+				existingUrls.add(article.originalUrl);
+			}
+		});
+
+		if (i + batchSize < urls.length) {
+			await new Promise((resolve) => setTimeout(resolve, 500));
+		}
+	}
+
+	return existingUrls;
+}
+
 export async function createArticle(data: Article) {
 	return prisma.article.upsert({
 		where: {
@@ -79,7 +138,7 @@ export async function getArticleByOriginalUrl(url: string) {
 export async function createCategory(data: Category) {
 	return prisma.category.upsert({
 		where: { slug: data.slug },
-		update: {},
+		update: { name: data.name },
 		create: {
 			name: data.name,
 			slug: data.slug,

@@ -1,14 +1,17 @@
 import { NextResponse } from "next/server";
 import { fetchAndProcessFeeds } from "@/lib/feedProcessor";
 import logger from "@/lib/logger";
+import { prisma } from "@/lib/prisma";
 
 export const runtime = "nodejs";
-export const maxDuration = 60;
+export const maxDuration = 300; // Increase to 5 minutes
 
 export async function GET(request: Request) {
 	try {
-		// Process the feeds
-		logger.info("Starting feed processing from API request");
+		// Warm up the connection pool
+		await prisma.$connect();
+
+		logger.info("Starting feed processing from API route");
 		await fetchAndProcessFeeds();
 
 		return NextResponse.json(
@@ -21,5 +24,8 @@ export async function GET(request: Request) {
 			{ error: "Internal server error" },
 			{ status: 500 }
 		);
+	} finally {
+		// Cleanup connections
+		await prisma.$disconnect();
 	}
 }

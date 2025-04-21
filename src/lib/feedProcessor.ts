@@ -13,6 +13,7 @@ import { postToLinkedIn } from "./social/linkedin";
 import { type SessionResponse } from "./social/bluesky";
 import { siteUrl } from "./config";
 import { stripHtml } from "./utils/xml";
+import { prisma } from "./prisma"; // Assuming prisma is imported from the database module
 
 const parser = new Parser();
 const openai = new OpenAI({
@@ -162,8 +163,21 @@ function isToday(date: Date): boolean {
 	);
 }
 
+async function checkExistingArticles(urls: string[]): Promise<Set<string>> {
+	const existingUrls = new Set(
+		await Promise.all(urls.map((url) => getArticleByOriginalUrl(url))).then(
+			(results) =>
+				results.filter(Boolean).map((article) => article.originalUrl)
+		)
+	);
+	return existingUrls;
+}
+
 async function fetchAndProcessFeeds() {
 	try {
+		// Ensure database connection
+		await prisma.$connect();
+
 		logger.info("Starting feed processing");
 		// Create Bluesky session once for all articles
 		let blueskySession: SessionResponse;
@@ -213,15 +227,8 @@ async function fetchAndProcessFeeds() {
 			});
 
 		// Batch check for existing articles
-		const existingUrls = new Set(
-			await Promise.all(
-				Array.from(new Set(allItems.map((item) => item.link))).map(
-					(url) => getArticleByOriginalUrl(url)
-				)
-			).then((results) =>
-				results.filter(Boolean).map((article) => article.originalUrl)
-			)
-		);
+		const allUrls = Array.from(new Set(allItems.map((item) => item.link)));
+		const existingUrls = await checkExistingArticles(allUrls);
 
 		const newItems = allItems.filter(
 			(item) => !existingUrls.has(item.link)
@@ -234,13 +241,18 @@ async function fetchAndProcessFeeds() {
 			return;
 		}
 
-		const BATCH_SIZE = 3;
+		const BATCH_SIZE = 2; // Reduce batch size
 
 		for (let i = 0; i < newItems.length; i += BATCH_SIZE) {
 			const batch = newItems.slice(i, i + BATCH_SIZE);
 			logger.debug(`Processing batch ${i / BATCH_SIZE + 1}`, {
 				batchSize: batch.length,
 			});
+
+			// Add delay between batches to prevent connection pool exhaustion
+			if (i > 0) {
+				await new Promise((resolve) => setTimeout(resolve, 2000));
+			}
 
 			await Promise.all(
 				batch.map(async (item) => {
@@ -330,8 +342,9 @@ async function fetchAndProcessFeeds() {
 				})
 			);
 
+			// Increase delay between batches
 			if (i + BATCH_SIZE < newItems.length) {
-				await new Promise((resolve) => setTimeout(resolve, 1500));
+				await new Promise((resolve) => setTimeout(resolve, 3000));
 			}
 		}
 
@@ -343,6 +356,9 @@ async function fetchAndProcessFeeds() {
 		logger.error("Error in fetchAndProcessFeeds", { error });
 		console.error("Error in fetchAndProcessFeeds:", error);
 		throw error;
+	} finally {
+		// Clean up connection
+		await prisma.$disconnect();
 	}
 }
 
