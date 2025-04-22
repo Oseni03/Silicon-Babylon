@@ -7,7 +7,12 @@ import {
 	type SatiricalResult,
 	type Category,
 } from "@/types/types";
-import { createArticle, createCategory, getArticleByOriginalUrl } from "./db";
+import {
+	createArticle,
+	createCategory,
+	getArticleByOriginalUrl,
+	getArticles,
+} from "./db";
 import { postToBluesky, createSession } from "./social/bluesky";
 import { postToLinkedIn } from "./social/linkedin";
 import { type SessionResponse } from "./social/bluesky";
@@ -164,13 +169,23 @@ function isToday(date: Date): boolean {
 }
 
 async function checkExistingArticles(urls: string[]): Promise<Set<string>> {
-	const existingUrls = new Set(
-		await Promise.all(urls.map((url) => getArticleByOriginalUrl(url))).then(
-			(results) =>
-				results.filter(Boolean).map((article) => article.originalUrl)
-		)
-	);
-	return existingUrls;
+	try {
+		const articles = await prisma.article.findMany({
+			where: {
+				originalUrl: {
+					in: urls,
+				},
+			},
+			select: {
+				originalUrl: true,
+			},
+		});
+
+		return new Set(articles.map((article) => article.originalUrl));
+	} catch (error) {
+		logger.error("Error checking existing articles", { error });
+		return new Set();
+	}
 }
 
 async function fetchAndProcessFeeds() {
@@ -226,13 +241,40 @@ async function fetchAndProcessFeeds() {
 				return items;
 			});
 
-		// Batch check for existing articles
+		// Batch check for existing articles and filter by date
 		const allUrls = Array.from(new Set(allItems.map((item) => item.link)));
+		logger.info(`Received ${allItems.length} unfiltered feeds`);
 		const existingUrls = await checkExistingArticles(allUrls);
 
-		const newItems = allItems.filter(
-			(item) => !existingUrls.has(item.link)
-		);
+		const newItems = allItems.filter((item) => {
+			// Check if URL exists
+			if (existingUrls.has(item.link)) {
+				logger.debug(`Skipping existing article: ${item.title}`);
+				return false;
+			}
+
+			// Check if item has required fields
+			if (!item.title || !item.content || !item.link) {
+				logger.debug(
+					`Skipping article with missing fields: ${item.title}`
+				);
+				return false;
+			}
+
+			// Check if published date is valid and recent (within last 48 hours)
+			const pubDate = new Date(item.isoDate);
+			const now = new Date();
+			const hoursDiff =
+				(now.getTime() - pubDate.getTime()) / (1000 * 3600);
+			if (isNaN(pubDate.getTime()) || hoursDiff > 48) {
+				logger.debug(
+					`Skipping old or invalid date article: ${item.title}`
+				);
+				return false;
+			}
+
+			return true;
+		});
 
 		logger.info(`Retrieved ${newItems.length} new items from feeds`);
 
