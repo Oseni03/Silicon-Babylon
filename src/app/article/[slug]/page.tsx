@@ -71,7 +71,7 @@ const Page = async ({ params }) => {
 		return (
 			<div className="flex flex-col min-h-screen">
 				<Header />
-				<main className="flex-grow pt-24">
+				<main className="flex-grow pt-4 md:pt-8">
 					<ArticleView
 						article={article}
 						relatedArticles={relatedArticles}
