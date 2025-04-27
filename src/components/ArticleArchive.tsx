@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { type Article, type Category } from "@/types/types";
 import ArticlesGrid from "./ArticlesGrid";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator, BreadcrumbPage } from "@/components/ui/breadcrumb";
 
 interface ArticleArchiveProps {
 	initialArticles: Article[];
@@ -45,17 +46,33 @@ const ArticleArchive = ({
 	}, [selectedCategory, searchQuery, initialArticles]);
 
 	return (
-		<section className="container mx-auto px-6 py-16">
-			<div className="max-w-4xl mx-auto text-center mb-12 space-y-2">
-				<h1 className="text-4xl font-medium tracking-tight">
+		<section className="container mx-auto px-4 md:px-6 py-8">
+			<div className="mb-8">
+				<Breadcrumb className="mb-6">
+					<BreadcrumbList>
+						<BreadcrumbItem>
+							<BreadcrumbLink href="/" className="text-muted-foreground hover:text-foreground">
+								Home
+							</BreadcrumbLink>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator />
+						<BreadcrumbItem>
+							<BreadcrumbPage>
+								Archive
+							</BreadcrumbPage>
+						</BreadcrumbItem>
+					</BreadcrumbList>
+				</Breadcrumb>
+
+				<h1 className="text-3xl md:text-4xl font-medium tracking-tight mb-3">
 					Article Archive
 				</h1>
-				<p className="text-muted-foreground">
+				<p className="text-muted-foreground text-lg">
 					Browse our complete collection of satirical tech articles
 				</p>
 			</div>
 
-			<div className="max-w-5xl mx-auto mb-10 space-y-6">
+			<div className="max-w-5xl mb-10 space-y-6">
 				{/* Search and filters */}
 				<div className="flex flex-col sm:flex-row gap-4">
 					<div className="relative flex-grow">

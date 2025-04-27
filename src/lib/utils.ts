@@ -53,3 +53,42 @@ export async function buildSitemapXML(entries: any[]) {
 	xml += "</urlset>";
 	return xml;
 }
+
+export const categories = [
+	{
+		name: "Commerce",
+		slug: "commerce",
+	},
+	{
+		name: "AI",
+		slug: "ai",
+	},
+	{
+		name: "Crypto",
+		slug: "crypto",
+	},
+	{
+		name: "Fundraising",
+		slug: "fundraising",
+	},
+	{
+		name: "Gaming",
+		slug: "gaming",
+	},
+	{
+		name: "Entertainment",
+		slug: "media-entertainment",
+	},
+	{
+		name: "Startups",
+		slug: "startups",
+	},
+	{
+		name: "Apps",
+		slug: "apps",
+	},
+	{
+		name: "Enterprise",
+		slug: "enterprise",
+	},
+];

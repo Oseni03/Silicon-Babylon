@@ -1,45 +1,6 @@
 import Link from "next/link";
-import { Category } from "@/types/types";
 import { Badge } from "@/components/ui/badge";
-
-const categories: Category[] = [
-    {
-        name: "Commerce",
-        slug: "commerce"
-    },
-    {
-        name: "Artificial Intelligence",
-        slug: "ai"
-    },
-    {
-        name: "Crypto Currency",
-        slug: "crypto"
-    },
-    {
-        name: "Fundraising",
-        slug: "fundraising"
-    },
-    {
-        name: "Gaming",
-        slug: "gaming"
-    },
-    {
-        name: "Media Entertainment",
-        slug: "media-entertainment"
-    },
-    {
-        name: "Startups",
-        slug: "startups"
-    },
-    {
-        name: "Apps",
-        slug: "apps"
-    },
-    {
-        name: "Enterprise",
-        slug: "enterprise"
-    },
-];
+import { categories } from "@/lib/categories";
 
 const CategoryGrid = () => {
     return (

@@ -28,7 +28,7 @@ const Page = async () => {
 	return (
 		<div className="flex flex-col min-h-screen">
 			<Header />
-			<main className="flex-grow pt-24">
+			<main className="flex-grow pt-4 md:pt-8 pb-12 md:pb-16">
 				<ArticleArchive
 					initialArticles={withAffiliates}
 					categories={categoriesData}

@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import { type Metadata } from "next";
 import ArticlesGrid from "@/components/ArticlesGrid";
 import CTA from "@/components/CTA";
-import Disclaimer from "@/components/Disclaimer";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator, BreadcrumbPage } from "@/components/ui/breadcrumb";
 
 export async function generateStaticParams() {
   const categories = await getAllCategories();
@@ -18,7 +18,7 @@ export async function generateStaticParams() {
 const unslugify = (slug: string): string => {
   // Special cases
   const specialCases: Record<string, string> = {
-    'ai': 'AI'
+    ai: "AI",
   };
 
   if (specialCases[slug]) {
@@ -26,9 +26,9 @@ const unslugify = (slug: string): string => {
   }
 
   return slug
-    .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 };
 
 export async function generateMetadata({ params }): Promise<Metadata> {
@@ -57,19 +57,19 @@ export async function generateMetadata({ params }): Promise<Metadata> {
     openGraph: {
       title,
       description,
-      type: 'website',
+      type: "website",
       siteName,
     },
     twitter: {
-      card: 'summary_large_image',
+      card: "summary_large_image",
       title,
       description,
-    }
+    },
   };
 }
 
 const Page = async ({ params }) => {
-  const { slug } = await params
+  const { slug } = await params;
   const articles = await getArticlesByCategory(slug);
 
   if (!articles.length) {
@@ -81,19 +81,32 @@ const Page = async ({ params }) => {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-grow pt-24 pb-16">
-        <section className="container mx-auto px-6">
-          <h1 className="text-4xl font-medium tracking-tight text-center mb-4">
-            {categoryName} News
-          </h1>
-          <h1 className="hidden">
-            {categoryName} Articles
-          </h1>
-          <p className="text-muted-foreground text-center mb-12">
-            Browse our collection of satirical articles about {categoryName}
-          </p>
+      <main className="flex-grow pt-4 md:pt-8 pb-12 md:pb-16">
+        <section className="container mx-auto px-3 md:px-6">
+          <div className="mb-4 md:mb-8">
+            <Breadcrumb className="mb-4 md:mb-6">
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/" className="text-muted-foreground hover:text-foreground">
+                    Home
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>
+                    {categoryName}
+                  </BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
 
-          <Disclaimer />
+            <h1 className="text-3xl md:text-4xl font-medium tracking-tight mb-3">
+              {categoryName} News
+            </h1>
+            <p className="text-muted-foreground text-lg">
+              Browse our collection of satirical articles about {categoryName}
+            </p>
+          </div>
 
           <ArticlesGrid filteredArticles={articles} />
         </section>

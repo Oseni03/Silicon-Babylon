@@ -65,8 +65,7 @@ const Page = () => {
 	return (
 		<div className="flex flex-col min-h-screen">
 			<Header />
-
-			<main className="flex-grow pt-24">
+			<main className="flex-grow pt-8">
 				<section className="container mx-auto px-6 py-16">
 					<div className="max-w-3xl mx-auto">
 						<div className="text-center space-y-4 mb-16">
