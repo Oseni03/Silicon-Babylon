@@ -17,13 +17,15 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { usePathname } from "next/navigation";
-import { SearchPopover } from "@/components/SearchPopover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Search } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { AuthAction } from "@/components/AuthAction";
 import { categories } from "@/lib/utils";
 
 const Page = () => {
 	const [articles, setArticles] = useState<Article[]>([]);
+	const [searchQuery, setSearchQuery] = useState("");
 	const [isLoading, setIsLoading] = useState(true);
 	const [scrolled, setScrolled] = useState(false);
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -86,7 +88,14 @@ const Page = () => {
 						withAffiliates.push(getRandomAffiliate());
 					}
 				}
-				setArticles(withAffiliates);
+				const filtered = searchQuery
+					? withAffiliates.filter(
+						(article) =>
+							article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+							article.content.toLowerCase().includes(searchQuery.toLowerCase())
+					)
+					: withAffiliates;
+				setArticles(filtered);
 			} catch (error) {
 				console.error("Failed to fetch articles:", error);
 			} finally {
@@ -95,7 +104,36 @@ const Page = () => {
 		}
 
 		loadArticles();
-	}, []);
+	}, [searchQuery]);
+
+	// Replace the <SearchPopover> component with this:
+	const searchComponent = (
+		<Popover>
+			<PopoverTrigger asChild>
+				<button className="flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md hover:bg-secondary transition-colors duration-200">
+					<Search className="w-4 h-4" />
+					<span>Search</span>
+				</button>
+			</PopoverTrigger>
+			<PopoverContent className="w-80 p-0" align="end">
+				<div className="relative">
+					<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+					<input
+						type="text"
+						placeholder="Search articles..."
+						className="w-full pl-9 pr-4 py-3 text-sm rounded-md border-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+						value={searchQuery}
+						onChange={(e) => setSearchQuery(e.target.value)}
+					/>
+				</div>
+				{searchQuery && (
+					<div className="p-2 text-xs text-muted-foreground border-t">
+						Press enter to search
+					</div>
+				)}
+			</PopoverContent>
+		</Popover>
+	);
 
 	return (
 		<div className="flex flex-col min-h-screen">
@@ -208,7 +246,7 @@ const Page = () => {
 										</DropdownMenu>
 									)}
 
-									<SearchPopover filteredArticles={articles} setFilteredArticles={setArticles} />
+									{searchComponent}
 								</nav>
 							</div>
 
