@@ -45,7 +45,7 @@ async function fetchFeedWithTimeout(feedUrl: string) {
 async function generateSatiricalVersion(
 	originalTitle: string,
 	originalContent: string
-): Promise<SatiricalResult> {
+): Promise<SatiricalResult | null> {
 	try {
 		logger.info("Generating satirical version", { originalTitle });
 		// System prompt to instruct the model about JSON formatting
@@ -110,20 +110,18 @@ async function generateSatiricalVersion(
 					jsonError
 				);
 				console.log("Raw response:", responseText);
-
-				response = {
-					title: originalTitle + " (Satirical Version)",
-					content:
-						"Failed to generate satirical content. Our AI satirist is taking an unscheduled coffee break.",
-					keywords: ["satire", "tech", "humor"],
-				};
+				return null;
 			}
 		}
 
+		if (!response.title || !response.content) {
+			logger.error("Invalid response format", { response });
+			return null;
+		}
+
 		return {
-			title: response.title || originalTitle + " (Satirical Version)",
-			content:
-				response.content || "Failed to generate satirical content.",
+			title: response.title,
+			content: response.content,
 			description: response.description || "",
 			keywords:
 				Array.isArray(response.keywords) && response.keywords.length > 0
@@ -136,13 +134,7 @@ async function generateSatiricalVersion(
 			originalTitle,
 		});
 		console.error("Error generating satirical version:", error);
-		return {
-			title: originalTitle + " (Satirical Version)",
-			content:
-				"Our AI humorist is currently on coffee break. Please check back later for your satirical tech news.",
-			description: "",
-			keywords: ["satire", "tech", "humor"],
-		};
+		return null;
 	}
 }
 
@@ -307,6 +299,16 @@ async function fetchAndProcessFeeds() {
 							item.title,
 							item.content
 						);
+
+						if (!satirical) {
+							logger.info(
+								"Skipping article due to failed generation",
+								{
+									title: item.title,
+								}
+							);
+							return;
+						}
 
 						const slug = generateSlug(satirical.title);
 						const articleUrl = `${siteUrl}/article/${slug}`;

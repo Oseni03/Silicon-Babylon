@@ -30,10 +30,10 @@ const Footer = () => {
 						<h3 className="text-sm font-medium">Navigation</h3>
 						<nav className="flex flex-col space-y-2">
 							<Link
-								href="/"
+								href="/contact"
 								className="text-sm text-muted-foreground hover:text-foreground transition-colors"
 							>
-								Home
+								Contact
 							</Link>
 							<Link
 								href="/about"

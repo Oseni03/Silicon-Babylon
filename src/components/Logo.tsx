@@ -17,7 +17,7 @@ export const Logo = () => {
                     </span>
                 </div>
                 <span className="text-sm text-muted-foreground italic mt-1">
-                    Your Trusted Source for News
+                    Probably Accurate News, Most of the Time
                 </span>
             </Link>
         </div>
