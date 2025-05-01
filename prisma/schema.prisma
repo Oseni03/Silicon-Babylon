@@ -55,10 +55,13 @@ model Comment {
 }
 
 model Newsletter {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  createdAt DateTime @default(now())
-  verified  Boolean  @default(false)
+  id              String   @id @default(cuid())
+  email           String   @unique
+  createdAt       DateTime @default(now())
+  verified        Boolean  @default(false)
+  lastEmailSent   DateTime?
+  unsubscribed    Boolean  @default(false)
+  emailPreferences Json?   // For future customization options
 }
 
 model Contact {

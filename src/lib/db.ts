@@ -176,6 +176,15 @@ export async function subscribeToNewsletter(email: string) {
 	});
 }
 
+export async function unsubscribeToNewsletter(email: string) {
+	return prisma.newsletter.update({
+		where: { email },
+		data: {
+			unsubscribed: true,
+		},
+	});
+}
+
 export async function isEmailSubscribed(email: string) {
 	const subscriber = await prisma.newsletter.findUnique({
 		where: { email },
@@ -218,6 +227,39 @@ export async function getRelatedArticles(
 		take: limit,
 		orderBy: {
 			publishedAt: "desc",
+		},
+	});
+}
+
+export async function getTopArticles(limit = 8) {
+	const oneWeekAgo = new Date();
+	oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+	return prisma.article.findMany({
+		where: {
+			publishedAt: {
+				gte: oneWeekAgo,
+			},
+		},
+		orderBy: [
+			{
+				reactions: {
+					_count: "desc",
+				},
+			},
+			{
+				publishedAt: "desc",
+			},
+		],
+		take: limit,
+		include: {
+			categories: true,
+			_count: {
+				select: {
+					reactions: true,
+					comments: true,
+				},
+			},
 		},
 	});
 }

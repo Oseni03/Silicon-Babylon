@@ -5,6 +5,8 @@ export const siteUrl =
 		? "https://www.satiric-tech.info"
 		: "http://localhost:3000");
 export const siteKeywords = [
+	"satiricTech",
+	"Satiric",
 	"tech satire",
 	"news tech news",
 	"tech news tech",
@@ -22,5 +24,4 @@ export const siteKeywords = [
 	"satirical tech journalism",
 	"latest in tech satire",
 	"technology humor newsletter",
-	"satiricTech",
 ];

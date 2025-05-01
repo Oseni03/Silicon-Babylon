@@ -9,8 +9,8 @@ async function generateSitemaps() {
 	return categories.map((category) => ({
 		url: `${siteUrl}/category/${category.slug}/sitemap.xml`,
 		lastModified: new Date().toISOString(),
-		changeFrequency: "daily",
-		priority: 0.8,
+		changeFrequency: "daily" as const,
+		priority: 0.9,
 	}));
 }
 
@@ -22,8 +22,8 @@ export async function GET() {
 			{
 				url: `${siteUrl}/sitemap.xml`,
 				lastModified: new Date().toISOString(),
-				changeFrequency: "daily",
-				priority: 0.8,
+				changeFrequency: "daily" as const,
+				priority: 0.9,
 			},
 			...dynamicSitemaps,
 		];

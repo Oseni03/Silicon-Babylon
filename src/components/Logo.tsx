@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 export const Logo = () => {
     return (
-        <div className="flex items-center justify-center my-4">
+        <div className="flex md:items-center justify-center my-4">
             <Link href="/" className="flex flex-col items-center group">
                 <div className="flex items-center">
                     <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center group-hover:scale-105 transition-transform mr-2">

@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 	openGraph: {
 		title: {
 			template: `%s | ${siteName}`,
-			default: `${siteName} - Funny Tech News`,
+			default: `${siteName} - Hilarious Tech News`,
 		},
 		description:
 			"Explore commentary and humorous insights inspired by real tech headlines.",
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
 		card: "summary_large_image",
 		title: {
 			template: `%s | ${siteName}`,
-			default: `${siteName} - Funny Tech Insights`,
+			default: `${siteName} - Hilarious Tech News`,
 		},
 		description:
 			"Stay ahead with commentary and humorous insights inspired by real tech headlines.",
@@ -64,6 +64,7 @@ function RootLayout({ children }: PropsWithChildren) {
 					content="60456aee5155dfa58c050d796aa4a524"
 				/>
 				<meta name="p:domain_verify" content="7a8310954ab418e7c719b29e9dc972e3" />
+				<meta name='impact-site-verification' content='a1280f2b-15a4-4565-99cd-9a87773ee023' />
 				<Script
 					async
 					src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4433921260204256"

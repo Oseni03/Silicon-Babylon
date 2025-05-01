@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { siteName } from "@/lib/config";
+import { unsubscribeToNewsletter } from "@/lib/db";
 
 const CTA = () => {
 	const [isVisible, setIsVisible] = useState(true); // Changed to true by default
@@ -51,7 +52,7 @@ const CTA = () => {
 		e.preventDefault();
 		setIsLoading(true);
 		try {
-			const response = await fetch("/api/newsletter", {
+			const response = await fetch("/api/newsletter/subscribe", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -70,17 +71,23 @@ const CTA = () => {
 			toast("Successfully subscribed! 🎉", {
 				description:
 					"Get ready for playful tech insights delivered straight to your inbox.",
+				action: {
+					label: "Undo",
+					onClick: async () => {
+						await unsubscribeToNewsletter(email)
+						toast("Successfully unsubscribed! 🎉", {
+							description:
+								"Leaving so soon!.",
+						});
+					}
+				},
 			});
 		} catch (error) {
 			toast.error("Subscription failed", {
 				description:
 					error instanceof Error
 						? error.message
-						: "Failed to subscribe",
-				action: {
-					label: "Undo",
-					onClick: () => console.log("Undo"),
-				},
+						: "Failed to subscribe"
 			});
 		} finally {
 			setIsLoading(false);

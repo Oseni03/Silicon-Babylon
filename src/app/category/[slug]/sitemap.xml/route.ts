@@ -30,7 +30,7 @@ export async function GET(request: Request, { params }) {
 					article.updatedAt || article.createdAt
 				).toISOString(),
 				changeFrequency: "weekly",
-				priority: 0.7,
+				priority: 0.8,
 			})),
 		];
 
