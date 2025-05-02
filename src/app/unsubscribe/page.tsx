@@ -1,7 +1,7 @@
 "use client"
 
 import { useSearchParams } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, Suspense } from 'react'
 import { toast } from 'sonner'
 import { subscribeToNewsletter } from '@/lib/db'
 import { Button } from '@/components/ui/button'
@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { siteName } from '@/lib/config'
 import { Loader2 } from 'lucide-react'
 
-export default function UnsubscribePage() {
+function UnsubscribeContent() {
     const searchParams = useSearchParams()
     const email = searchParams.get("email")
     const [loading, setLoading] = useState(true)
@@ -109,5 +109,21 @@ export default function UnsubscribePage() {
                 </CardFooter>
             </Card>
         </div>
+    )
+}
+
+export default function UnsubscribePage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+                <Card className="w-full max-w-md">
+                    <CardContent className="flex justify-center py-8">
+                        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                    </CardContent>
+                </Card>
+            </div>
+        }>
+            <UnsubscribeContent />
+        </Suspense>
     )
 }
