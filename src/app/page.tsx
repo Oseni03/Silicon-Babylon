@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import ArticleCard from "@/components/ArticleCard";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
-import { getArticles } from "@/lib/db";
+import { getPaginatedArticles } from "@/lib/db";
 import { type Article } from "@/types/types";
 import { getRandomAffiliate } from "@/lib/affiliates";
 import Link from "next/link";
@@ -22,6 +22,7 @@ import { Search } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { AuthAction } from "@/components/AuthAction";
 import { categories } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 const Page = () => {
 	const [articles, setArticles] = useState<Article[]>([]);
@@ -37,6 +38,9 @@ const Page = () => {
 		day: 'numeric',
 		year: 'numeric'
 	});
+	const [hasMore, setHasMore] = useState(true);
+	const [page, setPage] = useState(1);
+	const pageSize = 15; // Number of articles per page
 
 	const toggleMenu = () => {
 		setIsMenuOpen(!isMenuOpen);
@@ -80,7 +84,7 @@ const Page = () => {
 	useEffect(() => {
 		async function loadArticles() {
 			try {
-				const data = await getArticles();
+				const data = await getPaginatedArticles({ limit: pageSize, offset: (page - 1) * pageSize });
 				const withAffiliates = [];
 				for (let i = 0; i < data.length; i++) {
 					withAffiliates.push(data[i]);
@@ -95,7 +99,14 @@ const Page = () => {
 							article.content.toLowerCase().includes(searchQuery.toLowerCase())
 					)
 					: withAffiliates;
-				setArticles(filtered);
+
+				if (page === 1) {
+					setArticles(filtered);
+				} else {
+					setArticles(prev => [...prev, ...filtered]);
+				}
+
+				setHasMore(data.length === pageSize);
 			} catch (error) {
 				console.error("Failed to fetch articles:", error);
 			} finally {
@@ -104,7 +115,7 @@ const Page = () => {
 		}
 
 		loadArticles();
-	}, [searchQuery]);
+	}, [searchQuery, page]);
 
 	// Replace the <SearchPopover> component with this:
 	const searchComponent = (
@@ -307,6 +318,18 @@ const Page = () => {
 						</div>
 					)}
 				</section>
+				<div className="flex justify-center mt-4">
+					{hasMore && (
+						<Button
+							variant="outline"
+							size="lg"
+							onClick={() => setPage(page + 1)}
+							disabled={isLoading}
+						>
+							{isLoading ? "Loading..." : "Load More"}
+						</Button>
+					)}
+				</div>
 				<CTA />
 			</main>
 			<Footer />

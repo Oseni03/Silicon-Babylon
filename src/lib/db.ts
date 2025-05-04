@@ -117,6 +117,19 @@ export async function getArticles() {
 	});
 }
 
+export async function getPaginatedArticles({ limit = 10, offset = 0 }) {
+	return prisma.article.findMany({
+		include: {
+			categories: true,
+		},
+		orderBy: {
+			publishedAt: "desc",
+		},
+		skip: offset,
+		take: limit,
+	});
+}
+
 export async function getArticleBySlug(slug: string) {
 	return prisma.article.findFirst({
 		where: { slug },

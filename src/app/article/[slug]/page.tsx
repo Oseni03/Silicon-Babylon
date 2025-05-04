@@ -7,35 +7,56 @@ import { notFound } from "next/navigation";
 import ArticleView from "@/components/ArticleView";
 import { cache } from "react";
 
-const getArticle = cache(getArticleBySlug);
+// Cache the article fetch
+const getArticle = cache(async (slug: string) => {
+	const article = await getArticleBySlug(slug);
+	if (!article) return null;
 
-export async function generateStaticParams() {
+	// Only fetch related articles if the main article exists
+	const relatedArticles = await getRelatedArticles(
+		article.id,
+		article.categories.map((cat) => cat.id),
+		3 // Limit to 3 related articles for initial load
+	);
+
+	return { article, relatedArticles };
+});
+
+// Cache the static params generation
+const getStaticParams = cache(async () => {
 	const articles = await getArticles();
-
 	return articles.map((article) => ({
 		slug: article.slug,
 	}));
+});
+
+export async function generateStaticParams() {
+	return getStaticParams();
 }
 
 export async function generateMetadata({ params }): Promise<Metadata> {
-	const { slug } = await Promise.resolve(params);
-	const article = await getArticle(slug);
+	const { slug } = params;
+	const data = await getArticle(slug);
 
-	if (!article) {
+	if (!data?.article) {
 		return {
 			title: `Article Not Found - ${siteName}`,
 		};
 	}
 
+	const { article } = data;
 	const ogImageUrl = `${siteUrl}/api/og?title=${encodeURIComponent(
 		article.title
 	)}&width=1200&height=630`;
 
-	const newKeywords = article.categories.map((article) => [`${article.name.toLocaleLowerCase()} articles`, `${article.name.toLowerCase()} news`]);
+	const newKeywords = article.categories.map((category) => [
+		`${category.name.toLowerCase()} articles`,
+		`${category.name.toLowerCase()} news`
+	]);
 
 	return {
-		title: `${article.title}`,
-		description: article.content.substring(0, 160),
+		title: article.title,
+		description: article.description || article.content.substring(0, 160),
 		keywords: [
 			...article.keywords,
 			...newKeywords.flat(),
@@ -43,7 +64,7 @@ export async function generateMetadata({ params }): Promise<Metadata> {
 		].join(", "),
 		openGraph: {
 			title: article.title,
-			description: article.content.substring(0, 160),
+			description: article.description || article.content.substring(0, 160),
 			images: [{
 				url: ogImageUrl.toString(),
 				width: 1200,
@@ -56,25 +77,20 @@ export async function generateMetadata({ params }): Promise<Metadata> {
 
 const Page = async ({ params }) => {
 	try {
-		const { slug } = await Promise.resolve(params);
-		const article = await getArticle(slug);
+		const { slug } = params;
+		const data = await getArticle(slug);
 
-		if (!article) {
+		if (!data?.article) {
 			notFound();
 		}
-
-		const relatedArticles = await getRelatedArticles(
-			article.id,
-			article.categories.map((cat) => cat.id)
-		);
 
 		return (
 			<div className="flex flex-col min-h-screen">
 				<Header />
 				<main className="flex-grow pt-4 md:pt-8">
 					<ArticleView
-						article={article}
-						relatedArticles={relatedArticles}
+						article={data.article}
+						relatedArticles={data.relatedArticles}
 					/>
 				</main>
 				<Footer />
