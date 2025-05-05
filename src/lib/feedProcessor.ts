@@ -7,12 +7,7 @@ import {
 	type SatiricalResult,
 	type Category,
 } from "@/types/types";
-import {
-	createArticle,
-	createCategory,
-	getArticleByOriginalUrl,
-	getArticles,
-} from "./db";
+import { createArticle, createCategory } from "./db";
 import { postToBluesky, createSession } from "./social/bluesky";
 import { postToLinkedIn } from "./social/linkedin";
 import { type SessionResponse } from "./social/bluesky";
@@ -53,7 +48,7 @@ async function generateSatiricalVersion(
 	Always respond with valid JSON that matches this format exactly:
 	{
 	  "title": "The SEO optimized funny title",
-	  "content": "The SEO optimized satirical/funny content in HTML format (around 550 - 600 words, with paragraphs wrapped in <p> tags and other HTML elements as needed)",
+	  "content": "The SEO optimized satirical/funny content in HTML format (around 1000 words, with paragraphs wrapped in <p> tags and other HTML elements as needed)",
 	  "description": "The short SEO optimized and captivating meta description in without HTML formatting",
 	  "keywords": ["keyword1", "keyword2", "keyword3", "keyword4", "keyword5", ...]
 	}`;
@@ -67,7 +62,7 @@ async function generateSatiricalVersion(
 	Respond with ONLY valid JSON in this exact format:
 	{
 	"title": "The SEO optimized satirical/funny title",
-	"content": "The SEO optimized satirical/funny content in HTML format (around 550 - 600 words, with paragraphs wrapped in <p> tags and other HTML elements as needed)",
+	"content": "The SEO optimized satirical/funny content in HTML format (around 1000 words, with paragraphs wrapped in <p> tags and other HTML elements as needed)",
 	"description": "The SEO optimized, captivating meta description that interests people to read the full article",
 	"keywords": ["keyword1", "keyword2", "keyword3", "keyword4", "keyword5", ...]
 	}
@@ -81,7 +76,7 @@ async function generateSatiricalVersion(
 				{ role: "user", content: userPrompt },
 			],
 			temperature: 1.5,
-			max_tokens: 1000,
+			max_tokens: 2000,
 			response_format: {
 				type: "json_object",
 			},
