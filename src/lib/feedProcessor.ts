@@ -57,7 +57,7 @@ async function generateSatiricalVersion(
 		const userPrompt = `Create a satirical version of this tech news article using humor techniques such as exaggeration, irony, parody, or absurdism. Make it funny and entertaining while keeping it relevant to the original topic. Avoid offensive content. Format the content in HTML, with paragraphs wrapped in <p> tags and other HTML elements (e.g., <strong>, <em>, <ul>, <li>) as needed.
 
 	Original Title: ${originalTitle}
-	Original Content: ${originalContent.substring(0, 550)}...
+	Original Content: ${originalContent.substring(0, 700)}...
 
 	Respond with ONLY valid JSON in this exact format:
 	{
