@@ -48,7 +48,7 @@ async function generateSatiricalVersion(
 	Always respond with valid JSON that matches this format exactly:
 	{
 	  "title": "The SEO optimized funny title",
-	  "content": "The SEO optimized satirical/funny content in HTML format (around 1000 words, with paragraphs wrapped in <p> tags and other HTML elements as needed)",
+	  "content": "The SEO optimized satirical/funny content in HTML format (around 1500 words, with paragraphs wrapped in <p> tags and other HTML elements as needed)",
 	  "description": "The short SEO optimized and captivating meta description in without HTML formatting",
 	  "keywords": ["keyword1", "keyword2", "keyword3", "keyword4", "keyword5", ...]
 	}`;
@@ -57,12 +57,12 @@ async function generateSatiricalVersion(
 		const userPrompt = `Create a satirical version of this tech news article using humor techniques such as exaggeration, irony, parody, or absurdism. Make it funny and entertaining while keeping it relevant to the original topic. Avoid offensive content. Format the content in HTML, with paragraphs wrapped in <p> tags and other HTML elements (e.g., <strong>, <em>, <ul>, <li>) as needed.
 
 	Original Title: ${originalTitle}
-	Original Content: ${originalContent.substring(0, 700)}...
+	Original Content: ${originalContent}...
 
 	Respond with ONLY valid JSON in this exact format:
 	{
 	"title": "The SEO optimized satirical/funny title",
-	"content": "The SEO optimized satirical/funny content in HTML format (around 1000 words, with paragraphs wrapped in <p> tags and other HTML elements as needed)",
+	"content": "The SEO optimized satirical/funny content in HTML format (around 1500 words, with paragraphs wrapped in <p> tags and other HTML elements as needed)",
 	"description": "The SEO optimized, captivating meta description that interests people to read the full article",
 	"keywords": ["keyword1", "keyword2", "keyword3", "keyword4", "keyword5", ...]
 	}
@@ -76,7 +76,7 @@ async function generateSatiricalVersion(
 				{ role: "user", content: userPrompt },
 			],
 			temperature: 1.5,
-			max_tokens: 2000,
+			max_tokens: 2500,
 			response_format: {
 				type: "json_object",
 			},
