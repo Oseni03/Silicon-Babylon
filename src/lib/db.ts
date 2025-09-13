@@ -266,7 +266,7 @@ export async function getTopArticles(limit = 8) {
 			},
 		],
 		take: limit,
-		include: {
+		select: {
 			categories: true,
 			_count: {
 				select: {
@@ -274,6 +274,17 @@ export async function getTopArticles(limit = 8) {
 					comments: true,
 				},
 			},
+			slug: true,
+			title: true,
+			content: true,
+			description: true,
+			publishedAt: true,
+			originalUrl: true,
+			originalTitle: true,
+			keywords: true,
+			regenerated: true,
+			createdAt: true,
+			updatedAt: true,
 		},
 	});
 }

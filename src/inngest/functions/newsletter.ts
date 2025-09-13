@@ -8,7 +8,7 @@ import { inngest } from "../client";
 import logger from "@/lib/logger";
 import { sendNewsletterBatch } from "@/lib/email";
 import { prisma } from "@/lib/prisma";
-import { NewsletterSubscriber } from "@/types/types";
+import { Article, NewsletterSubscriber } from "@/types/types";
 import { ai_agent } from "@/lib/ai";
 import { render } from "@react-email/components";
 import BulkByteNewsletter from "@/components/BulkByteNewsletter";
@@ -18,14 +18,9 @@ export const sendNewsletter = inngest.createFunction(
 	{ cron: "TZ=Europe/Paris 0 6 * * 1" },
 	async ({ step }) => {
 		// Get all active subscribers
-		const subscribers = await step.run(
-			"get-active-subscribers",
-			async () => {
-				return getActiveSubscribers();
-			}
-		);
+		const subscribers = await getActiveSubscribers();
 
-		if (subscribers.length === 0) {
+		if (subscribers?.length === 0) {
 			logger.info("No active subscribers found for newsletter");
 			return {
 				success: true,
@@ -35,10 +30,16 @@ export const sendNewsletter = inngest.createFunction(
 		}
 
 		// Get top articles
-		const articles = await step.run("get-top-articles", async () => {
-			const articles = await getTopArticles();
-			return articles;
-		});
+		const articles = await getTopArticles();
+
+		if (articles?.length === 0) {
+			logger.info("No article found for newsletter");
+			return {
+				success: true,
+				message: "No article found",
+				sent: 0,
+			};
+		}
 
 		// Get newsletter props
 		const props = await step.run("get-newsletter-props", async () => {
@@ -53,12 +54,21 @@ export const sendNewsletter = inngest.createFunction(
 			};
 		});
 
+		if (!articles || !subscribers) {
+			logger.error("Articles or subscribers not found");
+			return {
+				success: false,
+				message: "Articles or subscribers not found",
+				sent: 0,
+			};
+		}
+
 		// Send newsletter batch
 		const result = await step.run("send-newsletter-batch", async () => {
 			await createIssue({
 				body: await render(
 					BulkByteNewsletter({
-						articles,
+						articles: articles,
 						issueNumber: props.issueNumber.toString(),
 						summary: props.summary as string,
 					})
