@@ -131,3 +131,8 @@ export async function generateSatiricalVersion(
 		return null;
 	}
 }
+
+export async function generateNewsletterSummary(titles: string[]) {
+	const sample =
+		"We've got AI having midlife crises, startups pivoting to pet rocks, and the usual crypto shenanigans. Let's dive into this week's digital chaos!";
+}

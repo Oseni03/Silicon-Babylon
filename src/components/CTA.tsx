@@ -1,10 +1,11 @@
-"use client"
+"use client";
 
 import { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { siteName } from "@/lib/config";
 import { unsubscribeToNewsletter } from "@/lib/db";
+import { Loader2 } from "lucide-react";
 
 const CTA = () => {
 	const [isVisible, setIsVisible] = useState(true); // Changed to true by default
@@ -16,14 +17,14 @@ const CTA = () => {
 	const [loading, setIsLoading] = useState(false);
 
 	const scrollToCTA = () => {
-		ctaRef.current?.scrollIntoView({ behavior: 'smooth' });
+		ctaRef.current?.scrollIntoView({ behavior: "smooth" });
 		setIsSticky(false);
 	};
 
 	useEffect(() => {
 		const observer = new IntersectionObserver(
 			(entries) => {
-				entries.forEach(entry => {
+				entries.forEach((entry) => {
 					if (entry.target === ctaRef.current) {
 						setIsVisible(entry.isIntersecting);
 						setIsSticky(!entry.isIntersecting);
@@ -74,12 +75,11 @@ const CTA = () => {
 				action: {
 					label: "Undo",
 					onClick: async () => {
-						await unsubscribeToNewsletter(email)
+						await unsubscribeToNewsletter(email);
 						toast("Successfully unsubscribed! 🎉", {
-							description:
-								"Leaving so soon!.",
+							description: "Leaving so soon!.",
 						});
-					}
+					},
 				},
 			});
 		} catch (error) {
@@ -87,7 +87,7 @@ const CTA = () => {
 				description:
 					error instanceof Error
 						? error.message
-						: "Failed to subscribe"
+						: "Failed to subscribe",
 			});
 		} finally {
 			setIsLoading(false);
@@ -100,8 +100,8 @@ const CTA = () => {
 				Stay Updated with {siteName}
 			</h2>
 			<p className="text-muted-foreground">
-				Subscribe to our newsletter for a weekly dose of
-				playful tech insights. No spam, just fun and fact.
+				Subscribe to our newsletter for a weekly dose of playful tech
+				insights. No spam, just fun and fact.
 			</p>
 			<form
 				onSubmit={handleSubmit}
@@ -120,11 +120,14 @@ const CTA = () => {
 					className="whitespace-nowrap px-6 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
 				>
 					Subscribe
+					{loading && (
+						<Loader2 className="ml-2 h-4 w-4 animate-spin inline-block" />
+					)}
 				</button>
 			</form>
 			<p className="text-xs text-muted-foreground mt-4">
-				By subscribing, you agree to receive lighthearted,
-				imaginative content and accept our privacy policy.
+				By subscribing, you agree to receive lighthearted, imaginative
+				content and accept our privacy policy.
 			</p>
 		</div>
 	);
@@ -132,7 +135,9 @@ const CTA = () => {
 	const StickyCTAContent = () => (
 		<div className="flex items-center justify-between gap-4 sm:gap-6">
 			<div className="space-y-1.5 flex-1">
-				<h3 className="text-sm font-medium">Stay Updated with {siteName}</h3>
+				<h3 className="text-sm font-medium">
+					Stay Updated with {siteName}
+				</h3>
 				<p className="text-xs text-muted-foreground">
 					Get weekly tech insights and playful content in your inbox
 				</p>

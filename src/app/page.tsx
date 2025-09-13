@@ -17,8 +17,12 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { usePathname } from "next/navigation";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Search } from "lucide-react";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover";
+import { Loader2, Search } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { AuthAction } from "@/components/AuthAction";
 import { categories } from "@/lib/utils";
@@ -32,11 +36,11 @@ const Page = () => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [isAuthOpen, setIsAuthOpen] = useState(false);
 	const pathname = usePathname();
-	const currentDate = new Date().toLocaleDateString('en-US', {
-		weekday: 'long',
-		month: 'long',
-		day: 'numeric',
-		year: 'numeric'
+	const currentDate = new Date().toLocaleDateString("en-US", {
+		weekday: "long",
+		month: "long",
+		day: "numeric",
+		year: "numeric",
 	});
 	const [hasMore, setHasMore] = useState(true);
 	const [page, setPage] = useState(1);
@@ -63,18 +67,21 @@ const Page = () => {
 	useEffect(() => {
 		const handleResize = () => {
 			const width = window.innerWidth;
-			if (width < 768) { // mobile
+			if (width < 768) {
+				// mobile
 				setMainCategoryCount(3);
-			} else if (width < 1024) { // tablet
+			} else if (width < 1024) {
+				// tablet
 				setMainCategoryCount(5);
-			} else { // desktop
+			} else {
+				// desktop
 				setMainCategoryCount(8);
 			}
 		};
 
 		handleResize(); // Initial check
-		window.addEventListener('resize', handleResize);
-		return () => window.removeEventListener('resize', handleResize);
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
 	}, []);
 
 	// Adjust categories based on screen size
@@ -84,7 +91,11 @@ const Page = () => {
 	useEffect(() => {
 		async function loadArticles() {
 			try {
-				const data = await getPaginatedArticles({ limit: pageSize, offset: (page - 1) * pageSize });
+				setIsLoading(true);
+				const data = await getPaginatedArticles({
+					limit: pageSize,
+					offset: (page - 1) * pageSize,
+				});
 				const withAffiliates = [];
 				for (let i = 0; i < data.length; i++) {
 					withAffiliates.push(data[i]);
@@ -94,16 +105,20 @@ const Page = () => {
 				}
 				const filtered = searchQuery
 					? withAffiliates.filter(
-						(article) =>
-							article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-							article.content.toLowerCase().includes(searchQuery.toLowerCase())
-					)
+							(article) =>
+								article.title
+									.toLowerCase()
+									.includes(searchQuery.toLowerCase()) ||
+								article.content
+									.toLowerCase()
+									.includes(searchQuery.toLowerCase())
+						)
 					: withAffiliates;
 
 				if (page === 1) {
 					setArticles(filtered);
 				} else {
-					setArticles(prev => [...prev, ...filtered]);
+					setArticles((prev) => [...prev, ...filtered]);
 				}
 
 				setHasMore(data.length === pageSize);
@@ -149,26 +164,29 @@ const Page = () => {
 	return (
 		<div className="flex flex-col min-h-screen">
 			<header className="relative z-50 w-full">
-
 				{/* Main header with logo and navigation */}
-				<div className={cn(
-					"w-full py-4 px-6 transition-all duration-300 ease-in-out bg-background",
-					scrolled ? "sticky top-0 shadow-sm border-b border-border" : ""
-				)}>
+				<div
+					className={cn(
+						"w-full py-4 px-6 transition-all duration-300 ease-in-out bg-background",
+						scrolled
+							? "sticky top-0 shadow-sm border-b border-border"
+							: ""
+					)}
+				>
 					<div className="container mx-auto">
 						{/* Logo section */}
 						<Logo />
 
 						<div className="w-full bg-background py-2 px-6">
 							<div className="container mx-auto flex items-center justify-between text-sm">
-
 								<div className="flex items-center">
-									<span className="mr-2 hidden md:block">{currentDate}</span>
+									<span className="mr-2 hidden md:block">
+										{currentDate}
+									</span>
 								</div>
 
 								<div className="hidden md:block">
 									<AuthAction setIsAuthOpen={setIsAuthOpen} />
-
 								</div>
 								<div className="w-full flex justify-between md:hidden">
 									<AuthAction setIsAuthOpen={setIsAuthOpen} />
@@ -192,20 +210,44 @@ const Page = () => {
 											>
 												{isMenuOpen ? (
 													<>
-														<line x1="18" y1="6" x2="6" y2="18" />
-														<line x1="6" y1="6" x2="18" y2="18" />
+														<line
+															x1="18"
+															y1="6"
+															x2="6"
+															y2="18"
+														/>
+														<line
+															x1="6"
+															y1="6"
+															x2="18"
+															y2="18"
+														/>
 													</>
 												) : (
 													<>
-														<line x1="4" x2="20" y1="12" y2="12" />
-														<line x1="4" x2="20" y1="6" y2="6" />
-														<line x1="4" x2="20" y1="18" y2="18" />
+														<line
+															x1="4"
+															x2="20"
+															y1="12"
+															y2="12"
+														/>
+														<line
+															x1="4"
+															x2="20"
+															y1="6"
+															y2="6"
+														/>
+														<line
+															x1="4"
+															x2="20"
+															y1="18"
+															y2="18"
+														/>
 													</>
 												)}
 											</svg>
 										</button>
 									</div>
-
 								</div>
 							</div>
 						</div>
@@ -227,7 +269,10 @@ const Page = () => {
 									{moreCategories.length > 0 && (
 										<DropdownMenu>
 											<DropdownMenuTrigger asChild>
-												<button type="button" className="text-base font-medium hover:text-primary transition-colors border-b-2 border-transparent hover:border-primary py-1 flex items-center">
+												<button
+													type="button"
+													className="text-base font-medium hover:text-primary transition-colors border-b-2 border-transparent hover:border-primary py-1 flex items-center"
+												>
 													More
 													<svg
 														xmlns="http://www.w3.org/2000/svg"
@@ -246,13 +291,19 @@ const Page = () => {
 												</button>
 											</DropdownMenuTrigger>
 											<DropdownMenuContent>
-												{moreCategories.map((category) => (
-													<DropdownMenuItem key={category.slug}>
-														<Link href={`/category/${category.slug}`}>
-															{category.name}
-														</Link>
-													</DropdownMenuItem>
-												))}
+												{moreCategories.map(
+													(category) => (
+														<DropdownMenuItem
+															key={category.slug}
+														>
+															<Link
+																href={`/category/${category.slug}`}
+															>
+																{category.name}
+															</Link>
+														</DropdownMenuItem>
+													)
+												)}
 											</DropdownMenuContent>
 										</DropdownMenu>
 									)}
@@ -260,7 +311,6 @@ const Page = () => {
 									{searchComponent}
 								</nav>
 							</div>
-
 						</div>
 					</div>
 				</div>
@@ -290,7 +340,10 @@ const Page = () => {
 				/>
 			</header>
 			<main className="flex-grow">
-				<section id="latest-articles" className="container mx-auto px-4 md:px-6 pt-4 md:pt-8 pb-12 md:pb-16">
+				<section
+					id="latest-articles"
+					className="container mx-auto px-4 md:px-6 pt-4 md:pt-8 pb-12 md:pb-16"
+				>
 					{isLoading ? (
 						<div className="animate-pulse space-y-4">
 							{[...Array(6)].map((_, i) => (
@@ -307,7 +360,11 @@ const Page = () => {
 									key={`${article.slug}-${index}`}
 									slug={article.slug}
 									title={article.title}
-									excerpt={article.description || article.content.substring(0, 200) + "..."}
+									excerpt={
+										article.description ||
+										article.content.substring(0, 200) +
+											"..."
+									}
 									date={article.publishedAt.toISOString()}
 									categories={article.categories}
 									index={index}
@@ -326,7 +383,10 @@ const Page = () => {
 							onClick={() => setPage(page + 1)}
 							disabled={isLoading}
 						>
-							{isLoading ? "Loading..." : "Load More"}
+							{"Load More"}
+							{isLoading && (
+								<Loader2 className="ml-2 h-4 w-4 animate-spin" />
+							)}
 						</Button>
 					)}
 				</div>

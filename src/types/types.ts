@@ -51,3 +51,13 @@ export interface AffiliateProgram {
 	keywords: string[];
 	url: string;
 }
+
+export interface NewsletterSubscriber {
+	createdAt: Date;
+	email: string;
+	emailPreferences?: string | null;
+	id: string;
+	lastEmailSent: null;
+	unsubscribed: false;
+	verified: false;
+}

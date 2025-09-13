@@ -3,6 +3,7 @@
 import { type Article, type Category } from "@/types/types";
 import { prisma } from "./prisma";
 import { stripHtml } from "./utils/xml";
+import logger from "./logger";
 
 // Add retry utility
 async function withRetry<T>(
@@ -36,7 +37,7 @@ export async function checkExistingArticles(
 	for (let i = 0; i < urls.length; i += batchSize) {
 		const batch = urls.slice(i, i + batchSize);
 
-		const articles = await withRetry(() =>
+		const articles = (await withRetry(() =>
 			prisma.article.findMany({
 				where: {
 					originalUrl: {
@@ -47,7 +48,7 @@ export async function checkExistingArticles(
 					originalUrl: true,
 				},
 			})
-		);
+		)) as Article[];
 
 		articles.forEach((article) => {
 			if (article.originalUrl) {
@@ -274,5 +275,40 @@ export async function getTopArticles(limit = 8) {
 				},
 			},
 		},
+	});
+}
+
+export async function getActiveSubscribers() {
+	try {
+		// Get all active subscribers
+		const subscribers = await prisma.newsletter.findMany({
+			where: {
+				// verified: true,
+				unsubscribed: false,
+			},
+		});
+		return subscribers;
+	} catch (error) {
+		throw new Error("Failed to fetch active subscribers");
+	}
+}
+
+export async function getIssuesCount() {
+	try {
+		const count = await prisma.issue.count();
+		return count;
+	} catch (error) {
+		logger.error("Error fetching issues count:", error);
+		throw new Error("Failed to fetch issues");
+	}
+}
+
+export async function createIssue(data: {
+	body: string;
+	summary?: string;
+	subject?: string;
+}) {
+	return prisma.issue.create({
+		data,
 	});
 }

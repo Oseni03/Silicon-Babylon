@@ -15,20 +15,20 @@ datasource db {
 }
 
 model Article {
-  id            String      @id @default(cuid())
-  slug          String      @unique
-  title         String      @db.VarChar(255)
-  content       String      @db.Text
-  description   String?     @db.Text
-  originalUrl   String      @unique
+  id            String            @id @default(cuid())
+  slug          String            @unique
+  title         String            @db.VarChar(255)
+  content       String            @db.Text
+  description   String?           @db.Text
+  originalUrl   String            @unique
   originalTitle String
   publishedAt   DateTime
   keywords      String[]
   categories    Category[]
   comments      Comment[]
-  regenerated   Boolean     @default(false)
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  regenerated   Boolean           @default(false)
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
   reactions     ArticleReaction[]
 }
 
@@ -56,13 +56,22 @@ model Comment {
 }
 
 model Newsletter {
-  id              String   @id @default(cuid())
-  email           String   @unique
-  createdAt       DateTime @default(now())
-  verified        Boolean  @default(false)
-  lastEmailSent   DateTime?
-  unsubscribed    Boolean  @default(false)
-  emailPreferences Json?   // For future customization options
+  id               String    @id @default(cuid())
+  email            String    @unique
+  createdAt        DateTime  @default(now())
+  verified         Boolean   @default(false)
+  lastEmailSent    DateTime?
+  unsubscribed     Boolean   @default(false)
+  emailPreferences Json? // For future customization options
+}
+
+model Issue {
+  id        Int      @id @default(autoincrement())
+  body      String   @db.Text
+  summary   String?
+  subject   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Contact {
@@ -75,20 +84,20 @@ model Contact {
 }
 
 model User {
-  id              String          @id // Remove @default(cuid()) since we'll use Firebase UID
-  email           String          @unique
-  username        String?         @unique
-  comments        Comment[]
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
+  id               String            @id // Remove @default(cuid()) since we'll use Firebase UID
+  email            String            @unique
+  username         String?           @unique
+  comments         Comment[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
   articleReactions ArticleReaction[]
-  commentLikes    CommentLike[]
-  commentReplies  CommentReply[]
+  commentLikes     CommentLike[]
+  commentReplies   CommentReply[]
 }
 
 model ArticleReaction {
   id        String   @id @default(cuid())
-  type      String   // "LIKE", "LOVE", "LAUGH", etc.
+  type      String // "LIKE", "LOVE", "LAUGH", etc.
   articleId String
   userId    String
   createdAt DateTime @default(now())

@@ -1,264 +1,331 @@
-import * as React from 'react';
+import * as React from "react";
 import {
-    Body,
-    Container,
-    Head,
-    Heading,
-    Html,
-    Img,
-    Link,
-    Preview,
-    Section,
-    Text,
-    Tailwind,
-    Button,
-    Hr,
-    Column,
-    Row,
-} from '@react-email/components';
-import { type Article } from '@/types/types';
-import { stripHtml } from '@/lib/utils/xml';
-import { siteName, siteUrl } from '@/lib/config';
+	Body,
+	Container,
+	Head,
+	Heading,
+	Html,
+	Link,
+	Preview,
+	Section,
+	Text,
+	Button,
+	Hr,
+	Tailwind,
+} from "@react-email/components";
+import { siteName, siteUrl } from "@/lib/config";
+import { Article } from "@/types/types";
 
-const BulkByteNewsletter = (articles: Article[], email: string) => {
-    const currentDate = new Date().toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-    });
+const BulkByteNewsletter = ({
+	email,
+	issueNumber,
+	summary,
+	articles,
+}: {
+	issueNumber: string;
+	email: string;
+	summary: string;
+	articles: Article[];
+}) => {
+	return (
+		<Html lang="en" dir="ltr">
+			<Tailwind>
+				<Head />
+				<Preview>
+					This week's tech bytes: AI gets existential, crypto does
+					crypto things, and more probably accurate news!
+				</Preview>
+				<Body className="bg-black py-[40px] font-sans">
+					<Container className="bg-black max-w-[600px] mx-auto px-[20px]">
+						{/* Header */}
+						<Section className="text-center mb-[32px]">
+							<Heading className="text-[#f8f8f8] text-[32px] font-bold m-0 mb-[8px]">
+								{siteName}
+							</Heading>
+							<Text className="text-[#7a7676] text-[16px] m-0 mb-[16px]">
+								Bulk-Byte Newsletter #{issueNumber}
+							</Text>
+							<Text className="text-[#7a7676] text-[14px] m-0">
+								Where real tech news meets imaginary insights
+							</Text>
+						</Section>
 
-    return (
-        <Html>
-            <Tailwind>
-                <Head>
-                    <title>{siteName}</title>
-                    <Preview>The only tech news that's intentionally ridiculous</Preview>
-                </Head>
-                <Body className="bg-gray-100 font-sans py-[40px]">
-                    <Container className="bg-white rounded-[8px] mx-auto p-[20px] max-w-[600px]">
-                        {/* Header with Logo */}
-                        <Section className="mt-[10px]">
-                            <Row>
-                                <Column className="text-center">
-                                    <div className="flex items-center justify-center">
-                                        {/* Logo: White S in Black Box with rounded edges */}
-                                        <div style={{
-                                            width: '40px',
-                                            height: '40px',
-                                            backgroundColor: 'black',
-                                            borderRadius: '8px',
-                                            display: 'inline-flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            marginRight: '10px'
-                                        }}>
-                                            <div style={{ color: 'white', fontSize: '24px', fontWeight: 'bold', lineHeight: '1' }}>S</div>
-                                        </div>
+						{/* Welcome Message */}
+						<Section className="mb-[32px]">
+							<Text className="text-[#f8f8f8] text-[16px] leading-[24px] m-0 mb-[16px]">
+								Hey there! 👋
+							</Text>
+							<Text className="text-[#f8f8f8] text-[16px] leading-[24px] m-0">
+								Ready for another dose of probably accurate tech
+								news? {summary}
+							</Text>
+							{/* <Text className="text-[#f8f8f8] text-[16px] leading-[24px] m-0">
+								Ready for another dose of probably accurate tech
+								news? We've got AI having midlife crises,
+								startups pivoting to pet rocks, and the usual
+								crypto shenanigans. Let's dive into this week's
+								digital chaos!
+							</Text> */}
+						</Section>
 
-                                        <Heading className="text-[32px] font-bold text-black my-[16px] inline-block">
-                                            <span className="text-black">{siteName}</span>
-                                        </Heading>
-                                    </div>
+						{/* Main Stories */}
+						<Section className="mb-[40px]">
+							<Heading className="text-[#f8f8f8] text-[24px] font-bold m-0 mb-[24px]">
+								🔥 This Week's Hot Bytes
+							</Heading>
 
-                                    <Text className="text-center text-gray-700 text-[16px] italic">
-                                        The only tech news that's intentionally ridiculous
-                                    </Text>
-                                    <Text className="text-center text-gray-500 text-[14px]">
-                                        Bulk-Byte Edition • {currentDate}
-                                    </Text>
-                                </Column>
-                            </Row>
-                        </Section>
+							{/* Story 1 */}
+							{articles.slice(0, 4).map((article, index) => (
+								<Section
+									key={index}
+									className="mb-[24px] p-[16px] border border-solid border-[#7a7676] rounded-[8px]"
+								>
+									<Heading className="text-[#f8f8f8] text-[18px] font-bold m-0 mb-[8px]">
+										{article.title}
+									</Heading>
+									<Text className="text-[#f8f8f8] text-[14px] leading-[20px] m-0 mb-[12px]">
+										{article.description ||
+											article.content.substring(0, 100) +
+												"..."}
+									</Text>
+									<Link
+										href={`${siteUrl}/article/${article.slug}`}
+										className="text-[#7a7676] text-[14px] font-medium hover:underline"
+									>
+										Read the full story →
+									</Link>
+								</Section>
+							))}
+						</Section>
 
-                        <Hr className="border-gray-200 my-[20px]" />
+						<Hr className="border-[#7a7676] my-[32px]" />
 
-                        {/* Top Stories */}
-                        <Section>
-                            <Heading className="text-[20px] font-bold text-black mb-[16px]">
-                                This Week's Top Absurdities
-                            </Heading>
+						{/* Book Recommendations Section */}
+						<Section className="mb-[40px]">
+							<Heading className="text-[#f8f8f8] text-[20px] font-bold m-0 mb-[16px]">
+								📚 Developer Bookshelf: Because Stack Overflow
+								Can't Teach You Everything
+							</Heading>
 
-                            {articles.slice(0, 4).map((article) =>
-                                <>
-                                    <Row>
-                                        <Column>
-                                            <Text className="font-bold text-[16px] text-black mb-[8px]">
-                                                {article.title}
-                                            </Text>
-                                            <Text className="text-gray-800 mb-[16px]">
-                                                {article.description || stripHtml(article.content.substring(0, 100))}
-                                            </Text>
-                                            <Link href={`${siteUrl}/article/${article.slug}`} className="text-black underline">
-                                                Read the full gist →
-                                            </Link>
-                                        </Column>
-                                    </Row>
+							<Text className="text-[#f8f8f8] text-[14px] leading-[20px] m-0 mb-[24px]">
+								While we're busy making fun of tech trends, here
+								are some actually useful books to level up your
+								dev game. (Yes, we get a tiny commission if you
+								buy through our links - gotta fund our satirical
+								journalism somehow!)
+							</Text>
 
-                                    <Hr className="border-gray-200 my-[16px]" />
-                                </>
-                            )}
-                        </Section>
+							{/* Book 1 */}
+							<Section className="mb-[20px] p-[16px] bg-[#1a1a1a] rounded-[8px] border border-solid border-[#7a7676]">
+								<Heading className="text-[#f8f8f8] text-[16px] font-bold m-0 mb-[8px]">
+									"Clean Code" by Robert C. Martin
+								</Heading>
+								<Text className="text-[#f8f8f8] text-[13px] leading-[18px] m-0 mb-[12px]">
+									The holy grail of not writing code that
+									makes your future self cry. Uncle Bob
+									teaches you how to write code so clean, it
+									practically sparkles. Perfect for when you
+									want to impress your code reviewers instead
+									of traumatizing them.
+								</Text>
+								<Button
+									href="https://amzn.to/4gpNEwY"
+									className="bg-[#7a7676] text-white px-[16px] py-[8px] rounded-[4px] text-[12px] font-medium box-border hover:bg-[#8a8686] text-decoration-none"
+								>
+									Buy on Amazon →
+								</Button>
+							</Section>
 
-                        {/* Ad Placement */}
-                        <Section className="my-[24px] bg-gray-100 p-[16px] rounded-[8px] border-[2px] border-gray-300">
-                            <Text className="text-[12px] text-gray-500 text-center mb-[8px]">SPONSORED CONTENT</Text>
-                            <Heading className="text-[18px] font-bold text-center text-black mb-[12px]">
-                                Tired of Software That Actually Works?
-                            </Heading>
-                            <Text className="text-gray-800 mb-[16px] text-center">
-                                Try <span className="font-bold">BugifyPro™</span> - We intentionally add bugs to your perfectly functioning code!
-                            </Text>
-                            <Text className="text-gray-800 mb-[16px] text-center italic">
-                                "After using BugifyPro, our developers finally have job security!" - Anonymous CTO
-                            </Text>
-                            <Button
-                                href="https://example.com/bugifypro"
-                                className="bg-black text-white font-bold py-[12px] px-[20px] rounded-[4px] text-center block w-full box-border"
-                            >
-                                Sabotage Your Software Today!
-                            </Button>
-                        </Section>
+							{/* Book 2 */}
+							<Section className="mb-[20px] p-[16px] bg-[#1a1a1a] rounded-[8px] border border-solid border-[#7a7676]">
+								<Heading className="text-[#f8f8f8] text-[16px] font-bold m-0 mb-[8px]">
+									"The Pragmatic Programmer" by David Thomas &
+									Andrew Hunt
+								</Heading>
+								<Text className="text-[#f8f8f8] text-[13px] leading-[18px] m-0 mb-[12px]">
+									The developer's survival guide for when you
+									realize programming is 10% coding and 90%
+									debugging, crying, and questioning your life
+									choices. This book helps with the first
+									part, you're on your own for the crying.
+								</Text>
+								<Button
+									href="https://amzn.to/4gjNA1D"
+									className="bg-[#7a7676] text-white px-[16px] py-[8px] rounded-[4px] text-[12px] font-medium box-border hover:bg-[#8a8686] text-decoration-none"
+								>
+									Buy on Amazon →
+								</Button>
+							</Section>
 
-                        <Hr className="border-gray-200 my-[20px]" />
+							{/* Book 3 */}
+							<Section className="mb-[20px] p-[16px] bg-[#1a1a1a] rounded-[8px] border border-solid border-[#7a7676]">
+								<Heading className="text-[#f8f8f8] text-[16px] font-bold m-0 mb-[8px]">
+									"System Design Interview" by Alex Xu
+								</Heading>
+								<Text className="text-[#f8f8f8] text-[13px] leading-[18px] m-0 mb-[12px]">
+									For when you need to convince interviewers
+									you can design the next Facebook, even
+									though you still struggle with centering
+									divs. Includes helpful diagrams that make
+									you look like you know what "eventual
+									consistency" actually means.
+								</Text>
+								<Button
+									href="https://amzn.to/48e7Fo0"
+									className="bg-[#7a7676] text-white px-[16px] py-[8px] rounded-[4px] text-[12px] font-medium box-border hover:bg-[#8a8686] text-decoration-none"
+								>
+									Buy on Amazon →
+								</Button>
+							</Section>
 
-                        {/* More Articles */}
-                        <Section>
-                            <Heading className="text-[20px] font-bold text-black mb-[16px]">
-                                More Digital Delusions
-                            </Heading>
+							<Text className="text-[#7a7676] text-[11px] m-0 mt-[16px]">
+								* These are affiliate links. We earn a small
+								commission at no extra cost to you. Thanks for
+								supporting our satirical shenanigans!
+							</Text>
+						</Section>
 
-                            {articles.slice(4, 8).map((article) =>
-                                <>
-                                    <Row>
-                                        <Column>
-                                            <Text className="font-bold text-[16px] text-black mb-[8px]">
-                                                {article.title}
-                                            </Text>
-                                            <Text className="text-gray-800 mb-[16px]">
-                                                {article.description || stripHtml(article.content.substring(0, 100))}
-                                            </Text>
-                                            <Link href={`${siteUrl}/article/${article.slug}`} className="text-black underline">
-                                                Read the full gist →
-                                            </Link>
-                                        </Column>
-                                    </Row>
+						<Hr className="border-[#7a7676] my-[32px]" />
 
-                                    <Hr className="border-gray-200 my-[16px]" />
-                                </>
-                            )}
-                        </Section>
+						{/* Sponsored Post Section - Spaark.dev */}
+						<Section className="mb-[40px] p-[20px] bg-[#1a1a1a] rounded-[8px] border border-solid border-[#7a7676]">
+							<Text className="text-[#7a7676] text-[12px] font-bold m-0 mb-[16px] uppercase tracking-[1px]">
+								Sponsored Content
+							</Text>
 
-                        <Hr className="border-gray-200 my-[20px]" />
+							<Heading className="text-[#f8f8f8] text-[20px] font-bold m-0 mb-[16px]">
+								Stop Coding Your Portfolio from Scratch (Again)
+								🤦‍♂️
+							</Heading>
 
-                        {/* Quote of the Week */}
-                        <Section className="bg-gray-100 p-[16px] rounded-[8px]">
-                            <Text className="text-[18px] italic text-black text-center">
-                                "We've created an algorithm that predicts what you'll have for lunch tomorrow with 99% accuracy. Unfortunately, it only works for people who eat the same thing every day."
-                            </Text>
-                            <Text className="text-right text-gray-700 font-bold">
-                                — Dr. Obvious, Chief Data Scientist at PredictableLabs
-                            </Text>
-                        </Section>
+							<Text className="text-[#f8f8f8] text-[16px] leading-[24px] m-0 mb-[16px]">
+								We get it. You're a developer, not a designer.
+								You've spent 47 hours trying to center a div on
+								your portfolio homepage, and it's still
+								mysteriously floating to the left like a
+								rebellious CSS property.
+							</Text>
 
-                        <Hr className="border-gray-200 my-[20px]" />
+							<Text className="text-[#f8f8f8] text-[14px] leading-[20px] m-0 mb-[16px]">
+								<strong>Enter Spaark.dev</strong> - the
+								portfolio builder that actually understands
+								developers:
+							</Text>
 
-                        {/* Tech Tip */}
-                        <Section>
-                            <Heading className="text-[18px] font-bold text-black mb-[12px]">
-                                💡 Useless Tech Tip of the Week
-                            </Heading>
-                            <Text className="text-gray-800 bg-gray-100 p-[12px] rounded-[4px]">
-                                To save battery life on your smartphone, simply mail it to someone who has electricity. Your battery will thank you for the break.
-                            </Text>
-                        </Section>
+							<Text className="text-[#f8f8f8] text-[14px] leading-[20px] m-0 mb-[4px]">
+								✨ <strong>Dev-focused templates</strong> that
+								don't look like they were designed in 2003
+							</Text>
+							<Text className="text-[#f8f8f8] text-[14px] leading-[20px] m-0 mb-[4px]">
+								📝 <strong>Built-in tech blog</strong> for your
+								"Why I Switched to Vim" articles
+							</Text>
+							<Text className="text-[#f8f8f8] text-[14px] leading-[20px] m-0 mb-[4px]">
+								🌐 <strong>Custom domain + SSL</strong> because
+								you're not an amateur
+							</Text>
+							<Text className="text-[#f8f8f8] text-[14px] leading-[20px] m-0 mb-[20px]">
+								⚡ <strong>CDN included</strong> for
+								blazing-fast load times (your visitors will
+								thank you)
+							</Text>
 
-                        {/* Second Ad Placement */}
-                        <Section className="my-[24px] bg-black p-[16px] rounded-[8px]">
-                            <Text className="text-[12px] text-gray-400 text-center mb-[8px]">ADVERTISEMENT</Text>
-                            <Heading className="text-[18px] font-bold text-center text-white mb-[12px]">
-                                Introducing the Anti-Productivity Suite
-                            </Heading>
-                            <Text className="text-gray-300 mb-[16px] text-center">
-                                Our software guarantees to reduce your productivity by at least 73% or your money back!
-                            </Text>
-                            <Text className="text-gray-300 mb-[12px] text-center">
-                                Features include:
-                            </Text>
-                            <Text className="text-gray-300 mb-[4px] text-center">• Random computer freezes during important meetings</Text>
-                            <Text className="text-gray-300 mb-[4px] text-center">• Auto-delete of documents you forgot to save</Text>
-                            <Text className="text-gray-300 mb-[16px] text-center">• Wi-Fi that only works when your boss isn't looking</Text>
-                            <Button
-                                href="https://example.com/anti-productivity"
-                                className="bg-white text-black font-bold py-[12px] px-[20px] rounded-[4px] text-center block w-full box-border"
-                            >
-                                Procrastinate Now (Or Later)
-                            </Button>
-                        </Section>
+							<Button
+								href="https://spaark.dev"
+								className="bg-white text-black px-[24px] py-[12px] rounded-[6px] text-[14px] font-medium box-border hover:bg-gray-100 text-decoration-none"
+							>
+								Build Your Portfolio →
+							</Button>
 
-                        <Hr className="border-gray-200 my-[20px]" />
+							<Text className="text-[#7a7676] text-[11px] m-0 mt-[12px]">
+								Starting at $0/month - Yes, actually free! No
+								hidden fees, no "gotchas", just good vibes and
+								great portfolios
+							</Text>
+						</Section>
 
-                        {/* Call to Action */}
-                        <Section className="text-center">
-                            <Heading className="text-[20px] font-bold text-black mb-[16px]">
-                                Want More Digital Nonsense?
-                            </Heading>
-                            <Text className="text-gray-800 mb-[16px]">
-                                Share this newsletter with your technically challenged friends and watch them believe it's all real!
-                            </Text>
-                            <div className="flex flex-col gap-4">
-                                <Button
-                                    href={`mailto:?subject=Check out this ridiculous tech newsletter&body=I found this hilarious tech newsletter that you might enjoy: ${siteUrl}/newsletter`}
-                                    className="bg-black text-white font-bold py-[12px] px-[20px] rounded-[4px] text-center inline-block box-border"
-                                >
-                                    📧 Share via Email
-                                </Button>
-                                <div className="flex justify-center gap-4">
-                                    <Button
-                                        href={`https://twitter.com/intent/tweet?text=Check out this hilarious tech newsletter: ${siteUrl}/newsletter&hashtags=tech,newsletter`}
-                                        className="bg-[#1DA1F2] text-white font-bold py-[12px] px-[20px] rounded-[4px] text-center inline-block box-border"
-                                    >
-                                        𝕏 Share on X
-                                    </Button>
-                                    <Button
-                                        href={`https://www.linkedin.com/sharing/share-offsite/?url=${siteUrl}/newsletter`}
-                                        className="bg-[#0077B5] text-white font-bold py-[12px] px-[20px] rounded-[4px] text-center inline-block box-border"
-                                    >
-                                        💼 Share on LinkedIn
-                                    </Button>
-                                </div>
-                                <div className="mt-4">
-                                    <Text className="text-gray-600 text-sm">
-                                        Or copy this link to share anywhere:
-                                    </Text>
-                                    <Text className="text-black font-mono text-sm break-all">
-                                        {siteUrl}/newsletter
-                                    </Text>
-                                </div>
-                            </div>
-                        </Section>
+						<Hr className="border-[#7a7676] my-[32px]" />
 
-                        <Hr className="border-gray-200 my-[20px]" />
+						{articles.length > 4 && (
+							<Section className="mb-[40px]">
+								<Heading className="text-[#f8f8f8] text-[20px] font-bold m-0 mb-[20px]">
+									⚡ Quick Bytes
+								</Heading>
 
-                        {/* Footer */}
-                        <Section>
-                            <Text className="text-center text-gray-500 text-[14px] m-0">
-                                © {new Date().getFullYear()} {siteName} - Where tech news is deliberately ridiculous
-                            </Text>
-                            <Text className="text-center text-gray-500 text-[14px] m-0">
-                                123 Fake Street, Nonexistent City, Digital World
-                            </Text>
-                            <Text className="text-center text-gray-500 text-[14px] mt-[8px]">
-                                <Link href={`${siteUrl}/unsubscribe?email=${email}`} className="text-gray-500 underline">
-                                    Unsubscribe
-                                </Link>{' '}
-                                (but why would you want to?)
-                            </Text>
-                        </Section>
-                    </Container>
-                </Body>
-            </Tailwind>
-        </Html>
-    );
+								{articles.slice(4).map((article, index) => (
+									<Text
+										key={index}
+										className="text-[#f8f8f8] text-[14px] leading-[20px] m-0 mb-[8px]"
+									>
+										• {article.title}
+									</Text>
+								))}
+							</Section>
+						)}
+
+						{/* CTA Section */}
+						<Section className="text-center mb-[40px] p-[20px] border border-solid border-[#7a7676] rounded-[8px]">
+							<Heading className="text-[#f8f8f8] text-[18px] font-bold m-0 mb-[12px]">
+								Want More Satirical Tech News?
+							</Heading>
+							<Text className="text-[#f8f8f8] text-[14px] leading-[20px] m-0 mb-[16px]">
+								Visit our website for daily doses of probably
+								accurate tech coverage!
+							</Text>
+							<Button
+								href={siteUrl}
+								className="bg-white text-black px-[24px] py-[12px] rounded-[6px] text-[14px] font-medium box-border hover:bg-gray-100 text-decoration-none"
+							>
+								Visit {siteName} →
+							</Button>
+						</Section>
+
+						{/* Footer */}
+						<Hr className="border-[#7a7676] my-[32px]" />
+
+						<Section className="text-center">
+							<Text className="text-[#7a7676] text-[12px] leading-[16px] m-0 mb-[8px]">
+								Where real tech news meets imaginary insights
+							</Text>
+
+							<Text className="text-[#7a7676] text-[12px] leading-[16px] m-0 mb-[16px]">
+								By subscribing, you agree to receive
+								lighthearted, imaginative content and accept our
+								privacy policy.
+							</Text>
+
+							<Text className="text-[#7a7676] text-[12px] leading-[16px] m-0 mb-[8px]">
+								<Link
+									href={`${siteUrl}/unsubscribe?email=${email}`}
+									className="text-[#7a7676] hover:underline"
+								>
+									Unsubscribe
+								</Link>
+								{/* {" | "}
+								<Link
+									href={`${siteUrl}/update-preferences?email=${email}`}
+									className="text-[#7a7676] hover:underline"
+								>
+									Update Preferences
+								</Link> */}
+								{" | "}
+								<Link
+									href={`${siteUrl}/privacy-policy`}
+									className="text-[#7a7676] hover:underline"
+								>
+									Privacy Policy
+								</Link>
+							</Text>
+
+							<Text className="text-[#7a7676] text-[11px] m-0">
+								© {new Date().getFullYear()} {siteName}
+							</Text>
+						</Section>
+					</Container>
+				</Body>
+			</Tailwind>
+		</Html>
+	);
 };
 
 export default BulkByteNewsletter;
