@@ -96,7 +96,7 @@ function RootLayout({ children }: PropsWithChildren) {
 					href="/rss.xml"
 				/>
 			</head>
-			<body className={inter.className}>
+			<body className={inter.className} suppressHydrationWarning={true}>
 				<ThemeProvider>
 					<AuthProvider>
 						<TooltipProvider>
