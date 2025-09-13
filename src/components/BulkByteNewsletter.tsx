@@ -23,7 +23,7 @@ const BulkByteNewsletter = ({
 	articles,
 }: {
 	issueNumber: string;
-	email: string;
+	email?: string;
 	summary: string;
 	articles: Article[];
 }) => {

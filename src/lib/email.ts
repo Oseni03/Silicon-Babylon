@@ -2,8 +2,6 @@ import { Resend } from "resend";
 import BulkByteNewsletter from "@/components/BulkByteNewsletter";
 import { NewsletterSubscriber, type Article } from "@/types/types";
 import { siteName } from "./config";
-import { createIssue } from "./db";
-import { render } from "@react-email/components";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -23,24 +21,16 @@ export async function sendNewsletterBatch({
 	try {
 		const batch = await Promise.all(
 			users.map(async (user) => {
-				const body = BulkByteNewsletter({
-					articles,
-					email: user.email,
-					issueNumber: issueNumber.toString(),
-					summary,
-				});
-
-				await createIssue({
-					body: await render(body),
-					subject,
-					summary,
-				});
-
 				return {
 					from: `${siteName} <newsletter@satiric-tech.info>`,
 					to: user.email,
 					subject: `${subject} - ${siteName} Newsletter`,
-					react: body,
+					react: BulkByteNewsletter({
+						articles,
+						email: user.email,
+						issueNumber: issueNumber.toString(),
+						summary,
+					}),
 				};
 			})
 		);

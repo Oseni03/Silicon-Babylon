@@ -1,10 +1,17 @@
-import { getActiveSubscribers, getIssuesCount, getTopArticles } from "@/lib/db";
+import {
+	createIssue,
+	getActiveSubscribers,
+	getIssuesCount,
+	getTopArticles,
+} from "@/lib/db";
 import { inngest } from "../client";
 import logger from "@/lib/logger";
 import { sendNewsletterBatch } from "@/lib/email";
 import { prisma } from "@/lib/prisma";
 import { NewsletterSubscriber } from "@/types/types";
 import { ai_agent } from "@/lib/ai";
+import { render } from "@react-email/components";
+import BulkByteNewsletter from "@/components/BulkByteNewsletter";
 
 export const sendNewsletter = inngest.createFunction(
 	{ id: "send-newsletter" },
@@ -48,6 +55,17 @@ export const sendNewsletter = inngest.createFunction(
 
 		// Send newsletter batch
 		const result = await step.run("send-newsletter-batch", async () => {
+			await createIssue({
+				body: await render(
+					BulkByteNewsletter({
+						articles,
+						issueNumber: props.issueNumber.toString(),
+						summary: props.summary as string,
+					})
+				),
+				subject: props.subject as string,
+				summary: props.summary as string,
+			});
 			return sendNewsletterBatch({
 				users: subscribers as NewsletterSubscriber[],
 				articles,
