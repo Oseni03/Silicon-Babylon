@@ -4,11 +4,12 @@ import { TechCrunchItem } from "@/types/types";
 import Parser from "rss-parser";
 import { checkExistingArticles, createArticle } from "@/lib/db";
 import { generateSlug } from "@/lib/utils";
-import { ensureCategories, fetchFeed, generateSatiricalVersion } from "./utils";
+import { ensureCategories, fetchFeed } from "./utils";
 import { siteUrl } from "@/lib/config";
 import { stripHtml } from "@/lib/utils/xml";
 import { postToLinkedIn } from "@/lib/social/linkedin";
 import { prisma } from "@/lib/prisma";
+import { ai_agent } from "@/lib/ai";
 
 export const processFeeds = inngest.createFunction(
 	{ id: "process-feeds" },
@@ -118,10 +119,11 @@ export const processFeeds = inngest.createFunction(
 							item.categories
 						);
 
-						const satirical = await generateSatiricalVersion(
-							item.title,
-							item.content
-						);
+						const satirical =
+							await ai_agent.generateSatiricalVersion(
+								item.title,
+								item.content
+							);
 
 						if (!satirical) {
 							logger.info(
@@ -130,7 +132,7 @@ export const processFeeds = inngest.createFunction(
 									title: item.title,
 								}
 							);
-							return;
+							throw new Error("Satirical generation failed");
 						}
 
 						const slug = generateSlug(satirical.title);
@@ -182,6 +184,7 @@ export const processFeeds = inngest.createFunction(
 							title: item.title,
 							error,
 						});
+						return { success: false, title: item.title, error };
 					}
 				})
 			)
