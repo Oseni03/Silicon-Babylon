@@ -90,3 +90,19 @@ export const categories = [
 		slug: "enterprise",
 	},
 ];
+
+export const unslugify = (slug: string): string => {
+	// Special cases
+	const specialCases: Record<string, string> = {
+		ai: "AI",
+	};
+
+	if (specialCases[slug]) {
+		return specialCases[slug];
+	}
+
+	return slug
+		.split("-")
+		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+		.join(" ");
+};

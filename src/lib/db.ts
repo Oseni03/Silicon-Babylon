@@ -182,6 +182,30 @@ export async function getArticlesByCategory(categorySlug: string) {
 	});
 }
 
+export async function getPaginatedArticlesByCategory({
+	categorySlug,
+	limit = 10,
+	offset = 0,
+}) {
+	return prisma.article.findMany({
+		where: {
+			categories: {
+				some: {
+					slug: categorySlug,
+				},
+			},
+		},
+		include: {
+			categories: true,
+		},
+		orderBy: {
+			publishedAt: "desc",
+		},
+		skip: offset,
+		take: limit,
+	});
+}
+
 export async function subscribeToNewsletter(email: string) {
 	return prisma.newsletter.create({
 		data: {

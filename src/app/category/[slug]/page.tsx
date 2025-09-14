@@ -1,120 +1,168 @@
+"use client";
+
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { getArticlesByCategory, getAllCategories } from "@/lib/db";
-import { siteName, siteKeywords } from "@/lib/config";
-import { notFound } from "next/navigation";
-import { type Metadata } from "next";
+import { notFound, useParams } from "next/navigation";
 import ArticlesGrid from "@/components/ArticlesGrid";
 import CTA from "@/components/CTA";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator, BreadcrumbPage } from "@/components/ui/breadcrumb";
+import {
+	Breadcrumb,
+	BreadcrumbItem,
+	BreadcrumbLink,
+	BreadcrumbList,
+	BreadcrumbSeparator,
+	BreadcrumbPage,
+} from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
+import { unslugify } from "@/lib/utils";
+import { useEffect, useState } from "react";
+import { Article } from "@/types/types";
+import { getRandomAffiliate } from "@/lib/affiliates";
+import { getPaginatedArticlesByCategory } from "@/lib/db";
 
-export async function generateStaticParams() {
-  const categories = await getAllCategories();
-  return categories.map((category) => ({
-    slug: category.slug,
-  }));
+interface PageProps {
+	params: Promise<{ slug: string }>;
 }
 
-const unslugify = (slug: string): string => {
-  // Special cases
-  const specialCases: Record<string, string> = {
-    ai: "AI",
-  };
+const Page = () => {
+	const { slug } = useParams();
+	const [articles, setArticles] = useState<Article[]>([]);
+	const [hasMore, setHasMore] = useState(true);
+	const [page, setPage] = useState(1);
+	const [isLoading, setIsLoading] = useState(true);
+	const [initialLoadComplete, setInitialLoadComplete] = useState(false);
+	const pageSize = 15;
 
-  if (specialCases[slug]) {
-    return specialCases[slug];
-  }
+	useEffect(() => {
+		if (!slug) {
+			return;
+		}
 
-  return slug
-    .split("-")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-};
+		async function loadArticles() {
+			try {
+				setIsLoading(true);
+				const data = await getPaginatedArticlesByCategory({
+					categorySlug: slug as string,
+					limit: pageSize,
+					offset: (page - 1) * pageSize,
+				});
 
-export async function generateMetadata({ params }): Promise<Metadata> {
-  const { slug } = await params;
-  const categoryName = unslugify(slug);
-  const title = `${categoryName} News`;
-  const description = `Explore our curated collection of satirical tech news about ${categoryName}. Get your daily dose of tech humor and insights.`;
-  const keywords = [
-    categoryName,
-    "satirical tech news",
-    "tech humor",
-    `${categoryName} articles`,
-    `${categoryName} news`,
-    `${categoryName} funny articles`,
-    `${categoryName} funny news`,
-    `${categoryName} satire articles`,
-    `${categoryName} satire news`,
-    `${categoryName} newsletter`,
-    ...siteKeywords.splice(0, 5), // Limit to 5 keywords
-  ].join(", ");
+				// If no articles found on first load, show 404
+				if (page === 1 && data.length === 0) {
+					notFound();
+					return;
+				}
 
-  return {
-    title,
-    description,
-    keywords,
-    openGraph: {
-      title,
-      description,
-      type: "website",
-      siteName,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
-  };
-}
+				const withAffiliates = [];
+				for (let i = 0; i < data.length; i++) {
+					withAffiliates.push(data[i]);
+					if ((i + 1) % 4 === 0) {
+						withAffiliates.push(getRandomAffiliate());
+					}
+				}
 
-const Page = async ({ params }) => {
-  const { slug } = await params;
-  const articles = await getArticlesByCategory(slug);
+				if (page === 1) {
+					setArticles(withAffiliates);
+				} else {
+					setArticles((prev) => [...prev, ...withAffiliates]);
+				}
 
-  if (!articles.length) {
-    notFound();
-  }
+				setHasMore(data.length === pageSize);
+				setInitialLoadComplete(true);
+			} catch (error) {
+				console.error("Failed to fetch articles:", error);
+				// Only show 404 if it's the first load and there's an error
+				if (page === 1) {
+					notFound();
+				}
+			} finally {
+				setIsLoading(false);
+			}
+		}
 
-  const categoryName = unslugify(slug);
+		loadArticles();
+	}, [slug, page]);
 
-  return (
-    <div className="flex flex-col min-h-screen">
-      <Header />
-      <main className="flex-grow pt-4 md:pt-8 pb-12 md:pb-16">
-        <section className="container mx-auto px-3 md:px-6">
-          <div className="mb-4 md:mb-8">
-            <Breadcrumb className="mb-4 md:mb-6">
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <BreadcrumbLink href="/" className="text-muted-foreground hover:text-foreground">
-                    Home
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>
-                    {categoryName}
-                  </BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
+	// Show loading state during initial load
+	if (!initialLoadComplete && isLoading) {
+		return (
+			<div className="flex flex-col min-h-screen">
+				<Header />
+				<main className="flex-grow flex items-center justify-center">
+					<div className="flex items-center space-x-2">
+						<Loader2 className="h-6 w-6 animate-spin" />
+						<span>Loading articles...</span>
+					</div>
+				</main>
+				<Footer />
+			</div>
+		);
+	}
 
-            <h1 className="text-3xl md:text-4xl font-medium tracking-tight mb-3">
-              {categoryName} News
-            </h1>
-            <p className="text-muted-foreground text-lg">
-              Browse our collection of satirical articles about {categoryName}
-            </p>
-          </div>
+	// If no articles after initial load, this will be handled by notFound() in useEffect
+	if (initialLoadComplete && articles.length === 0) {
+		notFound();
+	}
 
-          <ArticlesGrid filteredArticles={articles} />
-        </section>
-      </main>
-      <CTA />
-      <Footer />
-    </div>
-  );
+	const categoryName = unslugify(slug as string);
+
+	return (
+		<div className="flex flex-col min-h-screen">
+			<Header />
+			<main className="flex-grow pt-4 md:pt-8 pb-12 md:pb-16">
+				<section className="container mx-auto px-3 md:px-6">
+					<div className="mb-4 md:mb-8">
+						<Breadcrumb className="mb-4 md:mb-6">
+							<BreadcrumbList>
+								<BreadcrumbItem>
+									<BreadcrumbLink
+										href="/"
+										className="text-muted-foreground hover:text-foreground"
+									>
+										Home
+									</BreadcrumbLink>
+								</BreadcrumbItem>
+								<BreadcrumbSeparator />
+								<BreadcrumbItem>
+									<BreadcrumbPage>
+										{categoryName}
+									</BreadcrumbPage>
+								</BreadcrumbItem>
+							</BreadcrumbList>
+						</Breadcrumb>
+
+						<h1 className="text-3xl md:text-4xl font-medium tracking-tight mb-3">
+							{categoryName} News
+						</h1>
+						<p className="text-muted-foreground text-lg">
+							Browse our collection of satirical articles about{" "}
+							{categoryName}
+						</p>
+					</div>
+
+					<ArticlesGrid filteredArticles={articles} />
+				</section>
+				<div className="flex justify-center mt-4">
+					{hasMore && (
+						<Button
+							variant="outline"
+							size="lg"
+							onClick={() => setPage((prev) => prev + 1)}
+							disabled={isLoading}
+						>
+							{"Load More"}
+							{isLoading && (
+								<Loader2 className="ml-2 h-4 w-4 animate-spin" />
+							)}
+						</Button>
+					)}
+				</div>
+			</main>
+			<CTA />
+			<Footer />
+		</div>
+	);
 };
 
 export default Page;
