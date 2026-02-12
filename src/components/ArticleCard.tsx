@@ -1,6 +1,7 @@
-"use client"
+"use client";
 
 import { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { type ArticleCardProps } from "@/types/types";
@@ -12,8 +13,10 @@ const ArticleCard = ({
 	categories = [],
 	index,
 	slug,
-	isAffiliate,
+	isAffiliate = false,
 	originalUrl,
+	image,
+	imageAlt = title, // fallback to title if no alt provided
 }: ArticleCardProps) => {
 	const [isVisible, setIsVisible] = useState(false);
 	const cardRef = useRef<HTMLDivElement>(null);
@@ -30,7 +33,7 @@ const ArticleCard = ({
 				root: null,
 				rootMargin: "0px",
 				threshold: 0.1,
-			}
+			},
 		);
 
 		if (cardRef.current) {
@@ -50,6 +53,8 @@ const ArticleCard = ({
 		day: "numeric",
 	});
 
+	const hasImage = !!image;
+
 	return (
 		<div
 			ref={cardRef}
@@ -59,10 +64,26 @@ const ArticleCard = ({
 				isVisible && "active",
 				"transition-all duration-500 ease-out",
 				`animation-delay-${Math.min(index * 100, 600)}`,
-				isAffiliate && "border-primary/20"
+				isAffiliate && "border-primary/20",
 			)}
 		>
-			<div className="p-6 space-y-4">
+			{hasImage && (
+				<div className="relative aspect-[16/9] overflow-hidden bg-muted">
+					<Image
+						src={image}
+						alt={imageAlt}
+						fill
+						className={cn(
+							"object-cover transition-transform duration-500 group-hover:scale-105",
+							isAffiliate && "brightness-[0.98]",
+						)}
+						sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+						priority={index < 6} // optional: load first few images eagerly
+					/>
+				</div>
+			)}
+
+			<div className={cn("p-6 space-y-4", hasImage ? "pt-5" : "pt-6")}>
 				<div className="flex items-center justify-between mb-3">
 					<div className="flex gap-2 flex-wrap">
 						{categories?.length > 0 ? (
@@ -74,19 +95,21 @@ const ArticleCard = ({
 										"text-xs font-medium px-2.5 py-0.5 rounded-full hover:opacity-80 transition-opacity",
 										isAffiliate
 											? "bg-primary/10 text-primary"
-											: "bg-secondary text-secondary-foreground"
+											: "bg-secondary text-secondary-foreground",
 									)}
 								>
 									{cat.name}
 								</Link>
 							))
 						) : (
-							<span className={cn(
-								"text-xs font-medium px-2.5 py-0.5 rounded-full",
-								isAffiliate
-									? "bg-primary/10 text-primary"
-									: "bg-secondary text-secondary-foreground"
-							)}>
+							<span
+								className={cn(
+									"text-xs font-medium px-2.5 py-0.5 rounded-full",
+									isAffiliate
+										? "bg-primary/10 text-primary"
+										: "bg-secondary text-secondary-foreground",
+								)}
+							>
 								Uncategorized
 							</span>
 						)}
@@ -101,10 +124,8 @@ const ArticleCard = ({
 				</h3>
 
 				<div
-					className="text-muted-foreground text-sm line-clamp-4"
-					dangerouslySetInnerHTML={{
-						__html: excerpt,
-					}}
+					className="text-muted-foreground text-sm line-clamp-3 md:line-clamp-4"
+					dangerouslySetInnerHTML={{ __html: excerpt }}
 				/>
 
 				<div className="pt-2">
@@ -113,7 +134,7 @@ const ArticleCard = ({
 							href={originalUrl}
 							target="_blank"
 							rel="noopener noreferrer sponsored"
-							className="inline-flex items-center text-sm font-medium text-primary"
+							className="inline-flex items-center text-sm font-medium text-primary hover:underline"
 						>
 							Learn more
 							<svg
@@ -133,7 +154,7 @@ const ArticleCard = ({
 					) : (
 						<Link
 							href={`/article/${slug}`}
-							className="inline-flex items-center text-sm font-medium text-primary"
+							className="inline-flex items-center text-sm font-medium text-primary hover:underline"
 						>
 							Read more
 							<svg

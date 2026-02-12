@@ -22,11 +22,13 @@ export interface ArticleCardProps {
 	title: string;
 	excerpt: string;
 	date: string;
-	categories: Category[];
+	categories?: Category[];
 	index: number;
 	slug: string;
 	isAffiliate?: boolean;
 	originalUrl?: string;
+	image?: string | null; // ← Added: URL of the featured image
+	imageAlt?: string; // ← Optional: alt text for accessibility
 }
 
 // API Response Types
