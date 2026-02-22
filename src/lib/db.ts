@@ -4,6 +4,7 @@ import { type Article, type Category } from "@/types/types";
 import { prisma } from "./prisma";
 import { stripHtml } from "./utils/xml";
 import logger from "./logger";
+import { unstable_cache } from "next/cache";
 
 // Add retry utility
 async function withRetry<T>(
@@ -107,29 +108,51 @@ export async function createArticle(data: Article) {
 	});
 }
 
-export async function getArticles() {
-	return prisma.article.findMany({
-		include: {
-			categories: true,
-		},
-		orderBy: {
-			publishedAt: "desc",
-		},
-	});
-}
+export const getArticles = unstable_cache(
+	async () => {
+		return prisma.article.findMany({
+			select: {
+				id: true,
+				slug: true,
+				title: true,
+				description: true,
+				originalUrl: true,
+				publishedAt: true,
+				categories: true,
+				keywords: true,
+			},
+			orderBy: {
+				publishedAt: "desc",
+			},
+		});
+	},
+	['articles'],
+	{ tags: ['articles'], revalidate: 3600 }
+);
 
-export async function getPaginatedArticles({ limit = 10, offset = 0 }) {
-	return prisma.article.findMany({
-		include: {
-			categories: true,
-		},
-		orderBy: {
-			publishedAt: "desc",
-		},
-		skip: offset,
-		take: limit,
-	});
-}
+export const getPaginatedArticles = unstable_cache(
+	async ({ limit = 10, offset = 0 }) => {
+		return prisma.article.findMany({
+			select: {
+				id: true,
+				slug: true,
+				title: true,
+				description: true,
+				originalUrl: true,
+				publishedAt: true,
+				categories: true,
+				keywords: true,
+			},
+			orderBy: {
+				publishedAt: "desc",
+			},
+			skip: offset,
+			take: limit,
+		});
+	},
+	['paginated-articles'],
+	{ tags: ['articles'], revalidate: 3600 }
+);
 
 export async function getArticleBySlug(slug: string) {
 	return prisma.article.findFirst({
@@ -143,8 +166,15 @@ export async function getArticleBySlug(slug: string) {
 export async function getArticleByOriginalUrl(url: string) {
 	return prisma.article.findFirst({
 		where: { originalUrl: url },
-		include: {
+		select: {
+			id: true,
+			slug: true,
+			title: true,
+			description: true,
+			originalUrl: true,
+			publishedAt: true,
 			categories: true,
+			keywords: true,
 		},
 	});
 }
@@ -160,51 +190,81 @@ export async function createCategory(data: Category) {
 	});
 }
 
-export async function getAllCategories() {
-	return prisma.category.findMany();
-}
+export const getAllCategories = unstable_cache(
+	async () => {
+		return prisma.category.findMany();
+	},
+	['all-categories'],
+	{ tags: ['categories'], revalidate: 86400 } // Cache for 24 hours
+);
 
-export async function getArticlesByCategory(categorySlug: string) {
-	return prisma.article.findMany({
-		where: {
-			categories: {
-				some: {
-					slug: categorySlug,
+export const getArticlesByCategory = unstable_cache(
+	async (categorySlug: string) => {
+		return prisma.article.findMany({
+			where: {
+				categories: {
+					some: {
+						slug: categorySlug,
+					},
 				},
 			},
-		},
-		include: {
-			categories: true,
-		},
-		orderBy: {
-			publishedAt: "desc",
-		},
-	});
-}
+			select: {
+				id: true,
+				slug: true,
+				title: true,
+				description: true,
+				originalUrl: true,
+				publishedAt: true,
+				categories: true,
+				keywords: true,
+			},
+			orderBy: {
+				publishedAt: "desc",
+			},
+		});
+	},
+	['articles-by-category'],
+	{ tags: ['articles', 'categories'], revalidate: 3600 }
+);
 
-export async function getPaginatedArticlesByCategory({
-	categorySlug,
-	limit = 10,
-	offset = 0,
-}) {
-	return prisma.article.findMany({
-		where: {
-			categories: {
-				some: {
-					slug: categorySlug,
+export const getPaginatedArticlesByCategory = unstable_cache(
+	async ({
+		categorySlug,
+		limit = 10,
+		offset = 0,
+	}: {
+		categorySlug: string;
+		limit?: number;
+		offset?: number;
+	}) => {
+		return prisma.article.findMany({
+			where: {
+				categories: {
+					some: {
+						slug: categorySlug,
+					},
 				},
 			},
-		},
-		include: {
-			categories: true,
-		},
-		orderBy: {
-			publishedAt: "desc",
-		},
-		skip: offset,
-		take: limit,
-	});
-}
+			select: {
+				id: true,
+				slug: true,
+				title: true,
+				description: true,
+				originalUrl: true,
+				publishedAt: true,
+				categories: true,
+				keywords: true,
+			},
+			orderBy: {
+				publishedAt: "desc",
+			},
+			skip: offset,
+			take: limit,
+		});
+	},
+	['paginated-articles-by-category'],
+	{ tags: ['articles', 'categories'], revalidate: 3600 }
+);
 
 export async function subscribeToNewsletter(email: string) {
 	return prisma.newsletter.create({
@@ -269,49 +329,53 @@ export async function getRelatedArticles(
 	});
 }
 
-export async function getTopArticles(limit = 8) {
-	const oneWeekAgo = new Date();
-	oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+export const getTopArticles = unstable_cache(
+	async (limit = 8) => {
+		const oneWeekAgo = new Date();
+		oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
-	return prisma.article.findMany({
-		where: {
-			publishedAt: {
-				gte: oneWeekAgo,
-			},
-		},
-		orderBy: [
-			{
-				reactions: {
-					_count: "desc",
+		return prisma.article.findMany({
+			where: {
+				publishedAt: {
+					gte: oneWeekAgo,
 				},
 			},
-			{
-				publishedAt: "desc",
-			},
-		],
-		take: limit,
-		select: {
-			categories: true,
-			_count: {
-				select: {
-					reactions: true,
-					comments: true,
+			orderBy: [
+				{
+					reactions: {
+						_count: "desc",
+					},
 				},
+				{
+					publishedAt: "desc",
+				},
+			],
+			take: limit,
+			select: {
+				categories: true,
+				_count: {
+					select: {
+						reactions: true,
+						comments: true,
+					},
+				},
+				slug: true,
+				title: true,
+				content: true,
+				description: true,
+				publishedAt: true,
+				originalUrl: true,
+				originalTitle: true,
+				keywords: true,
+				regenerated: true,
+				createdAt: true,
+				updatedAt: true,
 			},
-			slug: true,
-			title: true,
-			content: true,
-			description: true,
-			publishedAt: true,
-			originalUrl: true,
-			originalTitle: true,
-			keywords: true,
-			regenerated: true,
-			createdAt: true,
-			updatedAt: true,
-		},
-	});
-}
+		});
+	},
+	['top-articles'],
+	{ tags: ['articles', 'reactions'], revalidate: 3600 }
+);
 
 export async function getActiveSubscribers() {
 	try {

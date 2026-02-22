@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import Script from "next/script";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-// import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import ReactQueryProvider from "@/components/ReactQueryProvider";
 import { ThemeProvider } from "@/providers";
 import type { PropsWithChildren } from "react";
 import { siteName, siteKeywords } from "@/lib/config";
@@ -97,14 +97,16 @@ function RootLayout({ children }: PropsWithChildren) {
 				/>
 			</head>
 			<body className={inter.className} suppressHydrationWarning={true}>
-				<ThemeProvider>
-					<AuthProvider>
-						<TooltipProvider>
-							<Toaster />
-							{children}
-						</TooltipProvider>
-					</AuthProvider>
-				</ThemeProvider>
+				<ReactQueryProvider>
+					<ThemeProvider>
+						<AuthProvider>
+							<TooltipProvider>
+								<Toaster />
+								{children}
+							</TooltipProvider>
+						</AuthProvider>
+					</ThemeProvider>
+				</ReactQueryProvider>
 			</body>
 		</html>
 	);
