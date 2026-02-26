@@ -32,7 +32,7 @@ const ArticleView = ({ article, relatedArticles }: ArticleViewProps) => {
 						</h1>
 
 						<div className="flex flex-col sm:flex-row sm:items-center text-sm text-muted-foreground gap-4 sm:gap-6">
-							<time dateTime={article.publishedAt.toISOString()}>
+							<time dateTime={new Date(article.publishedAt).toISOString()}>
 								{new Date(
 									article.publishedAt
 								).toLocaleDateString("en-US", {
@@ -110,7 +110,7 @@ const ArticleView = ({ article, relatedArticles }: ArticleViewProps) => {
 										</h3>
 										<div className="flex items-center text-sm text-muted-foreground">
 											<time
-												dateTime={related.publishedAt.toISOString()}
+												dateTime={new Date(related.publishedAt).toISOString()}
 											>
 												{new Date(
 													related.publishedAt

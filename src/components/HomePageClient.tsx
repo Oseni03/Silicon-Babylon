@@ -278,7 +278,7 @@ export default function HomePageClient({
 									article.description ||
 									article.content.substring(0, 200) + "..."
 								}
-								date={article.publishedAt.toISOString()}
+								date={new Date(article.publishedAt).toISOString()}
 								categories={article.categories}
 								index={index}
 								isAffiliate={article.isAffiliate}
