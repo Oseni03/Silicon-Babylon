@@ -120,6 +120,7 @@ export const getArticles = unstable_cache(
 				publishedAt: true,
 				categories: true,
 				keywords: true,
+				content: true,
 			},
 			orderBy: {
 				publishedAt: "desc",
@@ -142,6 +143,7 @@ export const getPaginatedArticles = unstable_cache(
 				publishedAt: true,
 				categories: true,
 				keywords: true,
+				content: true,
 			},
 			orderBy: {
 				publishedAt: "desc",
@@ -175,6 +177,7 @@ export async function getArticleByOriginalUrl(url: string) {
 			publishedAt: true,
 			categories: true,
 			keywords: true,
+			content: true,
 		},
 	});
 }
@@ -217,6 +220,9 @@ export const getArticlesByCategory = unstable_cache(
 				publishedAt: true,
 				categories: true,
 				keywords: true,
+				content: true,
+                createdAt: true,
+                updatedAt: true,
 			},
 			orderBy: {
 				publishedAt: "desc",
@@ -254,6 +260,7 @@ export const getPaginatedArticlesByCategory = unstable_cache(
 				publishedAt: true,
 				categories: true,
 				keywords: true,
+				content: true,
 			},
 			orderBy: {
 				publishedAt: "desc",
