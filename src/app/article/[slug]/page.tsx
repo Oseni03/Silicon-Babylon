@@ -34,8 +34,8 @@ export async function generateStaticParams() {
 	return getStaticParams();
 }
 
-export async function generateMetadata({ params }): Promise<Metadata> {
-	const { slug } = params;
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+	const { slug } = await params;
 	const data = await getArticle(slug);
 
 	if (!data?.article) {
@@ -75,30 +75,26 @@ export async function generateMetadata({ params }): Promise<Metadata> {
 	};
 }
 
-const Page = async ({ params }) => {
-	try {
-		const { slug } = params;
-		const data = await getArticle(slug);
+const Page = async ({ params }: { params: Promise<{ slug: string }> }) => {
+	const { slug } = await params;
+	const data = await getArticle(slug);
 
-		if (!data?.article) {
-			notFound();
-		}
-
-		return (
-			<div className="flex flex-col min-h-screen">
-				<Header />
-				<main className="flex-grow pt-4 md:pt-8">
-					<ArticleView
-						article={data.article}
-						relatedArticles={data.relatedArticles}
-					/>
-				</main>
-				<Footer />
-			</div>
-		);
-	} catch (error) {
+	if (!data?.article) {
 		notFound();
 	}
+
+	return (
+		<div className="flex flex-col min-h-screen">
+			<Header />
+			<main className="flex-grow pt-4 md:pt-8">
+				<ArticleView
+					article={data.article}
+					relatedArticles={data.relatedArticles}
+				/>
+			</main>
+			<Footer />
+		</div>
+	);
 };
 
 export default Page;
