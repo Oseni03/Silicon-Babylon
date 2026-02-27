@@ -132,8 +132,19 @@ export const getArticles = unstable_cache(
 );
 
 export const getPaginatedArticles = unstable_cache(
-	async ({ limit = 10, offset = 0 }) => {
+	async ({ limit = 10, offset = 0, search = "" }) => {
+		const where = search
+			? {
+					OR: [
+						{ title: { contains: search, mode: "insensitive" as const } },
+						{ content: { contains: search, mode: "insensitive" as const } },
+						{ description: { contains: search, mode: "insensitive" as const } },
+					],
+			  }
+			: {};
+
 		return prisma.article.findMany({
+			where,
 			select: {
 				id: true,
 				slug: true,
@@ -238,18 +249,35 @@ export const getPaginatedArticlesByCategory = unstable_cache(
 		categorySlug,
 		limit = 10,
 		offset = 0,
+		search = "",
 	}: {
 		categorySlug: string;
 		limit?: number;
 		offset?: number;
+		search?: string;
 	}) => {
+		const searchCondition = search
+			? {
+					OR: [
+						{ title: { contains: search, mode: "insensitive" as const } },
+						{ content: { contains: search, mode: "insensitive" as const } },
+						{ description: { contains: search, mode: "insensitive" as const } },
+					],
+			  }
+			: {};
+
 		return prisma.article.findMany({
 			where: {
-				categories: {
-					some: {
-						slug: categorySlug,
+				AND: [
+					{
+						categories: {
+							some: {
+								slug: categorySlug,
+							},
+						},
 					},
-				},
+					searchCondition,
+				],
 			},
 			select: {
 				id: true,
