@@ -16,7 +16,7 @@ const ArticleCard = ({
 	isAffiliate = false,
 	originalUrl,
 	image,
-	imageAlt = title, // fallback to title if no alt provided
+	imageAlt = title,
 }: ArticleCardProps) => {
 	const [isVisible, setIsVisible] = useState(false);
 	const cardRef = useRef<HTMLDivElement>(null);
@@ -29,21 +29,12 @@ const ArticleCard = ({
 					observer.unobserve(entry.target);
 				}
 			},
-			{
-				root: null,
-				rootMargin: "0px",
-				threshold: 0.1,
-			},
+			{ threshold: 0.1 }
 		);
 
-		if (cardRef.current) {
-			observer.observe(cardRef.current);
-		}
-
+		if (cardRef.current) observer.observe(cardRef.current);
 		return () => {
-			if (cardRef.current) {
-				observer.unobserve(cardRef.current);
-			}
+			if (cardRef.current) observer.unobserve(cardRef.current);
 		};
 	}, []);
 
@@ -53,127 +44,70 @@ const ArticleCard = ({
 		day: "numeric",
 	});
 
-	const hasImage = !!image;
+	const linkHref = isAffiliate ? originalUrl : `/article/${slug}`;
+	const LinkComponent = isAffiliate ? "a" : Link;
+	const linkProps = isAffiliate ? { target: "_blank", rel: "noopener noreferrer sponsored" } : {};
 
 	return (
 		<div
 			ref={cardRef}
 			className={cn(
-				"group relative border border-border rounded-lg overflow-hidden transition-all duration-500 ease-out bg-card hover:shadow-md",
-				"animate-on-scroll fade-in",
+				"group flex flex-col h-full border-b border-black pb-8 md:pb-12 transition-all duration-700 ease-out animate-on-scroll fade-in",
 				isVisible && "active",
-				"transition-all duration-500 ease-out",
 				`animation-delay-${Math.min(index * 100, 600)}`,
-				isAffiliate && "border-primary/20",
+				isAffiliate && "bg-primary/5"
 			)}
 		>
-			{hasImage && (
-				<div className="relative aspect-[16/9] overflow-hidden bg-muted">
-					<Image
-						src={image}
-						alt={imageAlt}
-						fill
-						className={cn(
-							"object-cover transition-transform duration-500 group-hover:scale-105",
-							isAffiliate && "brightness-[0.98]",
-						)}
-						sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-						priority={index < 6} // optional: load first few images eagerly
-					/>
-				</div>
-			)}
-
-			<div className={cn("p-6 space-y-4", hasImage ? "pt-5" : "pt-6")}>
-				<div className="flex items-center justify-between mb-3">
-					<div className="flex gap-2 flex-wrap">
-						{categories?.length > 0 ? (
-							categories.map((cat) => (
-								<Link
-									key={cat.slug}
-									href={`/category/${cat.slug}`}
-									className={cn(
-										"text-xs font-medium px-2.5 py-0.5 rounded-full hover:opacity-80 transition-opacity",
-										isAffiliate
-											? "bg-primary/10 text-primary"
-											: "bg-secondary text-secondary-foreground",
-									)}
-								>
-									{cat.name}
-								</Link>
-							))
-						) : (
-							<span
-								className={cn(
-									"text-xs font-medium px-2.5 py-0.5 rounded-full",
-									isAffiliate
-										? "bg-primary/10 text-primary"
-										: "bg-secondary text-secondary-foreground",
-								)}
-							>
-								Uncategorized
-							</span>
-						)}
+			<LinkComponent href={linkHref as any} {...linkProps} className="flex flex-col h-full gap-6">
+				{image && (
+					<div className="relative aspect-[16/10] overflow-hidden bg-muted transition-all duration-500 grayscale hover:grayscale-0">
+						<Image
+							src={image}
+							alt={imageAlt}
+							fill
+							className="object-cover transition-transform duration-700 group-hover:scale-105"
+							sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+							priority={index < 3}
+						/>
 					</div>
-					<span className="text-xs text-muted-foreground">
-						{formattedDate}
-					</span>
-				</div>
+				)}
 
-				<h3 className="text-xl font-medium leading-tight group-hover:text-primary/90 transition-colors">
-					{title}
-				</h3>
+				<div className="flex flex-col flex-grow space-y-4">
+					<div className="flex items-center gap-3">
+						<div className="flex gap-2">
+							{categories.length > 0 ? (
+								categories.slice(0, 1).map((cat) => (
+									<span key={cat.slug} className="text-[10px] uppercase tracking-widest font-bold text-black border-b border-black">
+										{cat.name}
+									</span>
+								))
+							) : (
+								<span className="text-[10px] uppercase tracking-widest font-bold text-black border-b border-black">
+									Inside Tech
+								</span>
+							)}
+						</div>
+						<span className="text-[10px] uppercase tracking-widest text-muted-foreground">
+							{formattedDate}
+						</span>
+					</div>
 
-				<div
-					className="text-muted-foreground text-sm line-clamp-3 md:line-clamp-4"
-					dangerouslySetInnerHTML={{ __html: excerpt }}
-				/>
+					<h3 className="text-2xl md:text-3xl font-serif leading-[1.1] group-hover:underline decoration-1 underline-offset-4 transition-all">
+						{title}
+					</h3>
 
-				<div className="pt-2">
-					{isAffiliate ? (
-						<a
-							href={originalUrl}
-							target="_blank"
-							rel="noopener noreferrer sponsored"
-							className="inline-flex items-center text-sm font-medium text-primary hover:underline"
-						>
-							Learn more
-							<svg
-								className="ml-1 h-4 w-4 transform transition-transform group-hover:translate-x-1"
-								xmlns="http://www.w3.org/2000/svg"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								strokeWidth="2"
-								strokeLinecap="round"
-								strokeLinejoin="round"
-							>
-								<line x1="5" y1="12" x2="19" y2="12" />
-								<polyline points="12 5 19 12 12 19" />
-							</svg>
-						</a>
-					) : (
-						<Link
-							href={`/article/${slug}`}
-							className="inline-flex items-center text-sm font-medium text-primary hover:underline"
-						>
-							Read more
-							<svg
-								className="ml-1 h-4 w-4 transform transition-transform group-hover:translate-x-1"
-								xmlns="http://www.w3.org/2000/svg"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								strokeWidth="2"
-								strokeLinecap="round"
-								strokeLinejoin="round"
-							>
-								<line x1="5" y1="12" x2="19" y2="12" />
-								<polyline points="12 5 19 12 12 19" />
-							</svg>
-						</Link>
+					<p 
+						className="text-muted-foreground text-sm leading-relaxed line-clamp-3 font-sans"
+						dangerouslySetInnerHTML={{ __html: excerpt }}
+					/>
+
+					{isAffiliate && (
+						<div className="pt-2 text-[10px] uppercase tracking-widest font-black text-primary">
+							Sponsored Content
+						</div>
 					)}
 				</div>
-			</div>
+			</LinkComponent>
 		</div>
 	);
 };

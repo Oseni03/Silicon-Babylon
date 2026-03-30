@@ -8,11 +8,9 @@ import { unsubscribeToNewsletter } from "@/lib/db";
 import { Loader2 } from "lucide-react";
 
 const CTA = () => {
-	const [isVisible, setIsVisible] = useState(true); // Changed to true by default
-	const [isSticky, setIsSticky] = useState(false); // Changed to false by default
-	const [isInHero, setIsInHero] = useState(false); // Changed to false by default
+	const [isVisible, setIsVisible] = useState(true);
+	const [isSticky, setIsSticky] = useState(false);
 	const ctaRef = useRef<HTMLDivElement>(null);
-	const heroRef = useRef<HTMLDivElement>(null);
 	const [email, setEmail] = useState("");
 	const [loading, setIsLoading] = useState(false);
 
@@ -70,86 +68,21 @@ const CTA = () => {
 			setEmail("");
 
 			toast("Successfully subscribed! 🎉", {
-				description:
-					"Get ready for playful tech insights delivered straight to your inbox.",
+				description: "Welcome to the future of tech satire.",
 				action: {
 					label: "Undo",
 					onClick: async () => {
 						await unsubscribeToNewsletter(email);
-						toast("Successfully unsubscribed! 🎉", {
-							description: "Leaving so soon!.",
-						});
+						toast("Successfully unsubscribed!");
 					},
 				},
 			});
 		} catch (error) {
-			toast.error("Subscription failed", {
-				description:
-					error instanceof Error
-						? error.message
-						: "Failed to subscribe",
-			});
+			toast.error("Subscription failed");
 		} finally {
 			setIsLoading(false);
 		}
 	};
-
-	const MainCTAContent = () => (
-		<div className="text-center max-w-2xl mx-auto space-y-4">
-			<h2 className="text-xl font-medium tracking-tight">
-				Stay Updated with {siteName}
-			</h2>
-			<p className="text-muted-foreground">
-				Subscribe to our newsletter for a weekly dose of playful tech
-				insights. No spam, just fun and fact.
-			</p>
-			<form
-				onSubmit={handleSubmit}
-				className="mt-4 flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
-			>
-				<input
-					type="email"
-					placeholder="Enter your email"
-					className="flex-grow px-4 py-2 rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
-					value={email}
-					onChange={(e) => setEmail(e.target.value)}
-					required
-				/>
-				<button
-					type="submit"
-					className="whitespace-nowrap px-6 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-				>
-					Subscribe
-					{loading && (
-						<Loader2 className="ml-2 h-4 w-4 animate-spin inline-block" />
-					)}
-				</button>
-			</form>
-			<p className="text-xs text-muted-foreground mt-4">
-				By subscribing, you agree to receive lighthearted, imaginative
-				content and accept our privacy policy.
-			</p>
-		</div>
-	);
-
-	const StickyCTAContent = () => (
-		<div className="flex items-center justify-between gap-4 sm:gap-6">
-			<div className="space-y-1.5 flex-1">
-				<h3 className="text-sm font-medium">
-					Stay Updated with {siteName}
-				</h3>
-				<p className="text-xs text-muted-foreground">
-					Get weekly tech insights and playful content in your inbox
-				</p>
-			</div>
-			<button
-				onClick={scrollToCTA}
-				className="shrink-0 h-11 whitespace-nowrap px-6 text-sm rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-			>
-				Subscribe Now
-			</button>
-		</div>
-	);
 
 	return (
 		<>
@@ -157,46 +90,86 @@ const CTA = () => {
 			<section
 				ref={ctaRef}
 				className={cn(
-					"container mx-auto px-6 py-16 animate-on-scroll fade-in",
-					isVisible && "active"
+					"w-full bg-black text-white py-24 md:py-32 overflow-hidden",
+					isVisible && "animate-in fade-in duration-1000"
 				)}
 			>
-				<div className="w-full max-w-4xl mx-auto bg-secondary/50 border border-border rounded-lg overflow-hidden">
-					<div className="p-8 md:p-12">
-						<MainCTAContent />
+				<div className="container mx-auto px-4 md:px-6">
+					<div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-12 md:gap-24">
+						<div className="flex-1 space-y-6 text-center md:text-left">
+							<h2 className="text-4xl md:text-6xl font-serif leading-tight">
+								The future is <span className="italic text-primary">satirical</span>.
+							</h2>
+							<p className="text-white/60 text-lg max-w-md font-sans">
+								Join 50,000+ readers getting our weekly dose of tech insights and playful commentary.
+							</p>
+						</div>
+
+						<div className="w-full md:w-auto flex-shrink-0">
+							<form
+								onSubmit={handleSubmit}
+								className="flex flex-col gap-4 w-full md:w-96"
+							>
+								<div className="relative group">
+									<input
+										type="email"
+										placeholder="STAY CONNECTED (EMAIL)"
+										className="w-full bg-transparent border-b-2 border-white/20 py-4 px-1 text-sm tracking-widest focus:outline-none focus:border-primary transition-colors placeholder:text-white/30 uppercase font-black"
+										value={email}
+										onChange={(e) => setEmail(e.target.value)}
+										required
+									/>
+									<div className="absolute bottom-0 left-0 h-0.5 bg-primary w-0 group-focus-within:w-full transition-all duration-500"></div>
+								</div>
+								<button
+									type="submit"
+									disabled={loading}
+									className="group flex items-center justify-between py-4 px-1 border-b-2 border-white/20 hover:border-primary transition-all text-left"
+								>
+									<span className="text-[10px] uppercase tracking-[0.3em] font-black group-hover:text-primary transition-colors">
+										{loading ? "PROCESSING..." : "JOIN THE LIST"}
+									</span>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="16"
+										height="16"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										strokeWidth="2"
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										className="transition-transform group-hover:translate-x-1"
+									>
+										<line x1="5" y1="12" x2="19" y2="12" />
+										<polyline points="12 5 19 12 12 19" />
+									</svg>
+								</button>
+							</form>
+							<p className="text-[8px] uppercase tracking-widest text-white/40 mt-6 text-center md:text-left">
+								BY JOINING, YOU AGREE TO OUR IMAGINATIVE TERMS.
+							</p>
+						</div>
 					</div>
 				</div>
 			</section>
 
 			{/* Sticky CTA */}
-			{isSticky && !isInHero && (
-				<section className="fixed bottom-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-t border-border">
-					<div className="container mx-auto px-4 sm:px-6 py-4 sm:py-5">
-						<div className="relative w-full max-w-4xl mx-auto">
-							<button
-								onClick={() => setIsSticky(false)}
-								className="absolute -right-1 sm:-right-2 top-1/2 -translate-y-1/2 p-1.5 sm:p-2 hover:bg-primary/10 rounded-full"
-								aria-label="Close subscription form"
-							>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="20"
-									height="20"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									strokeWidth="2"
-									strokeLinecap="round"
-									strokeLinejoin="round"
-								>
-									<path d="M18 6 6 18" />
-									<path d="m6 6 12 12" />
-								</svg>
-							</button>
-							<StickyCTAContent />
+			{isSticky && (
+				<div className="fixed bottom-0 left-0 right-0 z-50 bg-black text-white transform transition-transform duration-500 animate-in slide-in-from-bottom border-t border-white/10">
+					<div className="container mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
+						<div className="flex items-center gap-4">
+							<div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+							<span className="text-[10px] uppercase tracking-widest font-black hidden sm:inline">Latest: Satire on the edge</span>
 						</div>
+						<button
+							onClick={scrollToCTA}
+							className="text-[10px] uppercase tracking-[0.3em] font-black hover:text-primary transition-colors"
+						>
+							SUBSCRIBE NOW
+						</button>
 					</div>
-				</section>
+				</div>
 			)}
 		</>
 	);

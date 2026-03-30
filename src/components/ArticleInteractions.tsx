@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
 	Dialog,
@@ -14,7 +13,6 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
 	Tooltip,
 	TooltipContent,
@@ -32,6 +30,7 @@ import {
 	toggleCommentLike,
 	addReply,
 } from "@/lib/db/articleInteractions";
+import { cn } from "@/lib/utils";
 
 interface ArticleInteractionsProps {
 	articleId: string;
@@ -138,382 +137,170 @@ export default function ArticleInteractions({
 	}, [articleId]);
 
 	return (
-		<div className="mt-8 space-y-6">
-			<div className="flex gap-2 mb-4">
+		<div className="mt-12 space-y-12">
+			{/* Reactions */}
+			<div className="flex flex-wrap gap-3">
 				<TooltipProvider>
 					{REACTIONS.map(({ type, emoji }) => (
 						<Tooltip key={type}>
 							<TooltipTrigger asChild>
-								<Button
-									variant="outline"
-									size="icon"
+								<button
 									onClick={() => handleReaction(type)}
-									className="h-10 w-10 text-lg relative"
+									className="group relative flex items-center gap-2 px-4 py-2 border border-black hover:bg-black hover:text-white transition-all font-sans text-sm font-bold uppercase tracking-widest"
 								>
-									{emoji}
+									<span>{emoji}</span>
 									{reactionCounts[type] > 0 && (
-										<span className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center">
-											{reactionCounts[type]}
-										</span>
+										<span className="text-[10px]">{reactionCounts[type]}</span>
 									)}
-								</Button>
+								</button>
 							</TooltipTrigger>
-							<TooltipContent>
-								<p>
-									{type.charAt(0) +
-										type.slice(1).toLowerCase()}
-								</p>
+							<TooltipContent className="rounded-none border-black bg-black text-white px-2 py-1 text-[10px] uppercase tracking-widest">
+								<p>{type.charAt(0) + type.slice(1).toLowerCase()}</p>
 							</TooltipContent>
 						</Tooltip>
 					))}
 				</TooltipProvider>
 			</div>
 
-			<div className="space-y-4">
-				<h3 className="text-xl font-bold">Comments</h3>
+			{/* Comments Section */}
+			<div className="space-y-8">
+				<div className="flex items-center justify-between border-b border-black pb-4">
+					<h3 className="text-sm uppercase tracking-[0.3em] font-black">Discussion</h3>
+					<span className="text-[10px] uppercase font-bold text-muted-foreground">{comments.length} Comments</span>
+				</div>
 
 				<form onSubmit={handleComment} className="space-y-4">
-					<Textarea
-						value={newComment}
-						onChange={(e) => setNewComment(e.target.value)}
-						placeholder="Add a comment..."
-						className="min-h-[100px]"
-					/>
-					<Button
+					<div className="relative group">
+						<textarea
+							value={newComment}
+							onChange={(e) => setNewComment(e.target.value)}
+							placeholder="JOIN THE CONVERSATION..."
+							className="w-full bg-transparent border-b-2 border-black/10 py-4 px-1 text-sm tracking-widest focus:outline-none focus:border-black transition-colors placeholder:text-black/20 uppercase font-bold min-h-[80px] resize-none"
+						/>
+						<div className="absolute bottom-0 left-0 h-0.5 bg-black w-0 group-focus-within:w-full transition-all duration-500"></div>
+					</div>
+					<button
 						type="submit"
+						disabled={loading}
 						onClick={() => !user && setShowAuthModal(true)}
-						className="w-full sm:w-auto"
+						className="group flex items-center gap-4 py-2 px-1 text-left"
 					>
-						{loading ? "Posting..." : "Post Comment"}
-					</Button>
+						<span className="text-[10px] uppercase tracking-[0.3em] font-black group-hover:text-primary transition-colors">
+							{loading ? "POSTING..." : "SUBMIT COMMENT"}
+						</span>
+						<div className="w-8 h-px bg-black group-hover:w-16 transition-all duration-500"></div>
+					</button>
 				</form>
 
-				{comments.length === 0 ? (
-					<div className="text-center p-8 border rounded-md text-muted-foreground">
-						<p>
-							No comments yet. Be the first to share your
-							thoughts!
-						</p>
-					</div>
-				) : comments.length > 2 ? (
-					<ScrollArea className="h-[400px] w-full rounded-md border p-4">
-						<div className="space-y-4">
-							{comments.map((comment: any) => (
-								<Card key={comment.id}>
-									<CardContent className="p-4">
-										<div className="flex items-start gap-4">
-											<Avatar>
-												<AvatarFallback>
-													{comment.user
-														.username?.[0] || "U"}
-												</AvatarFallback>
-											</Avatar>
-											<div className="flex-1">
-												<div className="flex items-center gap-2">
-													<span className="font-semibold">
-														{comment.user
-															.username ||
-															"Anonymous"}
-													</span>
-													<span className="text-sm text-muted-foreground">
-														{formatDate(
-															comment.createdAt
-														)}
-													</span>
-												</div>
-												<p className="mt-2 text-sm text-foreground">
-													{comment.content}
-												</p>
-												<div className="mt-2 flex items-center gap-2">
-													<Button
-														variant="ghost"
-														size="sm"
-														onClick={() =>
-															handleLike(
-																comment.id
-															)
-														}
-														className={`text-muted-foreground ${
-															comment.likes.some(
-																(like: any) =>
-																	like.userId ===
-																	user?.id
-															)
-																? "text-primary"
-																: ""
-														}`}
-													>
-														👍{" "}
-														{comment.likes.length}
-													</Button>
-													<Dialog>
-														<DialogTrigger asChild>
-															<Button
-																variant="ghost"
-																size="sm"
-																onClick={() =>
-																	setReplyingTo(
-																		comment.id
-																	)
-																}
-																className="text-muted-foreground"
-															>
-																💬{" "}
-																{
-																	comment
-																		.replies
-																		.length
-																}
-															</Button>
-														</DialogTrigger>
-														<DialogContent>
-															<DialogHeader>
-																<DialogTitle>
-																	Reply to
-																	comment
-																</DialogTitle>
-															</DialogHeader>
-															<form
-																onSubmit={
-																	handleReply
-																}
-																className="space-y-4"
-															>
-																<Textarea
-																	value={
-																		replyContent
-																	}
-																	onChange={(
-																		e
-																	) =>
-																		setReplyContent(
-																			e
-																				.target
-																				.value
-																		)
-																	}
-																	placeholder="Write your reply..."
-																	className="min-h-[100px]"
-																/>
-																<Button
-																	type="submit"
-																	disabled={
-																		replyLoading ||
-																		!user
-																	}
-																>
-																	{replyLoading
-																		? "Posting..."
-																		: "Post Reply"}
-																</Button>
-															</form>
-														</DialogContent>
-													</Dialog>
-												</div>
-												{comment.replies.length > 0 && (
-													<div className="mt-4 space-y-3 pl-4 border-l">
-														{comment.replies.map(
-															(reply: any) => (
-																<div
-																	key={
-																		reply.id
-																	}
-																	className="flex gap-2"
-																>
-																	<Avatar className="h-6 w-6">
-																		<AvatarFallback className="text-xs">
-																			{reply
-																				.user
-																				.username?.[0] ||
-																				"U"}
-																		</AvatarFallback>
-																	</Avatar>
-																	<div>
-																		<div className="flex items-center gap-2">
-																			<span className="font-semibold text-sm">
-																				{reply
-																					.user
-																					.username ||
-																					"Anonymous"}
-																			</span>
-																			<span className="text-xs text-muted-foreground">
-																				{formatDate(
-																					reply.createdAt
-																				)}
-																			</span>
-																		</div>
-																		<p className="text-sm">
-																			{
-																				reply.content
-																			}
-																		</p>
-																	</div>
-																</div>
-															)
-														)}
-													</div>
-												)}
-											</div>
-										</div>
-									</CardContent>
-								</Card>
-							))}
+				<div className="space-y-8 divide-y divide-black/10">
+					{comments.length === 0 ? (
+						<div className="py-12 text-center">
+							<p className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground">
+								No comments yet. Be the first to share.
+							</p>
 						</div>
-					</ScrollArea>
-				) : (
-					<div className="space-y-4 w-full rounded-md border p-4">
-						{comments.map((comment: any) => (
-							<Card key={comment.id}>
-								<CardContent className="p-4">
-									<div className="flex items-start gap-4">
-										<Avatar>
-											<AvatarFallback>
-												{comment.user.username?.[0] ||
-													"U"}
-											</AvatarFallback>
-										</Avatar>
-										<div className="flex-1">
-											<div className="flex items-center gap-2">
-												<span className="font-semibold">
-													{comment.user.username ||
-														"Anonymous"}
+					) : (
+						comments.map((comment: any) => (
+							<div key={comment.id} className="pt-8">
+								<div className="flex items-start gap-4">
+									<Avatar className="rounded-none border border-black h-8 w-8">
+										<AvatarFallback className="rounded-none bg-black text-white text-[10px] font-black">
+											{comment.user.username?.[0] || "U"}
+										</AvatarFallback>
+									</Avatar>
+									<div className="flex-1 space-y-4">
+										<div className="flex items-center justify-between">
+											<div className="flex items-center gap-3">
+												<span className="text-[10px] uppercase tracking-widest font-black">
+													{comment.user.username || "Anonymous"}
 												</span>
-												<span className="text-sm text-muted-foreground">
-													{formatDate(
-														comment.createdAt
-													)}
+												<span className="text-[10px] uppercase tracking-widest text-muted-foreground">
+													{formatDate(comment.createdAt)}
 												</span>
 											</div>
-											<p className="mt-2 text-sm text-foreground">
-												{comment.content}
-											</p>
-											<div className="mt-2 flex items-center gap-2">
-												<Button
-													variant="ghost"
-													size="sm"
-													onClick={() =>
-														handleLike(comment.id)
-													}
-													className={`text-muted-foreground ${
-														comment.likes.some(
-															(like: any) =>
-																like.userId ===
-																user?.id
-														)
-															? "text-primary"
-															: ""
-													}`}
-												>
-													👍 {comment.likes.length}
-												</Button>
-												<Dialog>
-													<DialogTrigger asChild>
-														<Button
-															variant="ghost"
-															size="sm"
-															onClick={() =>
-																setReplyingTo(
-																	comment.id
-																)
-															}
-															className="text-muted-foreground"
-														>
-															💬{" "}
-															{
-																comment.replies
-																	.length
-															}
-														</Button>
-													</DialogTrigger>
-													<DialogContent>
-														<DialogHeader>
-															<DialogTitle>
-																Reply to comment
-															</DialogTitle>
-														</DialogHeader>
-														<form
-															onSubmit={
-																handleReply
-															}
-															className="space-y-4"
-														>
-															<Textarea
-																value={
-																	replyContent
-																}
-																onChange={(e) =>
-																	setReplyContent(
-																		e.target
-																			.value
-																	)
-																}
-																placeholder="Write your reply..."
-																className="min-h-[100px]"
-															/>
-															<Button
-																type="submit"
-																disabled={
-																	replyLoading ||
-																	!user
-																}
-															>
-																{replyLoading
-																	? "Posting..."
-																	: "Post Reply"}
-															</Button>
-														</form>
-													</DialogContent>
-												</Dialog>
-											</div>
-											{comment.replies.length > 0 && (
-												<div className="mt-4 space-y-3 pl-4 border-l">
-													{comment.replies.map(
-														(reply: any) => (
-															<div
-																key={reply.id}
-																className="flex gap-2"
-															>
-																<Avatar className="h-6 w-6">
-																	<AvatarFallback className="text-xs">
-																		{reply
-																			.user
-																			.username?.[0] ||
-																			"U"}
-																	</AvatarFallback>
-																</Avatar>
-																<div>
-																	<div className="flex items-center gap-2">
-																		<span className="font-semibold text-sm">
-																			{reply
-																				.user
-																				.username ||
-																				"Anonymous"}
-																		</span>
-																		<span className="text-xs text-muted-foreground">
-																			{formatDate(
-																				reply.createdAt
-																			)}
-																		</span>
-																	</div>
-																	<p className="text-sm">
-																		{
-																			reply.content
-																		}
-																	</p>
-																</div>
-															</div>
-														)
-													)}
-												</div>
-											)}
 										</div>
+										<p className="text-sm font-sans leading-relaxed text-black/80">
+											{comment.content}
+										</p>
+										<div className="flex items-center gap-6">
+											<button
+												onClick={() => handleLike(comment.id)}
+												className={cn(
+													"text-[10px] font-black uppercase tracking-widest flex items-center gap-2 hover:text-black transition-colors",
+													comment.likes.some((like: any) => like.userId === user?.id)
+														? "text-black"
+														: "text-muted-foreground"
+												)}
+											>
+												Like ({comment.likes.length})
+											</button>
+											<Dialog>
+												<DialogTrigger asChild>
+													<button
+														onClick={() => setReplyingTo(comment.id)}
+														className="text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-black transition-colors"
+													>
+														Reply ({comment.replies.length})
+													</button>
+												</DialogTrigger>
+												<DialogContent className="rounded-none border-black">
+													<DialogHeader>
+														<DialogTitle className="text-[10px] uppercase tracking-[0.3em] font-black">
+															Reply to {comment.user.username || "Anonymous"}
+														</DialogTitle>
+													</DialogHeader>
+													<form onSubmit={handleReply} className="space-y-6 pt-4">
+														<div className="relative group">
+															<textarea
+																value={replyContent}
+																onChange={(e) => setReplyContent(e.target.value)}
+																placeholder="WRITE YOUR REPLY..."
+																className="w-full bg-transparent border-b-2 border-black/10 py-4 px-1 text-sm tracking-widest focus:outline-none focus:border-black transition-colors placeholder:text-black/20 uppercase font-bold min-h-[100px] resize-none"
+															/>
+															<div className="absolute bottom-0 left-0 h-0.5 bg-black w-0 group-focus-within:w-full transition-all duration-500"></div>
+														</div>
+														<button
+															type="submit"
+															disabled={replyLoading || !user}
+															className="group flex items-center gap-4 py-2 px-1 text-left"
+														>
+															<span className="text-[10px] uppercase tracking-[0.3em] font-black group-hover:text-primary transition-colors">
+																{replyLoading ? "POSTING..." : "POST REPLY"}
+															</span>
+															<div className="w-8 h-px bg-black group-hover:w-16 transition-all duration-500"></div>
+														</button>
+													</form>
+												</DialogContent>
+											</Dialog>
+										</div>
+
+										{comment.replies.length > 0 && (
+											<div className="mt-6 space-y-6 pl-8 border-l border-black/10">
+												{comment.replies.map((reply: any) => (
+													<div key={reply.id} className="space-y-2">
+														<div className="flex items-center gap-3">
+															<span className="text-[10px] uppercase tracking-widest font-black">
+																{reply.user.username || "Anonymous"}
+															</span>
+															<span className="text-[10px] uppercase tracking-widest text-muted-foreground">
+																{formatDate(reply.createdAt)}
+															</span>
+														</div>
+														<p className="text-sm font-sans leading-relaxed text-black/70">
+															{reply.content}
+														</p>
+													</div>
+												))}
+											</div>
+										)}
 									</div>
-								</CardContent>
-							</Card>
-						))}
-					</div>
-				)}
+								</div>
+							</div>
+						))
+					)}
+				</div>
 			</div>
+
 			<AuthModal
 				isOpen={showAuthModal}
 				onClose={() => setShowAuthModal(false)}

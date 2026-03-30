@@ -9,8 +9,9 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 
-export const AuthAction = ({ setIsAuthOpen }) => {
+export const AuthAction = ({ setIsAuthOpen }: { setIsAuthOpen: (open: boolean) => void }) => {
     const { user, loading, signOut } = useAuth();
 
     const handleSignOut = async () => {
@@ -18,46 +19,46 @@ export const AuthAction = ({ setIsAuthOpen }) => {
             await signOut();
             toast.success("Signed out successfully");
         } catch (error) {
-            toast.error("Error signing out", {
-                description: "There was a problem signing you out.",
-            });
+            toast.error("Error signing out");
         }
     };
+
     return (
-        <div className="flex justify-between md:justify-normal items-center gap-2">
-            <ModeToggle />
+        <div className="flex items-center gap-4">
             {loading ? (
-                <div className="w-8 h-8 rounded-full bg-secondary animate-pulse" />
+                <div className="w-8 h-8 bg-black/5 animate-pulse" />
             ) : user ? (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="relative h-8 w-8 rounded-full p-0">
-                            <Avatar>
-                                <AvatarImage
-                                    src={undefined}
-                                    alt={user.username || "User avatar"}
-                                />
-                                <AvatarFallback>
-                                    {(user.username?.[0] || "U").toUpperCase()}
-                                </AvatarFallback>
-                            </Avatar>
-                        </Button>
+                        <button className="flex items-center gap-2 group outline-none">
+                            <div className="w-8 h-8 border border-black flex items-center justify-center bg-black text-white text-[10px] font-black group-hover:bg-white group-hover:text-black transition-all">
+                                {(user.username?.[0] || "U").toUpperCase()}
+                            </div>
+                            <span className="text-[10px] uppercase tracking-widest font-bold hidden lg:block">
+                                {user.username || "Account"}
+                            </span>
+                        </button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={handleSignOut}>
+                    <DropdownMenuContent align="end" className="rounded-none border-black p-1 shadow-none">
+                        <DropdownMenuItem 
+                            onClick={handleSignOut}
+                            className="rounded-none text-[10px] uppercase tracking-widest font-black focus:bg-black focus:text-white cursor-pointer"
+                        >
                             Sign Out
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             ) : (
-                <Button
-                    variant="outline"
-                    size="sm"
+                <button
                     onClick={() => setIsAuthOpen(true)}
+                    className="text-[10px] uppercase tracking-[0.2em] font-black hover:text-primary transition-colors border-b border-black pb-0.5"
                 >
                     Sign In
-                </Button>
+                </button>
             )}
+            <div className="hidden sm:block">
+                <ModeToggle />
+            </div>
         </div>
     )
 }

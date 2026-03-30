@@ -1,5 +1,5 @@
 import "@/app/index.css";
-import { Inter } from "next/font/google";
+import { Inter, Playfair_Display } from "next/font/google";
 import Script from "next/script";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -10,8 +10,17 @@ import { siteName, siteKeywords } from "@/lib/config";
 import { AuthProvider } from "@/context/AuthContext";
 import { Metadata } from "next";
 import { siteUrl } from "@/lib/config";
+import { cn } from "@/lib/utils";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ 
+	subsets: ["latin"],
+	variable: "--font-sans",
+});
+
+const playfair = Playfair_Display({
+	subsets: ["latin"],
+	variable: "--font-serif",
+});
 
 export const metadata: Metadata = {
 	metadataBase: new URL(siteUrl),
@@ -96,7 +105,11 @@ function RootLayout({ children }: PropsWithChildren) {
 					href="/rss.xml"
 				/>
 			</head>
-			<body className={inter.className} suppressHydrationWarning={true}>
+			<body className={cn(
+				"min-h-screen bg-background font-sans antialiased",
+				inter.variable,
+				playfair.variable
+			)} suppressHydrationWarning={true}>
 				<ReactQueryProvider>
 					<ThemeProvider>
 						<AuthProvider>

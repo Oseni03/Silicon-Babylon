@@ -20,7 +20,7 @@ interface PageProps {
 	params: Promise<{ slug: string }>;
 }
 
-export async function generateMetadata({ params }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
 	const { slug } = await params;
 	const categoryName = unslugify(slug);
 
@@ -38,12 +38,8 @@ const Page = async ({ params }: PageProps) => {
 		categorySlug: slug,
 		limit: pageSize,
 		offset: 0,
-	}).catch((error) => {
-		console.error("Failed to fetch articles:", error);
-		throw error;
 	});
 
-	// If no articles found, show 404
 	if (!data || data.length === 0) {
 		notFound();
 	}
@@ -59,36 +55,36 @@ const Page = async ({ params }: PageProps) => {
 	const categoryName = unslugify(slug);
 
 	return (
-		<div className="flex flex-col min-h-screen">
+		<div className="flex flex-col min-h-screen font-sans">
 			<Header />
-			<main className="flex-grow pt-4 md:pt-8 pb-12 md:pb-16">
-				<section className="container mx-auto px-3 md:px-6">
-					<div className="mb-4 md:mb-8">
-						<Breadcrumb className="mb-4 md:mb-6">
-							<BreadcrumbList>
+			<main className="flex-grow pt-12 md:pt-24 pb-12 md:pb-16 border-t border-black">
+				<section className="container mx-auto px-4 md:px-6">
+					<div className="mb-12 md:mb-20">
+						<Breadcrumb className="mb-8">
+							<BreadcrumbList className="gap-2">
 								<BreadcrumbItem>
 									<BreadcrumbLink
 										href="/"
-										className="text-muted-foreground hover:text-foreground"
+										className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground hover:text-black transition-colors"
 									>
-										Home
+										Index
 									</BreadcrumbLink>
 								</BreadcrumbItem>
-								<BreadcrumbSeparator />
+								<BreadcrumbSeparator className="text-muted-foreground" />
 								<BreadcrumbItem>
-									<BreadcrumbPage>
+									<BreadcrumbPage className="text-[10px] uppercase tracking-widest font-black text-black">
 										{categoryName}
 									</BreadcrumbPage>
 								</BreadcrumbItem>
 							</BreadcrumbList>
 						</Breadcrumb>
 
-						<h1 className="text-3xl md:text-4xl font-medium tracking-tight mb-3">
-							{categoryName} News
-						</h1>
-						<p className="text-muted-foreground text-lg">
-							Browse our collection of satirical articles about{" "}
+						<h1 className="text-5xl md:text-7xl font-serif tracking-tight mb-6">
 							{categoryName}
+						</h1>
+						<div className="w-16 h-1 bg-black mb-8"></div>
+						<p className="text-muted-foreground text-lg max-w-xl">
+							Selected reporting and satirical analysis on {categoryName.toLowerCase()}.
 						</p>
 					</div>
 

@@ -25,30 +25,17 @@ const Page = () => {
 				entries.forEach((entry) => {
 					if (entry.isIntersecting) {
 						if (entry.target === section1Ref.current) {
-							setIsVisible((prev) => ({
-								...prev,
-								section1: true,
-							}));
+							setIsVisible((prev) => ({ ...prev, section1: true }));
 						} else if (entry.target === section2Ref.current) {
-							setIsVisible((prev) => ({
-								...prev,
-								section2: true,
-							}));
+							setIsVisible((prev) => ({ ...prev, section2: true }));
 						} else if (entry.target === section3Ref.current) {
-							setIsVisible((prev) => ({
-								...prev,
-								section3: true,
-							}));
+							setIsVisible((prev) => ({ ...prev, section3: true }));
 						}
 						observer.unobserve(entry.target);
 					}
 				});
 			},
-			{
-				root: null,
-				rootMargin: "0px",
-				threshold: 0.1,
-			}
+			{ threshold: 0.1 }
 		);
 
 		if (section1Ref.current) observer.observe(section1Ref.current);
@@ -63,247 +50,86 @@ const Page = () => {
 	}, []);
 
 	return (
-		<div className="flex flex-col min-h-screen">
+		<div className="flex flex-col min-h-screen bg-background font-sans">
 			<Header />
-			<main className="flex-grow pt-8">
-				<section className="container mx-auto px-6 py-16">
-					<div className="max-w-3xl mx-auto">
-						<div className="text-center space-y-4 mb-16">
-							<div className="inline-block px-3 py-1 rounded-full bg-secondary border border-border text-xs font-medium">
-								About Us
-							</div>
-							<h1 className="text-4xl font-medium tracking-tight">
-								The Story Behind {siteName}
+			<main className="flex-grow">
+				<section className="container mx-auto px-4 md:px-6 py-24 md:py-32 border-t border-black">
+					<div className="max-w-4xl mx-auto">
+						<div className="space-y-8 mb-24">
+							<span className="text-[10px] uppercase tracking-[0.3em] font-black border-b border-black pb-1">
+								The Manifesto
+							</span>
+							<h1 className="text-5xl md:text-8xl font-serif tracking-tight leading-[0.9]">
+								Satire is the <br/><span className="italic text-primary">highest</span> form of truth.
 							</h1>
-							<p className="text-lg text-muted-foreground">
-								Where technology and creativity come together
+							<p className="text-xl md:text-2xl text-muted-foreground font-serif italic max-w-2xl">
+								In a world of hyper-innovation, we provide the necessary friction.
 							</p>
 						</div>
 
-						<div
-							ref={section1Ref}
-							className={cn(
-								"space-y-8 animate-on-scroll fade-in",
-								isVisible.section1 && "active"
-							)}
-						>
-							<div className="space-y-4">
-								<h2 className="text-2xl font-medium">
-									Our Mission
-								</h2>
-								<p>
-									{siteName} was created to bring a fresh and
-									unique perspective to the world of
-									technology. In a rapidly evolving industry,
-									we aim to provide content that informs,
-									entertains, and inspires.
+						<div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-24">
+							<div className="md:col-span-4">
+								<div className="sticky top-24 space-y-4">
+									<div className="w-12 h-px bg-black"></div>
+									<h2 className="text-[10px] uppercase tracking-[0.2em] font-black">Our Mission</h2>
+								</div>
+							</div>
+							<div className="md:col-span-8 space-y-8">
+								<p className="text-lg leading-relaxed text-black/80">
+									{siteName} was established as a counterbalance to the relentless optimism of the technology sector. While others report on specs and funding rounds, we report on the absurdity that often lies beneath the surface.
 								</p>
-								<p>
-									Our mission is to explore the latest tech
-									trends, industry movements, and product
-									launches with a creative lens. We believe
-									that technology is not just about innovation
-									– it's about understanding its impact on our
-									lives and the world around us.
+								<p className="text-lg leading-relaxed text-black/80">
+									Our goal isn't just to entertain, but to provoke thought. In the age of AI and exponential growth, the human element—with all its flaws and humor—is more important than ever.
 								</p>
 							</div>
 						</div>
 
-						<div
-							ref={section2Ref}
-							className={cn(
-								"space-y-8 mt-16 animate-on-scroll fade-in",
-								isVisible.section2 && "active"
-							)}
-						>
-							<div className="space-y-4">
-								<h2 className="text-2xl font-medium">
-									How It Works
-								</h2>
-								<p>
-									{siteName} curates insights and stories from
-									trusted sources like TechCrunch. We analyze
-									key trends, announcements, and industry
-									movements to craft engaging content that
-									highlights the most interesting aspects of
-									the tech world.
-								</p>
-								<p>
-									Our team ensures that every piece of content
-									is relevant, high-quality, and
-									thought-provoking. We strive to deliver a
-									blend of creativity and insight that
-									resonates with our audience.
-								</p>
-							</div>
-
-							<div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-								<div className="bg-card border border-border rounded-lg p-6 space-y-2">
-									<div className="w-10 h-10 rounded-md bg-secondary flex items-center justify-center mb-4">
-										<svg
-											xmlns="http://www.w3.org/2000/svg"
-											width="20"
-											height="20"
-											viewBox="0 0 24 24"
-											fill="none"
-											stroke="currentColor"
-											strokeWidth="2"
-											strokeLinecap="round"
-											strokeLinejoin="round"
-										>
-											<circle
-												cx="12"
-												cy="12"
-												r="10"
-											></circle>
-											<line
-												x1="2"
-												y1="12"
-												x2="22"
-												y2="12"
-											></line>
-											<path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-										</svg>
-									</div>
-									<h3 className="font-medium">
-										News Collection
-									</h3>
-									<p className="text-sm text-muted-foreground">
-										We gather the latest tech news from
-										reputable sources across the web.
-									</p>
-								</div>
-
-								<div className="bg-card border border-border rounded-lg p-6 space-y-2">
-									<div className="w-10 h-10 rounded-md bg-secondary flex items-center justify-center mb-4">
-										<svg
-											xmlns="http://www.w3.org/2000/svg"
-											width="20"
-											height="20"
-											viewBox="0 0 24 24"
-											fill="none"
-											stroke="currentColor"
-											strokeWidth="2"
-											strokeLinecap="round"
-											strokeLinejoin="round"
-										>
-											<path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
-											<path d="m15.5 9-4.5 4.5L7.5 11"></path>
-										</svg>
-									</div>
-									<h3 className="font-medium">
-										Trend Analysis
-									</h3>
-									<p className="text-sm text-muted-foreground">
-										Our team identifies patterns, concepts,
-										and opportunities to create engaging
-										content.
-									</p>
-								</div>
-
-								<div className="bg-card border border-border rounded-lg p-6 space-y-2">
-									<div className="w-10 h-10 rounded-md bg-secondary flex items-center justify-center mb-4">
-										<svg
-											xmlns="http://www.w3.org/2000/svg"
-											width="20"
-											height="20"
-											viewBox="0 0 24 24"
-											fill="none"
-											stroke="currentColor"
-											strokeWidth="2"
-											strokeLinecap="round"
-											strokeLinejoin="round"
-										>
-											<path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
-										</svg>
-									</div>
-									<h3 className="font-medium">
-										Content Creation
-									</h3>
-									<p className="text-sm text-muted-foreground">
-										We transform insights into content that
-										informs and entertains our audience.
-									</p>
-								</div>
-							</div>
-						</div>
-
-						<div
-							ref={section3Ref}
-							className={cn(
-								"space-y-8 mt-16 animate-on-scroll fade-in",
-								isVisible.section3 && "active"
-							)}
-						>
-							<div className="space-y-4">
-								<h2 className="text-2xl font-medium">
-									Our Principles
-								</h2>
+						<div className="mt-32 pt-24 border-t border-black/10">
+							<div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-32">
 								<div className="space-y-6">
-									<div className="flex gap-4">
-										<div className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center flex-shrink-0 mt-1">
-											<span className="text-xs font-medium">
-												1
-											</span>
-										</div>
-										<div>
-											<h3 className="text-lg font-medium">
-												Engaging Content
-											</h3>
-											<p className="text-muted-foreground mt-1">
-												Our goal is to create content
-												that captivates and inspires
-												readers, encouraging them to
-												think critically about the tech
-												world.
-											</p>
-										</div>
-									</div>
-
-									<div className="flex gap-4">
-										<div className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center flex-shrink-0 mt-1">
-											<span className="text-xs font-medium">
-												2
-											</span>
-										</div>
-										<div>
-											<h3 className="text-lg font-medium">
-												Transparency
-											</h3>
-											<p className="text-muted-foreground mt-1">
-												We are committed to being clear
-												and honest about the nature of
-												our content, ensuring readers
-												know what to expect.
-											</p>
-										</div>
-									</div>
-
-									<div className="flex gap-4">
-										<div className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center flex-shrink-0 mt-1">
-											<span className="text-xs font-medium">
-												3
-											</span>
-										</div>
-										<div>
-											<h3 className="text-lg font-medium">
-												Respectful Approach
-											</h3>
-											<p className="text-muted-foreground mt-1">
-												We focus on ideas, trends, and
-												industry movements, ensuring our
-												content remains respectful and
-												constructive.
-											</p>
-										</div>
-									</div>
+									<span className="text-[10px] uppercase tracking-widest font-black text-primary">01. Collection</span>
+									<h3 className="text-3xl font-serif">Curated Intelligence</h3>
+									<p className="text-muted-foreground leading-relaxed">
+										We analyze thousands of data points and headlines from global tech leaders to find the stories that deserve a second, more satirical look.
+									</p>
 								</div>
+								<div className="space-y-6">
+									<span className="text-[10px] uppercase tracking-widest font-black text-primary">02. Analysis</span>
+									<h3 className="text-3xl font-serif">Deep Cynicism</h3>
+									<p className="text-muted-foreground leading-relaxed">
+										Every article is crafted with a deep understanding of the industry, ensuring our satire hits the mark and reveals the underlying truth.
+									</p>
+								</div>
+							</div>
+						</div>
+
+						<div className="mt-32 bg-black text-white p-12 md:p-24 text-center space-y-8">
+							<h2 className="text-3xl md:text-5xl font-serif italic">"Technology is a useful servant but a dangerous master."</h2>
+							<p className="text-[10px] uppercase tracking-[0.4em] font-black opacity-50">— CHRISTIAN LANGE</p>
+						</div>
+
+						<div className="mt-32 grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-24">
+							<div className="md:col-span-4">
+								<div className="sticky top-24 space-y-4">
+									<div className="w-12 h-px bg-black"></div>
+									<h2 className="text-[10px] uppercase tracking-[0.2em] font-black">Join Us</h2>
+								</div>
+							</div>
+							<div className="md:col-span-8 space-y-8">
+								<p className="text-2xl font-serif leading-relaxed">
+									We are always looking for sharp minds and even sharper wits. If you believe you can see through the hype and want to help others do the same, let's talk.
+								</p>
+								<button className="group flex items-center gap-4 py-4 text-left">
+									<span className="text-[10px] uppercase tracking-[0.3em] font-black group-hover:text-primary transition-colors">
+										CONTACT THE EDITORIAL TEAM
+									</span>
+									<div className="w-12 h-px bg-black group-hover:w-24 transition-all duration-500"></div>
+								</button>
 							</div>
 						</div>
 					</div>
 				</section>
 			</main>
-
 			<Footer />
 		</div>
 	);

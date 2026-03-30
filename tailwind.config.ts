@@ -23,7 +23,8 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				sans: ["SF Pro Display", "system-ui", "sans-serif"],
+				sans: ["var(--font-sans)", "SF Pro Display", "system-ui", "sans-serif"],
+				serif: ["var(--font-serif)", "serif"],
 				mono: ["SF Mono", "monospace"],
 			},
 			colors: {
@@ -74,9 +75,9 @@ export default {
 				},
 			},
 			borderRadius: {
-				lg: "var(--radius)",
-				md: "calc(var(--radius) - 2px)",
-				sm: "calc(var(--radius) - 4px)",
+				lg: "0px",
+				md: "0px",
+				sm: "0px",
 			},
 			keyframes: {
 				"accordion-down": {

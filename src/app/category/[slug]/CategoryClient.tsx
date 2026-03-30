@@ -69,23 +69,19 @@ export default function CategoryClient({
 	return (
 		<>
 			<ArticlesGrid filteredArticles={allArticles as Article[]} />
-			<div className="flex justify-center mt-4">
+			<div className="flex justify-center mt-20">
 				{hasNextPage && (
-					<Button
-						variant="outline"
-						size="lg"
+					<button
 						onClick={() => fetchNextPage()}
 						disabled={isFetchingNextPage}
+						className="group flex flex-col items-center gap-2"
 					>
-						{isFetchingNextPage ? (
-							<>
-								Loading...
-								<Loader2 className="ml-2 h-4 w-4 animate-spin" />
-							</>
-						) : (
-							"Load More"
-						)}
-					</Button>
+						<span className="text-[10px] uppercase tracking-[0.3em] font-black group-hover:text-primary transition-colors">
+							{isFetchingNextPage ? "LOADING..." : "LOAD MORE"}
+						</span>
+						<div className="w-12 h-px bg-black group-hover:w-24 transition-all duration-500"></div>
+						{isFetchingNextPage && <Loader2 className="w-4 h-4 animate-spin text-muted-foreground mr-2 inline" />}
+					</button>
 				)}
 			</div>
 		</>
