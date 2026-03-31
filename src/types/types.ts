@@ -16,6 +16,7 @@ export interface Article {
 	categories: Category[];
 	keywords: string[];
 	isAffiliate?: boolean;
+	image?: string | null;
 }
 
 export interface ArticleCardProps {

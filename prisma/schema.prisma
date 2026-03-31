@@ -24,6 +24,7 @@ model Article {
   originalTitle String
   publishedAt   DateTime
   keywords      String[]
+  image         String?           @db.Text
   categories    Category[]
   comments      Comment[]
   regenerated   Boolean           @default(false)

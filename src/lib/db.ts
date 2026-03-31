@@ -79,6 +79,7 @@ export async function createArticle(data: Article) {
 				stripHtml(data.content).substring(0, 300) + "...",
 			keywords: data.keywords,
 			publishedAt: new Date(data.publishedAt),
+			image: data.image,
 			categories: {
 				connect: data.categories.map((category) => ({
 					slug: category.slug,
@@ -96,6 +97,7 @@ export async function createArticle(data: Article) {
 			originalUrl: data.originalUrl,
 			originalTitle: data.originalTitle,
 			publishedAt: new Date(data.publishedAt),
+			image: data.image,
 			categories: {
 				connect: data.categories.map((category) => ({
 					slug: category.slug,
@@ -189,6 +191,7 @@ export async function getArticleByOriginalUrl(url: string) {
 			categories: true,
 			keywords: true,
 			content: true,
+			image: true,
 		},
 	});
 }
@@ -232,8 +235,9 @@ export const getArticlesByCategory = unstable_cache(
 				categories: true,
 				keywords: true,
 				content: true,
-                createdAt: true,
-                updatedAt: true,
+				createdAt: true,
+				updatedAt: true,
+				image: true,
 			},
 			orderBy: {
 				publishedAt: "desc",
@@ -289,6 +293,7 @@ export const getPaginatedArticlesByCategory = unstable_cache(
 				categories: true,
 				keywords: true,
 				content: true,
+				image: true,
 			},
 			orderBy: {
 				publishedAt: "desc",
@@ -402,6 +407,7 @@ export const getTopArticles = unstable_cache(
 				originalUrl: true,
 				originalTitle: true,
 				keywords: true,
+				image: true,
 				regenerated: true,
 				createdAt: true,
 				updatedAt: true,
