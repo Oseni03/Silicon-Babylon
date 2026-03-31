@@ -39,9 +39,9 @@ export default function AuthModal({
 
 	return (
 		<Dialog open={isOpen} onOpenChange={onClose}>
-			<DialogContent className="sm:max-w-[425px] rounded-none border-black p-8 shadow-none">
-				<DialogHeader className="space-y-6">
-					<div className="w-12 h-px bg-black"></div>
+			<DialogContent className="sm:max-w-[425px] rounded-none border-foreground p-8 shadow-none text-foreground">
+				<DialogHeader className="space-y-6 text-foreground">
+					<div className="w-12 h-px bg-foreground"></div>
 					<DialogTitle className="text-4xl font-serif tracking-tight">
 						Welcome to {siteName}
 					</DialogTitle>
@@ -52,7 +52,7 @@ export default function AuthModal({
 				<div className="flex flex-col gap-4 py-8">
 					<button
 						onClick={handleGoogleSignIn}
-						className="w-full flex items-center justify-center gap-4 py-4 border-2 border-black hover:bg-black hover:text-white transition-all text-sm font-black uppercase tracking-[0.2em]"
+						className="w-full flex items-center justify-center gap-4 py-4 border-2 border-foreground hover:bg-foreground hover:text-background transition-all text-sm font-black uppercase tracking-[0.2em]"
 					>
 						<Image
 							src="/icons/google.svg"

@@ -66,7 +66,7 @@ export default function HomePageClient({
             </PopoverTrigger>
             <PopoverContent className="w-80 p-0 rounded-none border-black shadow-none" align="end">
                 <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-black/40" />
                     <input
                         type="text"
                         placeholder="Search articles..."
@@ -98,7 +98,7 @@ export default function HomePageClient({
                                 </div>
                                 <Button
                                     size="sm"
-                                    className="bg-black text-white hover:bg-black/90 rounded-full px-6 py-5 uppercase text-[10px] font-bold tracking-widest hidden sm:flex"
+                                    className="bg-foreground text-background hover:bg-foreground/90 rounded-full px-6 py-5 uppercase text-[10px] font-bold tracking-widest hidden sm:flex"
                                     onClick={() => setIsAuthOpen(true)}
                                 >
                                     Subscribe
@@ -111,7 +111,7 @@ export default function HomePageClient({
                             </div>
                         </div>
 
-                        <div className="flex items-center justify-between border-t border-black/10 pt-4">
+                        <div className="flex items-center justify-between border-t border-foreground/10 pt-4">
                             <span className="text-[10px] uppercase tracking-[0.2em] font-bold hidden md:block">
                                 {currentDate}
                             </span>
@@ -189,7 +189,7 @@ export default function HomePageClient({
                     <div className="space-y-16">
                         {/* Featured Hero Article */}
                         {featuredArticle && page === 1 && !searchQuery && (
-                            <div className="border-b border-black pb-16">
+                            <div className="pb-16 text-foreground">
                                 <ArticleCard
                                     slug={featuredArticle.slug}
                                     title={featuredArticle.title}
@@ -235,7 +235,7 @@ export default function HomePageClient({
                                 {isLoading ? "Loading..." : "Load More"}
                             </span>
                             <div className="w-12 h-px bg-black group-hover:w-24 transition-all duration-500"></div>
-                            {isLoading && <Loader2 className="w-4 h-4 animate-spin text-muted-foreground mr-2 inline" />}
+                            {isLoading && <Loader2 className="w-4 h-4 animate-spin text-black/40 mr-2 inline" />}
                         </button>
                     )}
                 </div>

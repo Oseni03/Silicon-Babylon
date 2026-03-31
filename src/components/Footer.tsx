@@ -14,7 +14,7 @@ const Footer = () => {
 					{/* Brand Column */}
 					<div className="md:col-span-1">
 						<Logo className="md:items-start mb-6" />
-						<p className="text-sm text-muted-foreground max-w-xs leading-relaxed">
+						<p className="text-sm text-black/60 max-w-xs leading-relaxed">
 							Probably accurate news, most of the time. Exploring the intersection of technology, satire, and the future.
 						</p>
 					</div>
@@ -34,7 +34,7 @@ const Footer = () => {
 						<h4 className="font-serif mb-6 uppercase tracking-widest text-xs">Categories</h4>
 						<ul className="space-y-4">
 							{categories.slice(0, 5).map((category) => (
-								<li key={category.slug}>
+						<li key={category.slug}>
 									<Link href={`/category/${category.slug}`} className="text-sm hover:text-primary transition-colors uppercase tracking-widest text-[10px] font-bold">
 										{category.name}
 									</Link>
@@ -53,13 +53,13 @@ const Footer = () => {
 					</div>
 				</div>
 
-				<div className="pt-8 border-t border-black/10 flex flex-col md:flex-row justify-between items-center gap-4">
-					<p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+				<div className="pt-8 border-t border-foreground/10 flex flex-col md:flex-row justify-between items-center gap-4">
+					<p className="text-[10px] uppercase tracking-widest text-black/40">
 						© {currentYear} {siteName}. All rights reserved.
 					</p>
 					<div className="flex gap-6">
-						<Link href="/privacy" className="text-[10px] uppercase tracking-widest text-muted-foreground hover:text-black">Privacy</Link>
-						<Link href="/terms" className="text-[10px] uppercase tracking-widest text-muted-foreground hover:text-black">Terms</Link>
+						<Link href="/privacy" className="text-[10px] uppercase tracking-widest text-foreground/40 hover:text-foreground">Privacy</Link>
+						<Link href="/terms" className="text-[10px] uppercase tracking-widest text-foreground/40 hover:text-foreground">Terms</Link>
 					</div>
 				</div>
 			</div>

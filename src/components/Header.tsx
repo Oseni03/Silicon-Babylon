@@ -27,7 +27,7 @@ const Header = () => {
 
 	return (
 		<header className={cn(
-			"relative z-50 w-full bg-background border-b border-black transition-all",
+			"relative z-50 w-full bg-background border-b border-foreground transition-all",
 			scrolled ? "fixed top-0 left-0 right-0 py-2 shadow-none" : "py-4 md:py-6"
 		)}>
 			<div className="container mx-auto px-4 md:px-6">
@@ -58,7 +58,7 @@ const Header = () => {
 						</div>
 						<Button 
 							size="sm" 
-							className="bg-black text-white hover:bg-black/90 rounded-full px-6 py-5 uppercase text-[10px] font-bold tracking-widest hidden sm:flex"
+							className="bg-foreground text-background hover:bg-foreground/90 rounded-full px-6 py-5 uppercase text-[10px] font-bold tracking-widest hidden sm:flex"
 							onClick={() => setIsAuthOpen(true)}
 						>
 							Subscribe
@@ -69,9 +69,9 @@ const Header = () => {
 							className="lg:hidden p-2"
 							onClick={() => setIsMenuOpen(!isMenuOpen)}
 						>
-							<div className="w-6 h-0.5 bg-black mb-1.5 transition-all"></div>
-							<div className="w-6 h-0.5 bg-black mb-1.5 transition-all"></div>
-							<div className="w-6 h-0.5 bg-black transition-all"></div>
+							<div className="w-6 h-0.5 bg-foreground mb-1.5 transition-all"></div>
+							<div className="w-6 h-0.5 bg-foreground mb-1.5 transition-all"></div>
+							<div className="w-6 h-0.5 bg-foreground transition-all"></div>
 						</button>
 					</div>
 				</div>
@@ -98,7 +98,7 @@ const Header = () => {
 								{category.name}
 							</Link>
 						))}
-						<div className="pt-4 w-full flex justify-center border-t border-black/10">
+						<div className="pt-4 w-full flex justify-center border-t border-foreground/10">
 							<AuthAction setIsAuthOpen={setIsAuthOpen} />
 						</div>
 					</nav>

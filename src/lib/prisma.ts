@@ -1,14 +1,18 @@
 // /c:/Users/USER/Documents/projects/satirical-techscape/lib/prisma.ts
 import { PrismaClient } from "@prisma/client";
 
+if (!process.env.DATABASE_URL) {
+	console.warn(
+		"WARNING: DATABASE_URL is not set. Prisma will fail if it tries to connect to the database."
+	);
+	console.warn(
+		"Please ensure you have a .env file with DATABASE_URL set."
+	);
+}
+
 const prismaClientSingleton = () => {
 	return new PrismaClient({
 		log: ["warn", "error"],
-		datasources: {
-			db: {
-				url: process.env.DATABASE_URL,
-			},
-		},
 	}).$extends({
 		query: {
 			$allOperations({ query, args }) {

@@ -5,25 +5,25 @@
 @layer base {
   :root {
     --background: 0 0% 98%;
-    --foreground: 0 0% 5%;
+    --foreground: 0 0% 0%; /* Pure black for maximum contrast */
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 5%;
+    --card-foreground: 0 0% 0%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 5%;
+    --popover-foreground: 0 0% 0%;
 
     --primary: 72 100% 50%;
-    --primary-foreground: 0 0% 5%;
+    --primary-foreground: 0 0% 0%;
 
     --secondary: 0 0% 94%;
-    --secondary-foreground: 0 0% 5%;
+    --secondary-foreground: 0 0% 0%;
 
     --muted: 0 0% 92%;
-    --muted-foreground: 0 0% 40%;
+    --muted-foreground: 0 0% 20%; /* Darker muted text for better readability */
 
     --accent: 72 100% 50%;
-    --accent-foreground: 0 0% 5%;
+    --accent-foreground: 0 0% 0%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
@@ -37,28 +37,28 @@
 
   .dark {
     --background: 0 0% 5%;
-    --foreground: 0 0% 98%;
+    --foreground: 0 0% 100%;
 
     --card: 0 0% 7%;
-    --card-foreground: 0 0% 98%;
+    --card-foreground: 0 0% 100%;
 
     --popover: 0 0% 5%;
-    --popover-foreground: 0 0% 98%;
+    --popover-foreground: 0 0% 100%;
 
     --primary: 72 100% 50%;
     --primary-foreground: 0 0% 5%;
 
     --secondary: 0 0% 12%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary-foreground: 0 0% 100%;
 
     --muted: 0 0% 12%;
-    --muted-foreground: 0 0% 65%;
+    --muted-foreground: 0 0% 80%;
 
     --accent: 72 100% 50%;
     --accent-foreground: 0 0% 5%;
 
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive-foreground: 0 0% 100%;
 
     --border: 0 0% 100%;
     --input: 0 0% 15%;
@@ -81,7 +81,7 @@
   }
 
   p {
-    @apply leading-relaxed;
+    @apply leading-relaxed text-black dark:text-white;
   }
 
   /* Custom scrollbar - Minimalist */
@@ -114,7 +114,7 @@
   }
   
   .prose p {
-    @apply text-black/80 dark:text-white/80 my-8 leading-[1.8] text-lg;
+    @apply text-black dark:text-white my-8 leading-[1.8] text-lg;
   }
   
   .prose h2 {
@@ -130,7 +130,7 @@
   }
   
   .prose li {
-    @apply text-lg text-black/80 dark:text-white/80;
+    @apply text-lg text-black dark:text-white;
   }
   
   .prose li::marker {
@@ -142,7 +142,7 @@
   }
   
   .prose blockquote {
-    @apply border-l-4 border-black dark:border-white pl-8 py-2 italic font-serif text-2xl my-12 text-black/90 dark:text-white/90;
+    @apply border-l-4 border-black dark:border-white pl-8 py-2 italic font-serif text-2xl my-12 text-black dark:text-white;
   }
 
   .prose strong {

@@ -52,10 +52,10 @@ const ArticleCard = ({
 		<div
 			ref={cardRef}
 			className={cn(
-				"group flex flex-col h-full border-b border-black pb-8 md:pb-12 transition-all duration-700 ease-out animate-on-scroll fade-in",
+				"group flex flex-col h-full border-b border-foreground pb-8 md:pb-12 transition-all duration-700 ease-out animate-on-scroll fade-in",
 				isVisible && "active",
 				`animation-delay-${Math.min(index * 100, 600)}`,
-				isAffiliate && "bg-primary/5"
+				isAffiliate && "bg-primary/5 p-6 md:p-8"
 			)}
 		>
 			<LinkComponent href={linkHref as any} {...linkProps} className="flex flex-col h-full gap-6">
@@ -77,17 +77,17 @@ const ArticleCard = ({
 						<div className="flex gap-2">
 							{categories.length > 0 ? (
 								categories.slice(0, 1).map((cat) => (
-									<span key={cat.slug} className="text-[10px] uppercase tracking-widest font-bold text-black border-b border-black">
+									<span key={cat.slug} className="text-[10px] uppercase tracking-widest font-bold text-foreground border-b border-foreground">
 										{cat.name}
 									</span>
 								))
 							) : (
-								<span className="text-[10px] uppercase tracking-widest font-bold text-black border-b border-black">
+								<span className="text-[10px] uppercase tracking-widest font-bold text-foreground border-b border-foreground">
 									Inside Tech
 								</span>
 							)}
 						</div>
-						<span className="text-[10px] uppercase tracking-widest text-muted-foreground">
+						<span className="text-[10px] uppercase tracking-widest font-bold text-foreground/60">
 							{formattedDate}
 						</span>
 					</div>
@@ -97,7 +97,7 @@ const ArticleCard = ({
 					</h3>
 
 					<p 
-						className="text-muted-foreground text-sm leading-relaxed line-clamp-3 font-sans"
+						className="text-foreground/80 text-sm leading-relaxed line-clamp-3 font-sans"
 						dangerouslySetInnerHTML={{ __html: excerpt }}
 					/>
 

@@ -26,12 +26,12 @@ export const AuthAction = ({ setIsAuthOpen }: { setIsAuthOpen: (open: boolean) =
     return (
         <div className="flex items-center gap-4">
             {loading ? (
-                <div className="w-8 h-8 bg-black/5 animate-pulse" />
+                <div className="w-8 h-8 bg-foreground/5 animate-pulse" />
             ) : user ? (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <button className="flex items-center gap-2 group outline-none">
-                            <div className="w-8 h-8 border border-black flex items-center justify-center bg-black text-white text-[10px] font-black group-hover:bg-white group-hover:text-black transition-all">
+                            <div className="w-8 h-8 border border-foreground flex items-center justify-center bg-foreground text-background group-hover:bg-background group-hover:text-foreground transition-all">
                                 {(user.username?.[0] || "U").toUpperCase()}
                             </div>
                             <span className="text-[10px] uppercase tracking-widest font-bold hidden lg:block">
@@ -39,10 +39,10 @@ export const AuthAction = ({ setIsAuthOpen }: { setIsAuthOpen: (open: boolean) =
                             </span>
                         </button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="rounded-none border-black p-1 shadow-none">
+                    <DropdownMenuContent align="end" className="rounded-none border-foreground p-1 shadow-none bg-background">
                         <DropdownMenuItem 
                             onClick={handleSignOut}
-                            className="rounded-none text-[10px] uppercase tracking-widest font-black focus:bg-black focus:text-white cursor-pointer"
+                            className="rounded-none text-[10px] uppercase tracking-widest font-black focus:bg-foreground focus:text-background cursor-pointer"
                         >
                             Sign Out
                         </DropdownMenuItem>
@@ -51,7 +51,7 @@ export const AuthAction = ({ setIsAuthOpen }: { setIsAuthOpen: (open: boolean) =
             ) : (
                 <button
                     onClick={() => setIsAuthOpen(true)}
-                    className="text-[10px] uppercase tracking-[0.2em] font-black hover:text-primary transition-colors border-b border-black pb-0.5"
+                    className="text-[10px] uppercase tracking-[0.2em] font-black hover:text-primary transition-colors border-b border-foreground pb-0.5"
                 >
                     Sign In
                 </button>

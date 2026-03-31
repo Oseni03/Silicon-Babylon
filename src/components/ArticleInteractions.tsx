@@ -146,7 +146,7 @@ export default function ArticleInteractions({
 							<TooltipTrigger asChild>
 								<button
 									onClick={() => handleReaction(type)}
-									className="group relative flex items-center gap-2 px-4 py-2 border border-black hover:bg-black hover:text-white transition-all font-sans text-sm font-bold uppercase tracking-widest"
+									className="group relative flex items-center gap-2 px-4 py-2 border border-foreground hover:bg-foreground hover:text-background transition-all font-sans text-sm font-bold uppercase tracking-widest"
 								>
 									<span>{emoji}</span>
 									{reactionCounts[type] > 0 && (
@@ -154,7 +154,7 @@ export default function ArticleInteractions({
 									)}
 								</button>
 							</TooltipTrigger>
-							<TooltipContent className="rounded-none border-black bg-black text-white px-2 py-1 text-[10px] uppercase tracking-widest">
+							<TooltipContent className="rounded-none border-foreground bg-foreground text-background px-2 py-1 text-[10px] uppercase tracking-widest">
 								<p>{type.charAt(0) + type.slice(1).toLowerCase()}</p>
 							</TooltipContent>
 						</Tooltip>
@@ -164,7 +164,7 @@ export default function ArticleInteractions({
 
 			{/* Comments Section */}
 			<div className="space-y-8">
-				<div className="flex items-center justify-between border-b border-black pb-4">
+				<div className="flex items-center justify-between border-b border-foreground pb-4">
 					<h3 className="text-sm uppercase tracking-[0.3em] font-black">Discussion</h3>
 					<span className="text-[10px] uppercase font-bold text-muted-foreground">{comments.length} Comments</span>
 				</div>
@@ -175,9 +175,9 @@ export default function ArticleInteractions({
 							value={newComment}
 							onChange={(e) => setNewComment(e.target.value)}
 							placeholder="JOIN THE CONVERSATION..."
-							className="w-full bg-transparent border-b-2 border-black/10 py-4 px-1 text-sm tracking-widest focus:outline-none focus:border-black transition-colors placeholder:text-black/20 uppercase font-bold min-h-[80px] resize-none"
+							className="w-full bg-transparent border-b-2 border-foreground/10 py-4 px-1 text-sm tracking-widest focus:outline-none focus:border-foreground transition-colors placeholder:text-foreground/20 uppercase font-bold min-h-[80px] resize-none"
 						/>
-						<div className="absolute bottom-0 left-0 h-0.5 bg-black w-0 group-focus-within:w-full transition-all duration-500"></div>
+						<div className="absolute bottom-0 left-0 h-0.5 bg-foreground w-0 group-focus-within:w-full transition-all duration-500"></div>
 					</div>
 					<button
 						type="submit"
@@ -188,11 +188,11 @@ export default function ArticleInteractions({
 						<span className="text-[10px] uppercase tracking-[0.3em] font-black group-hover:text-primary transition-colors">
 							{loading ? "POSTING..." : "SUBMIT COMMENT"}
 						</span>
-						<div className="w-8 h-px bg-black group-hover:w-16 transition-all duration-500"></div>
+						<div className="w-8 h-px bg-foreground group-hover:w-16 transition-all duration-500"></div>
 					</button>
 				</form>
 
-				<div className="space-y-8 divide-y divide-black/10">
+				<div className="space-y-8 divide-y divide-foreground/10">
 					{comments.length === 0 ? (
 						<div className="py-12 text-center">
 							<p className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground">
@@ -203,8 +203,8 @@ export default function ArticleInteractions({
 						comments.map((comment: any) => (
 							<div key={comment.id} className="pt-8">
 								<div className="flex items-start gap-4">
-									<Avatar className="rounded-none border border-black h-8 w-8">
-										<AvatarFallback className="rounded-none bg-black text-white text-[10px] font-black">
+									<Avatar className="rounded-none border border-foreground h-8 w-8">
+										<AvatarFallback className="rounded-none bg-foreground text-background text-[10px] font-black">
 											{comment.user.username?.[0] || "U"}
 										</AvatarFallback>
 									</Avatar>
@@ -219,16 +219,16 @@ export default function ArticleInteractions({
 												</span>
 											</div>
 										</div>
-										<p className="text-sm font-sans leading-relaxed text-black/80">
+										<p className="text-sm font-sans leading-relaxed text-foreground/80">
 											{comment.content}
 										</p>
 										<div className="flex items-center gap-6">
 											<button
 												onClick={() => handleLike(comment.id)}
 												className={cn(
-													"text-[10px] font-black uppercase tracking-widest flex items-center gap-2 hover:text-black transition-colors",
+													"text-[10px] font-black uppercase tracking-widest flex items-center gap-2 hover:text-foreground transition-colors",
 													comment.likes.some((like: any) => like.userId === user?.id)
-														? "text-black"
+														? "text-foreground"
 														: "text-muted-foreground"
 												)}
 											>
@@ -238,12 +238,12 @@ export default function ArticleInteractions({
 												<DialogTrigger asChild>
 													<button
 														onClick={() => setReplyingTo(comment.id)}
-														className="text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-black transition-colors"
+														className="text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
 													>
 														Reply ({comment.replies.length})
 													</button>
 												</DialogTrigger>
-												<DialogContent className="rounded-none border-black">
+												<DialogContent className="rounded-none border-foreground">
 													<DialogHeader>
 														<DialogTitle className="text-[10px] uppercase tracking-[0.3em] font-black">
 															Reply to {comment.user.username || "Anonymous"}
@@ -255,9 +255,9 @@ export default function ArticleInteractions({
 																value={replyContent}
 																onChange={(e) => setReplyContent(e.target.value)}
 																placeholder="WRITE YOUR REPLY..."
-																className="w-full bg-transparent border-b-2 border-black/10 py-4 px-1 text-sm tracking-widest focus:outline-none focus:border-black transition-colors placeholder:text-black/20 uppercase font-bold min-h-[100px] resize-none"
+																className="w-full bg-transparent border-b-2 border-foreground/10 py-4 px-1 text-sm tracking-widest focus:outline-none focus:border-foreground transition-colors placeholder:text-foreground/20 uppercase font-bold min-h-[100px] resize-none"
 															/>
-															<div className="absolute bottom-0 left-0 h-0.5 bg-black w-0 group-focus-within:w-full transition-all duration-500"></div>
+															<div className="absolute bottom-0 left-0 h-0.5 bg-foreground w-0 group-focus-within:w-full transition-all duration-500"></div>
 														</div>
 														<button
 															type="submit"
@@ -267,7 +267,7 @@ export default function ArticleInteractions({
 															<span className="text-[10px] uppercase tracking-[0.3em] font-black group-hover:text-primary transition-colors">
 																{replyLoading ? "POSTING..." : "POST REPLY"}
 															</span>
-															<div className="w-8 h-px bg-black group-hover:w-16 transition-all duration-500"></div>
+															<div className="w-8 h-px bg-foreground group-hover:w-16 transition-all duration-500"></div>
 														</button>
 													</form>
 												</DialogContent>
@@ -275,7 +275,7 @@ export default function ArticleInteractions({
 										</div>
 
 										{comment.replies.length > 0 && (
-											<div className="mt-6 space-y-6 pl-8 border-l border-black/10">
+											<div className="mt-6 space-y-6 pl-8 border-l border-foreground/10">
 												{comment.replies.map((reply: any) => (
 													<div key={reply.id} className="space-y-2">
 														<div className="flex items-center gap-3">
@@ -286,7 +286,7 @@ export default function ArticleInteractions({
 																{formatDate(reply.createdAt)}
 															</span>
 														</div>
-														<p className="text-sm font-sans leading-relaxed text-black/70">
+														<p className="text-sm font-sans leading-relaxed text-foreground/70">
 															{reply.content}
 														</p>
 													</div>

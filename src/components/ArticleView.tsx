@@ -30,12 +30,12 @@ const ArticleView = ({ article, relatedArticles }: ArticleViewProps) => {
 									<Link
 										key={category.slug}
 										href={`/category/${category.slug}`}
-										className="text-[10px] uppercase tracking-[0.2em] font-black text-black border-b border-black hover:text-primary transition-colors"
+										className="text-[10px] uppercase tracking-[0.2em] font-black text-foreground border-b border-foreground hover:text-primary transition-colors"
 									>
 										{category.name}
 									</Link>
 								))}
-								<span className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground">
+								<span className="text-[10px] uppercase tracking-[0.2em] font-black text-foreground/40">
 									{formattedDate}
 								</span>
 							</div>
@@ -50,7 +50,7 @@ const ArticleView = ({ article, relatedArticles }: ArticleViewProps) => {
 										href={article.originalUrl}
 										target="_blank"
 										rel="noopener noreferrer"
-										className="group inline-flex items-center text-[10px] uppercase tracking-widest font-black text-black/60 hover:text-black transition-colors"
+										className="group inline-flex items-center text-[10px] uppercase tracking-widest font-black text-foreground/60 hover:text-foreground transition-colors"
 									>
 										<span>Read official story on TechCrunch</span>
 										<svg
@@ -79,8 +79,8 @@ const ArticleView = ({ article, relatedArticles }: ArticleViewProps) => {
 						<div className="w-full md:w-32 flex-shrink-0">
 							<div className="sticky top-24 space-y-8">
 								<div className="flex flex-col gap-2">
-									<span className="text-[10px] uppercase tracking-widest font-black text-muted-foreground whitespace-nowrap">Shared By</span>
-									<span className="text-xs font-serif italic whitespace-nowrap">Satiric Staff</span>
+									<span className="text-[10px] uppercase tracking-widest font-black text-foreground/40 whitespace-nowrap">Shared By</span>
+									<span className="text-xs font-serif italic text-foreground whitespace-nowrap">Satiric Staff</span>
 								</div>
 								<ArticleInteractions articleId={article.id} />
 							</div>
@@ -88,7 +88,7 @@ const ArticleView = ({ article, relatedArticles }: ArticleViewProps) => {
 
 						<div className="flex-1">
 							<div
-								className="prose prose-xl max-w-none prose-p:font-sans prose-p:text-black/80 prose-p:leading-relaxed prose-headings:font-serif prose-headings:font-normal prose-a:text-black prose-a:decoration-primary prose-a:underline-offset-4 prose-blockquote:border-l-4 prose-blockquote:border-black prose-blockquote:italic prose-blockquote:font-serif bg-white"
+								className="prose prose-xl max-w-none prose-p:font-sans prose-p:text-foreground prose-p:leading-relaxed prose-headings:font-serif prose-headings:font-normal prose-a:text-foreground prose-a:decoration-primary prose-a:underline-offset-4 prose-blockquote:border-l-4 prose-blockquote:border-foreground prose-blockquote:italic prose-blockquote:font-serif"
 								dangerouslySetInnerHTML={{ __html: article.content }}
 							/>
 						</div>
@@ -107,7 +107,7 @@ const ArticleView = ({ article, relatedArticles }: ArticleViewProps) => {
 										href={`/article/${related.slug}`}
 										className="group block pb-8 border-b border-black/10"
 									>
-										<span className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground mb-3 block">
+										<span className="text-[10px] uppercase tracking-widest font-bold text-foreground/40 mb-3 block">
 											{new Date(related.publishedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
 										</span>
 										<h3 className="text-2xl font-serif leading-tight group-hover:underline decoration-1 underline-offset-4 decoration-black">
