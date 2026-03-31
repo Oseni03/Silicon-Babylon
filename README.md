@@ -1,6 +1,6 @@
 # Silicon Babylon
 
-A satirical tech news platform powered by AI.
+A mythical tech news platform powered by AI.
 
 ## Project info
 

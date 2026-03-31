@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 import logger from "./logger";
-import { SatiricalResult } from "@/types/types";
+import { GlitchedResult } from "@/types/types";
 
 interface NewsletterPropsResult {
 	subject: string;
@@ -46,14 +46,14 @@ class SiliconBabylonAgent {
 			.map((title) => `- ${title}`)
 			.join("\n");
 
-		const prompt = `You are a satirical tech newsletter writer for Silicon Babylon. Given these article titles, create a witty subject line and summary in the style of tech satire.
+		const prompt = `You are a mythical tech news writer for Silicon Babylon. Given these article titles, create a witty subject line and summary in the style of glitched technology news.
 
 Article titles:
 ${articlesText}
 
 Generate a newsletter introduction with:
-1. A satirical subject line
-2. A humorous summary in the style: "We've got AI having midlife crises, startups pivoting to pet rocks, and the usual crypto shenanigans. Let's dive into this week's digital chaos!"
+1. A mythical subject line
+2. A humorous summary in the style: "We've got AI having midlife crises, startups pivoting to pet rocks, and the usual tech glitches. Let's dive into this week's digital chaos!"
 
 Make it funny, sarcastic, and capture the absurdity of tech culture. Keep the summary to 1-2 sentences.
 
@@ -103,31 +103,31 @@ DO NOT include any text outside the JSON.`;
 		}
 	}
 
-	async generateSatiricalVersion(
+	async generateGlitchedVersion(
 		originalTitle: string,
 		originalContent: string
-	): Promise<SatiricalResult | null> {
+	): Promise<GlitchedResult | null> {
 		try {
 			// System prompt to instruct the model about JSON formatting
-			const systemPrompt = `You are a witty and sarcastic tech journalist. You will create satirical versions of tech news articles.
+			const systemPrompt = `You are a witty and sarcastic tech journalist. You will create glitched or mythical versions of tech news articles.
 	Always respond with valid JSON that matches this format exactly:
 	{
 	  "title": "The SEO optimized funny title",
-	  "content": "The SEO optimized satirical/funny content in HTML format (around 1500 words, with paragraphs wrapped in <p> tags and other HTML elements as needed)",
+	  "content": "The SEO optimized mythical/funny content in HTML format (around 1500 words, with paragraphs wrapped in <p> tags and other HTML elements as needed)",
 	  "description": "The short SEO optimized and captivating meta description in without HTML formatting",
 	  "keywords": ["keyword1", "keyword2", "keyword3", "keyword4", "keyword5", ...]
 	}`;
 
 			// User prompt with the specific article context
-			const userPrompt = `Create a satirical version of this tech news article using humor techniques such as exaggeration, irony, parody, or absurdism. Make it funny and entertaining while keeping it relevant to the original topic. Avoid offensive content. Format the content in HTML, with paragraphs wrapped in <p> tags and other HTML elements (e.g., <strong>, <em>, <ul>, <li>) as needed.
+			const userPrompt = `Create a mythical or glitched version of this tech news article using humor techniques such as exaggeration, irony, parody, or absurdism. Make it funny and entertaining while keeping it relevant to the original topic. Avoid offensive content. Format the content in HTML, with paragraphs wrapped in <p> tags and other HTML elements (e.g., <strong>, <em>, <ul>, <li>) as needed.
 
 	Original Title: ${originalTitle}
 	Original Content: ${originalContent}...
 
 	Respond with ONLY valid JSON in this exact format:
 	{
-	"title": "The SEO optimized satirical/funny title",
-	"content": "The SEO optimized satirical/funny content in HTML format (around 1500 words, with paragraphs wrapped in <p> tags and other HTML elements as needed)",
+	"title": "The SEO optimized mythical/funny title",
+	"content": "The SEO optimized mythical/funny content in HTML format (around 1500 words, with paragraphs wrapped in <p> tags and other HTML elements as needed)",
 	"description": "The SEO optimized, captivating meta description that interests people to read the full article",
 	"keywords": ["keyword1", "keyword2", "keyword3", "keyword4", "keyword5", ...]
 	}
@@ -178,10 +178,10 @@ DO NOT include any text outside the JSON.`;
 					Array.isArray(response.keywords) &&
 					response.keywords.length > 0
 						? response.keywords
-						: ["satire", "tech", "humor"],
+						: ["myth", "tech", "humor"],
 			};
 		} catch (error) {
-			logger.error("Error in generateSatiricalVersion:", error);
+			logger.error("Error in generateGlitchedVersion:", error);
 			return null;
 		}
 	}

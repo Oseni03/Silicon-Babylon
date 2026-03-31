@@ -33,7 +33,7 @@ export interface ArticleCardProps {
 }
 
 // API Response Types
-export interface SatiricalResult {
+export interface GlitchedResult {
 	title: string;
 	content: string;
 	description: string;

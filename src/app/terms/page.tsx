@@ -108,7 +108,7 @@ const TermsPage = () => {
 									terms, you may not access the service.
 								</p>
 								<p>
-									{siteName} provides AI-generated satirical
+									{siteName} provides AI-generated mythical
 									content based on real technology news. While
 									we aim to entertain, our content should not
 									be taken as factual reporting.
@@ -121,7 +121,7 @@ const TermsPage = () => {
 								</h2>
 								<p>
 									All content published on {siteName} is
-									satirical in nature and is generated with
+									mythical in nature and is generated with
 									the assistance of artificial intelligence.
 									The articles, stories, and other content are
 									works of fiction and humor.
@@ -132,7 +132,7 @@ const TermsPage = () => {
 									quotes, and circumstances described are
 									entirely fictional. Any resemblance to
 									actual events, locales, or persons is
-									coincidental or used for satirical purposes.
+									coincidental or used for mythical purposes.
 								</p>
 							</div>
 						</div>

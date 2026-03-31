@@ -1,4 +1,4 @@
-// /c:/Users/USER/Documents/projects/satirical-techscape/lib/prisma.ts
+// /c:/Users/USER/Documents/projects/silicon-babylon/lib/prisma.ts
 import { PrismaClient } from "@prisma/client";
 
 if (!process.env.DATABASE_URL) {

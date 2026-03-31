@@ -27,17 +27,17 @@ export async function generateMetadata({
 	const { slug } = await params;
 	const categoryName = unslugify(slug);
 	const title = `${categoryName} News`;
-	const description = `Explore our curated collection of satirical tech news about ${categoryName}. Get your daily dose of tech humor and insights.`;
+	const description = `Explore our curated collection of mythical tech news about ${categoryName}. Get your daily dose of tech humor and insights.`;
 	const keywords = [
 		categoryName,
-		"satirical tech news",
+		"mythical tech news",
 		"tech humor",
 		`${categoryName} articles`,
 		`${categoryName} news`,
 		`${categoryName} funny articles`,
 		`${categoryName} funny news`,
-		`${categoryName} satire articles`,
-		`${categoryName} satire news`,
+		`${categoryName} myth articles`,
+		`${categoryName} myth news`,
 		`${categoryName} newsletter`,
 		...siteKeywords.slice(0, 5), // Use slice instead of splice to avoid mutating
 	].join(", ");

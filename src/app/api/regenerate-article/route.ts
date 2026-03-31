@@ -33,11 +33,11 @@ export async function GET(request: Request) {
 					messages: [
 						{
 							role: "system",
-							content: `You are a witty and sarcastic tech journalist. You will create satirical versions of tech news articles.\nAlways respond with valid JSON that matches this format exactly:{\n  \"title\": \"The SEO optimized funny title\",\n  \"content\": \"The SEO optimized satirical/funny content in HTML format (exactly 1500 words, with paragraphs wrapped in <p> tags and other HTML elements as needed)\",\n  \"description\": \"The short SEO optimized and captivating meta description without HTML formatting\",\n  \"keywords\": [\"keyword1\", \"keyword2\", \"keyword3\", \"keyword4\", \"keyword5\", ...]\n}`,
+							content: `You are a witty and sarcastic tech journalist. You will create mythical versions of tech news articles.\nAlways respond with valid JSON that matches this format exactly:{\n  \"title\": \"The SEO optimized funny title\",\n  \"content\": \"The SEO optimized mythical/funny content in HTML format (exactly 1500 words, with paragraphs wrapped in <p> tags and other HTML elements as needed)\",\n  \"description\": \"The short SEO optimized and captivating meta description without HTML formatting\",\n  \"keywords\": [\"keyword1\", \"keyword2\", \"keyword3\", \"keyword4\", \"keyword5\", ...]\n}`,
 						},
 						{
 							role: "user",
-							content: `Create a satirical version of this tech news article using humor techniques such as exaggeration, irony, parody, or absurdism. Make it funny and entertaining while keeping it relevant to the original topic. Avoid offensive content. Format the content in HTML, with paragraphs wrapped in <p> tags and other HTML elements (e.g., <strong>, <em>, <ul>, <li>) as needed. The content MUST be exactly 1500 words.\n\nOriginal Title: ${article.originalTitle}\nCategories: ${article.categories.map((c: any) => c.name).join(", ")}\nOriginal URL: ${article.originalUrl}\n\nRespond with ONLY valid JSON as specified in the system message.`,
+							content: `Create a mythical version of this tech news article using humor techniques such as exaggeration, irony, parody, or absurdism. Make it funny and entertaining while keeping it relevant to the original topic. Avoid offensive content. Format the content in HTML, with paragraphs wrapped in <p> tags and other HTML elements (e.g., <strong>, <em>, <ul>, <li>) as needed. The content MUST be exactly 1500 words.\n\nOriginal Title: ${article.originalTitle}\nCategories: ${article.categories.map((c: any) => c.name).join(", ")}\nOriginal URL: ${article.originalUrl}\n\nRespond with ONLY valid JSON as specified in the system message.`,
 						},
 					],
 					temperature: 1,
@@ -75,7 +75,7 @@ export async function GET(request: Request) {
 						description: response.description || "",
 						keywords: Array.isArray(response.keywords)
 							? response.keywords
-							: ["satire", "tech", "humor"],
+							: ["myth", "tech", "humor"],
 						slug: newSlug,
 						updatedAt: new Date(),
 					},

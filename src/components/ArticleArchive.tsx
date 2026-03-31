@@ -73,7 +73,7 @@ const ArticleArchive = ({
 				</h1>
 				<div className="w-16 h-1 bg-black mb-8"></div>
 				<p className="text-muted-foreground text-lg max-w-xl">
-					Browse our complete collection of satirical tech articles.
+					Browse our complete collection of mythical tech articles.
 				</p>
 			</AnimatedSection>
 

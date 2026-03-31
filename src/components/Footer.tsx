@@ -15,7 +15,7 @@ const Footer = () => {
 					<div className="md:col-span-1">
 						<Logo className="md:items-start mb-6" />
 						<p className="text-sm text-black/60 max-w-xs leading-relaxed">
-							Probably accurate news, most of the time. Exploring the intersection of technology, satire, and the future.
+							Probably accurate news, most of the time. Exploring the intersection of technology, myths, and the future.
 						</p>
 					</div>
 
@@ -48,7 +48,7 @@ const Footer = () => {
 						<h4 className="font-serif mb-6 uppercase tracking-widest text-xs">Contact</h4>
 						<ul className="space-y-4">
 							<li><Link href="https://x.com/Oseni03" className="text-sm hover:text-primary transition-colors uppercase tracking-widest text-[10px] font-bold">X (Twitter)</Link></li>
-							<li><Link href="mailto:contact@satiric-tech.info" className="text-sm hover:text-primary transition-colors uppercase tracking-widest text-[10px] font-bold">Email us</Link></li>
+							<li><Link href="mailto:contact@silicon-babylon.info" className="text-sm hover:text-primary transition-colors uppercase tracking-widest text-[10px] font-bold">Email us</Link></li>
 						</ul>
 					</div>
 				</div>

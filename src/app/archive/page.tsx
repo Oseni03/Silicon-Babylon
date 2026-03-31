@@ -8,7 +8,7 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
 	title: "Archive",
-	description: "Browse our collection of satirical tech articles.",
+	description: "Browse our collection of mythical tech articles.",
 };
 
 const Page = async () => {

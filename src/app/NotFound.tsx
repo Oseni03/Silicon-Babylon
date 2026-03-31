@@ -40,7 +40,7 @@ export default function NotFound() {
 						<p className="text-muted-foreground mb-8">
 							Looks like our AI got a bit too creative and made
 							this page disappear. Don't worry, we have plenty of
-							real satirical content for you!
+							real mythical content for you!
 						</p>
 
 						{/* Navigation Links */}

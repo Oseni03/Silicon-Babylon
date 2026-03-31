@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 	return {
 		title: `${categoryName} News`,
-		description: `Browse our collection of satirical articles about ${categoryName}`,
+		description: `Browse our collection of mythical articles about ${categoryName}`,
 	};
 }
 
@@ -85,7 +85,7 @@ const Page = async ({ params }: PageProps) => {
 						</h1>
 						<div className="w-16 h-1 bg-black mb-8"></div>
 						<p className="text-muted-foreground text-lg max-w-xl">
-							Selected reporting and satirical analysis on {categoryName.toLowerCase()}.
+							Selected reporting and mythical analysis on {categoryName.toLowerCase()}.
 						</p>
 					</AnimatedSection>
 

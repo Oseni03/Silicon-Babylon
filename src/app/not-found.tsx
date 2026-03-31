@@ -30,7 +30,7 @@ const NotFound = () => {
 
 					<p className="text-muted-foreground">
 						We couldn't find the page you were looking for. Perhaps
-						it was satirically removed.
+						it was glitched away.
 					</p>
 
 					<div className="pt-4">

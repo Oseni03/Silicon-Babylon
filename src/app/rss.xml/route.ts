@@ -15,7 +15,7 @@ const generateRssFeed = cache((articles: Article[]): string => {
 	const channelInfo = `
     <title>${escapeXml(siteName)}</title>
     <link>${escapeXml(siteUrl)}</link>
-    <description>Satirical takes on the latest tech news and trends</description>
+    <description>Mythical takes on the latest tech news and trends</description>
     <language>en</language>
     <lastBuildDate>${lastBuildDate}</lastBuildDate>
     <atom:link href="${escapeXml(`${siteUrl}/rss.xml`)}" rel="self" type="application/rss+xml"/>`;

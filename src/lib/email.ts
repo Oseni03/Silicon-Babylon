@@ -22,7 +22,7 @@ export async function sendNewsletterBatch({
 		const batch = await Promise.all(
 			users.map(async (user) => {
 				return {
-					from: `${siteName} <newsletter@satiric-tech.info>`,
+					from: `${siteName} <newsletter@silicon-babylon.info>`,
 					to: user.email,
 					subject: `${subject} - ${siteName} Newsletter`,
 					react: BulkByteNewsletter({

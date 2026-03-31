@@ -119,33 +119,33 @@ export const processFeeds = inngest.createFunction(
 							item.categories
 						);
 
-						const satirical =
-							await ai_agent.generateSatiricalVersion(
+						const glitched =
+							await ai_agent.generateGlitchedVersion(
 								item.title,
 								item.content
 							);
 
-						if (!satirical) {
+						if (!glitched) {
 							logger.info(
 								"Skipping article due to failed generation",
 								{
 									title: item.title,
 								}
 							);
-							throw new Error("Satirical generation failed");
+							throw new Error("Glitched generation failed");
 						}
 
-						const slug = generateSlug(satirical.title);
+						const slug = generateSlug(glitched.title);
 						const articleUrl = `${siteUrl}/article/${slug}`;
 
 						await Promise.all(
 							[
 								createArticle({
-									title: satirical.title,
+									title: glitched.title,
 									slug,
-									content: satirical.content,
-									description: satirical.description,
-									keywords: satirical.keywords,
+									content: glitched.content,
+									description: glitched.description,
+									keywords: glitched.keywords,
 									publishedAt: new Date(item.isoDate),
 									categories: categories,
 									originalUrl: item.link,
@@ -154,11 +154,11 @@ export const processFeeds = inngest.createFunction(
 								// Post to LinkedIn if enabled
 								linkedInEnabled &&
 									postToLinkedIn(
-										satirical.title,
+										glitched.title,
 										articleUrl,
-										satirical.description ||
+										glitched.description ||
 											stripHtml(
-												satirical.content
+												glitched.content
 											).substring(0, 300) + "...",
 										item.categories,
 										linkedInAccessToken!,
@@ -167,7 +167,7 @@ export const processFeeds = inngest.createFunction(
 										logger.error(
 											"Error posting to LinkedIn",
 											{
-												title: satirical.title,
+												title: glitched.title,
 												error: linkedInError,
 											}
 										);
@@ -176,9 +176,9 @@ export const processFeeds = inngest.createFunction(
 						);
 
 						logger.info("Successfully processed article", {
-							title: satirical.title,
+							title: glitched.title,
 						});
-						return { success: true, title: satirical.title };
+						return { success: true, title: glitched.title };
 					} catch (error) {
 						logger.error("Error processing article", {
 							title: item.title,

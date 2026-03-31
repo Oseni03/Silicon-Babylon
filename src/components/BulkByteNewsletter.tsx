@@ -111,7 +111,7 @@ const BulkByteNewsletter = ({
 								While we're busy making fun of tech trends, here
 								are some actually useful books to level up your
 								dev game. (Yes, we get a tiny commission if you
-								buy through our links - gotta fund our satirical
+								buy through our links - gotta fund our mythical
 								journalism somehow!)
 							</Text>
 
@@ -181,7 +181,7 @@ const BulkByteNewsletter = ({
 							<Text className="text-[#7a7676] text-[11px] m-0 mt-[16px]">
 								* These are affiliate links. We earn a small
 								commission at no extra cost to you. Thanks for
-								supporting our satirical shenanigans!
+								supporting our glitched shenanigans!
 							</Text>
 						</Section>
 
@@ -266,7 +266,7 @@ const BulkByteNewsletter = ({
 						{/* CTA Section */}
 						<Section className="text-center mb-[40px] p-[20px] border border-solid border-[#7a7676] rounded-[8px]">
 							<Heading className="text-[#f8f8f8] text-[18px] font-bold m-0 mb-[12px]">
-								Want More Satirical Tech News?
+								Want More Mythical Tech News?
 							</Heading>
 							<Text className="text-[#f8f8f8] text-[14px] leading-[20px] m-0 mb-[16px]">
 								Visit our website for daily doses of probably

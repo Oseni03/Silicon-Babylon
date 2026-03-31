@@ -75,7 +75,7 @@ export const programmes: AffiliateProgram[] = [
 			"Luminar",
 			"X-Membership",
 			"photo editing",
-			"satire",
+			"myth",
 		],
 		url: "https://skylum.com/x-membership?utm_campaign=rakuten&utm_medium=cpa&utm_source=WqKKIY0Hyg0&ranMID=46644&ranEAID=WqKKIY0Hyg0&ranSiteID=WqKKIY0Hyg0-MbVIC1htyu6W6eyC1d7CLw",
 	},

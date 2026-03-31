@@ -68,7 +68,7 @@ const CTA = () => {
 			setEmail("");
 
 			toast("Successfully subscribed! 🎉", {
-				description: "Welcome to the future of tech satire.",
+				description: "Welcome to the future of tech glitches.",
 				action: {
 					label: "Undo",
 					onClick: async () => {
@@ -98,7 +98,7 @@ const CTA = () => {
 					<div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-12 md:gap-24">
 						<div className="flex-1 space-y-6 text-center md:text-left">
 							<h2 className="text-4xl md:text-6xl font-serif leading-tight">
-								The future is <span className="italic text-primary">satirical</span>.
+								The future is <span className="italic text-primary">glitched</span>.
 							</h2>
 							<p className="text-white/60 text-lg max-w-md font-sans">
 								Join 50,000+ readers getting our weekly dose of tech insights and playful commentary.
@@ -160,7 +160,7 @@ const CTA = () => {
 					<div className="container mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
 						<div className="flex items-center gap-4">
 							<div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
-							<span className="text-[10px] uppercase tracking-widest font-black hidden sm:inline">Latest: Satire on the edge</span>
+							<span className="text-[10px] uppercase tracking-widest font-black hidden sm:inline">Latest: Myths on the edge</span>
 						</div>
 						<button
 							onClick={scrollToCTA}

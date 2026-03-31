@@ -43,7 +43,7 @@ function generateCategoryFeed(
   <channel>
     <title>${escapeXml(`${siteName} - ${categoryName}`)}</title>
     <link>${escapeXml(`${siteUrl}/category/${categoryName}`)}</link>
-    <description>Satirical takes on ${categoryName} news and trends</description>
+    <description>Mythical takes on ${categoryName} news and trends</description>
     <language>en</language>
     <lastBuildDate>${lastBuildDate}</lastBuildDate>
     <atom:link href="${escapeXml(

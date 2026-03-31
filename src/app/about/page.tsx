@@ -60,7 +60,7 @@ const Page = () => {
 								The Manifesto
 							</span>
 							<h1 className="text-5xl md:text-8xl font-serif tracking-tight leading-[0.9]">
-								Satire is the <br/><span className="italic text-primary">highest</span> form of truth.
+								Myth is the <br/><span className="italic text-primary">highest</span> form of truth.
 							</h1>
 							<p className="text-xl md:text-2xl text-muted-foreground font-serif italic max-w-2xl">
 								In a world of hyper-innovation, we provide the necessary friction.
@@ -90,14 +90,14 @@ const Page = () => {
 									<span className="text-[10px] uppercase tracking-widest font-black text-primary">01. Collection</span>
 									<h3 className="text-3xl font-serif">Curated Intelligence</h3>
 									<p className="text-muted-foreground leading-relaxed">
-										We analyze thousands of data points and headlines from global tech leaders to find the stories that deserve a second, more satirical look.
+										We analyze thousands of data points and headlines from global tech leaders to find the stories that deserve a second, more mythical look.
 									</p>
 								</div>
 								<div className="space-y-6">
 									<span className="text-[10px] uppercase tracking-widest font-black text-primary">02. Analysis</span>
 									<h3 className="text-3xl font-serif">Deep Cynicism</h3>
 									<p className="text-muted-foreground leading-relaxed">
-										Every article is crafted with a deep understanding of the industry, ensuring our satire hits the mark and reveals the underlying truth.
+										Every article is crafted with a deep understanding of the industry, ensuring our mythical takes hit the mark and reveals the underlying truth.
 									</p>
 								</div>
 							</div>

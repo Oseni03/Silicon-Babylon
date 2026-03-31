@@ -83,7 +83,7 @@ const ArticleView = ({ article, relatedArticles }: ArticleViewProps) => {
 							<div className="sticky top-24 space-y-8">
 								<div className="flex flex-col gap-2">
 									<span className="text-[10px] uppercase tracking-widest font-black text-foreground/40 whitespace-nowrap">Shared By</span>
-									<span className="text-xs font-serif italic text-foreground whitespace-nowrap">Satiric Staff</span>
+									<span className="text-xs font-serif italic text-foreground whitespace-nowrap">Babylon Scribes</span>
 								</div>
 							</div>
 						</div>

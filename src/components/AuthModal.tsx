@@ -65,7 +65,7 @@ export default function AuthModal({
 					</button>
 				</div>
 				<p className="text-[8px] uppercase tracking-widest text-center text-muted-foreground">
-					By continuing, you accept our satirical terms of service.
+					By continuing, you accept our mythical terms of service.
 				</p>
 			</DialogContent>
 		</Dialog>
