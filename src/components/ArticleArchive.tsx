@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { type Article, type Category } from "@/types/types";
 import ArticlesGrid from "./ArticlesGrid";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator, BreadcrumbPage } from "@/components/ui/breadcrumb";
+import AnimatedSection from "./AnimatedSection";
 
 interface ArticleArchiveProps {
 	initialArticles: Article[];
@@ -47,32 +48,36 @@ const ArticleArchive = ({
 
 	return (
 		<section className="container mx-auto px-4 md:px-6 py-8">
-			<div className="mb-8">
-				<Breadcrumb className="mb-6">
-					<BreadcrumbList>
+			<AnimatedSection direction="up" distance={30} className="mb-12">
+				<Breadcrumb className="mb-8">
+					<BreadcrumbList className="gap-2">
 						<BreadcrumbItem>
-							<BreadcrumbLink href="/" className="text-muted-foreground hover:text-foreground">
-								Home
+							<BreadcrumbLink
+								href="/"
+								className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground hover:text-black transition-colors"
+							>
+								Index
 							</BreadcrumbLink>
 						</BreadcrumbItem>
-						<BreadcrumbSeparator />
+						<BreadcrumbSeparator className="text-muted-foreground" />
 						<BreadcrumbItem>
-							<BreadcrumbPage>
+							<BreadcrumbPage className="text-[10px] uppercase tracking-widest font-black text-black">
 								Archive
 							</BreadcrumbPage>
 						</BreadcrumbItem>
 					</BreadcrumbList>
 				</Breadcrumb>
 
-				<h1 className="text-3xl md:text-4xl font-medium tracking-tight mb-3">
+				<h1 className="text-5xl md:text-7xl font-serif tracking-tight mb-6">
 					Article Archive
 				</h1>
-				<p className="text-muted-foreground text-lg">
-					Browse our complete collection of satirical tech articles
+				<div className="w-16 h-1 bg-black mb-8"></div>
+				<p className="text-muted-foreground text-lg max-w-xl">
+					Browse our complete collection of satirical tech articles.
 				</p>
-			</div>
+			</AnimatedSection>
 
-			<div className="max-w-5xl mb-10 space-y-6">
+			<AnimatedSection delay={0.2} direction="up" distance={20} className="max-w-5xl mb-12 space-y-8">
 				{/* Search and filters */}
 				<div className="flex flex-col sm:flex-row gap-4">
 					<div className="relative flex-grow">
@@ -118,12 +123,12 @@ const ArticleArchive = ({
 				</div>
 
 				{/* Results info */}
-				<div className="text-sm text-muted-foreground">
-					Showing {filteredArticles.length} articles
+				<div className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground">
+					Found {filteredArticles.length} articles
 					{selectedCategory && ` in ${selectedCategory}`}
 					{searchQuery && ` matching "${searchQuery}"`}
 				</div>
-			</div>
+			</AnimatedSection>
 
 			{/* Articles grid */}
 			<ArticlesGrid filteredArticles={filteredArticles} />

@@ -46,7 +46,8 @@ const REACTIONS = [
 
 export default function ArticleInteractions({
 	articleId,
-}: ArticleInteractionsProps) {
+	className,
+}: ArticleInteractionsProps & { className?: string }) {
 	const { user } = useAuth();
 	const [comments, setComments] = useState([]);
 	const [newComment, setNewComment] = useState("");
@@ -137,9 +138,9 @@ export default function ArticleInteractions({
 	}, [articleId]);
 
 	return (
-		<div className="mt-12 space-y-12">
+		<div className={cn("space-y-16", className)}>
 			{/* Reactions */}
-			<div className="flex flex-wrap gap-3">
+			<div className="flex flex-wrap gap-4">
 				<TooltipProvider>
 					{REACTIONS.map(({ type, emoji }) => (
 						<Tooltip key={type}>
@@ -203,12 +204,12 @@ export default function ArticleInteractions({
 						comments.map((comment: any) => (
 							<div key={comment.id} className="pt-8">
 								<div className="flex items-start gap-4">
-									<Avatar className="rounded-none border border-foreground h-8 w-8">
-										<AvatarFallback className="rounded-none bg-foreground text-background text-[10px] font-black">
+									<Avatar className="rounded-none border border-foreground h-10 w-10 shrink-0">
+										<AvatarFallback className="rounded-none bg-foreground text-background text-xs font-black">
 											{comment.user.username?.[0] || "U"}
 										</AvatarFallback>
 									</Avatar>
-									<div className="flex-1 space-y-4">
+									<div className="flex-1 space-y-4 min-w-0">
 										<div className="flex items-center justify-between">
 											<div className="flex items-center gap-3">
 												<span className="text-[10px] uppercase tracking-widest font-black">
@@ -219,7 +220,7 @@ export default function ArticleInteractions({
 												</span>
 											</div>
 										</div>
-										<p className="text-sm font-sans leading-relaxed text-foreground/80">
+										<p className="text-base font-sans leading-relaxed text-foreground/80 break-words">
 											{comment.content}
 										</p>
 										<div className="flex items-center gap-6">

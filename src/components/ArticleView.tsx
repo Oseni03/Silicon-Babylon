@@ -3,6 +3,7 @@
 import Link from "next/link";
 import CTA from "@/components/CTA";
 import ArticleInteractions from "@/components/ArticleInteractions";
+import AnimatedSection from "@/components/AnimatedSection";
 import { type Article } from "@/types/types";
 import { cn } from "@/lib/utils";
 
@@ -20,10 +21,11 @@ const ArticleView = ({ article, relatedArticles }: ArticleViewProps) => {
 
 	return (
 		<>
-			<article className="container mx-auto px-4 md:px-6 py-12 md:py-24">
+			<article className="container mx-auto px-4 md:px-6 py-12 md:py-24 overflow-hidden">
 				<div className="max-w-4xl mx-auto">
 					{/* Article header */}
-					<header className="mb-16 pb-12 border-b border-black">
+					<AnimatedSection direction="up" distance={30}>
+						<header className="mb-16 pb-12 border-b border-black">
 						<div className="flex flex-col gap-8">
 							<div className="flex items-center gap-4">
 								{article.categories.map((category) => (
@@ -73,6 +75,7 @@ const ArticleView = ({ article, relatedArticles }: ArticleViewProps) => {
 							)}
 						</div>
 					</header>
+					</AnimatedSection>
 
 					{/* Article content */}
 					<div className="flex flex-col md:flex-row gap-12">
@@ -82,21 +85,27 @@ const ArticleView = ({ article, relatedArticles }: ArticleViewProps) => {
 									<span className="text-[10px] uppercase tracking-widest font-black text-foreground/40 whitespace-nowrap">Shared By</span>
 									<span className="text-xs font-serif italic text-foreground whitespace-nowrap">Satiric Staff</span>
 								</div>
-								<ArticleInteractions articleId={article.id} />
 							</div>
 						</div>
 
 						<div className="flex-1">
-							<div
-								className="prose prose-xl max-w-none prose-p:font-sans prose-p:text-foreground prose-p:leading-relaxed prose-headings:font-serif prose-headings:font-normal prose-a:text-foreground prose-a:decoration-primary prose-a:underline-offset-4 prose-blockquote:border-l-4 prose-blockquote:border-foreground prose-blockquote:italic prose-blockquote:font-serif"
-								dangerouslySetInnerHTML={{ __html: article.content }}
-							/>
+							<AnimatedSection delay={0.2} direction="none">
+								<div
+									className="prose prose-xl max-w-none prose-p:font-sans prose-p:text-foreground prose-p:leading-relaxed prose-headings:font-serif prose-headings:font-normal prose-a:text-foreground prose-a:decoration-primary prose-a:underline-offset-4 prose-blockquote:border-l-4 prose-blockquote:border-foreground prose-blockquote:italic prose-blockquote:font-serif"
+									dangerouslySetInnerHTML={{ __html: article.content }}
+								/>
+							</AnimatedSection>
+
+							{/* Interactions Section - Moved here for better positioning and responsiveness */}
+							<AnimatedSection delay={0.4} className="mt-24 pt-16 border-t border-black">
+								<ArticleInteractions articleId={article.id} />
+							</AnimatedSection>
 						</div>
 					</div>
 
 					{/* Related Articles Section */}
 					{relatedArticles && relatedArticles.length > 0 && (
-						<div className="mt-24 pt-16 border-t border-black">
+						<AnimatedSection delay={0.2} className="mt-24 pt-16 border-t border-black">
 							<h2 className="text-sm uppercase tracking-[0.3em] font-black mb-12">
 								Keep Reading
 							</h2>
@@ -116,11 +125,11 @@ const ArticleView = ({ article, relatedArticles }: ArticleViewProps) => {
 									</Link>
 								))}
 							</div>
-						</div>
+						</AnimatedSection>
 					)}
 
 					{/* Bottom navigation */}
-					<div className="mt-24 pt-12 border-t border-black flex flex-col md:flex-row justify-between items-center gap-8">
+					<AnimatedSection className="mt-24 pt-12 border-t border-black flex flex-col md:flex-row justify-between items-center gap-8">
 						<Link
 							href="/"
 							className="group flex flex-col items-center md:items-start gap-2"
@@ -140,7 +149,7 @@ const ArticleView = ({ article, relatedArticles }: ArticleViewProps) => {
 							</span>
 							<div className="w-12 h-px bg-black group-hover:w-24 transition-all duration-500"></div>
 						</Link>
-					</div>
+					</AnimatedSection>
 				</div>
 			</article>
 

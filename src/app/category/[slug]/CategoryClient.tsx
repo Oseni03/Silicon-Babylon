@@ -7,6 +7,7 @@ import ArticlesGrid from "@/components/ArticlesGrid";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { type Article } from "@/types/types";
+import AnimatedSection from "@/components/AnimatedSection";
 
 interface CategoryClientProps {
 	initialArticles: Article[];
@@ -69,7 +70,7 @@ export default function CategoryClient({
 	return (
 		<>
 			<ArticlesGrid filteredArticles={allArticles as Article[]} />
-			<div className="flex justify-center mt-20">
+			<AnimatedSection delay={0.4} direction="up" distance={10} className="flex justify-center mt-20 pb-12">
 				{hasNextPage && (
 					<button
 						onClick={() => fetchNextPage()}
@@ -83,7 +84,7 @@ export default function CategoryClient({
 						{isFetchingNextPage && <Loader2 className="w-4 h-4 animate-spin text-muted-foreground mr-2 inline" />}
 					</button>
 				)}
-			</div>
+			</AnimatedSection>
 		</>
 	);
 }

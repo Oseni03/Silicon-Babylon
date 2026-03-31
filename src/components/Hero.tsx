@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef } from "react";
+import AnimatedSection from "@/components/AnimatedSection";
 
 const Hero = () => {
 	const heroRef = useRef<HTMLDivElement>(null);
@@ -27,54 +28,49 @@ const Hero = () => {
 		<section
 			id="hero"
 			ref={heroRef}
-			className="relative h-screen flex items-center justify-center overflow-hidden transition-all duration-300 ease-out"
+			className="relative h-screen flex items-center justify-center overflow-hidden transition-all duration-300 ease-out border-b border-black"
 		>
 			<div
-				className="absolute inset-0 z-0 bg-gradient-to-b from-secondary/80 to-background/40"
+				className="absolute inset-0 z-0 bg-gradient-to-b from-secondary/40 to-background/20"
 				aria-hidden="true"
 			/>
 
 			<div className="container mx-auto px-4 sm:px-6 z-10">
-				<div className="max-w-3xl mx-auto text-center space-y-4 sm:space-y-6 px-2">
-					<div className="inline-block px-3 py-1 rounded-full bg-secondary border border-border text-xs font-medium animate-fade-in">
-						Autonomous Tech Commentary Platform
-					</div>
+				<div className="max-w-3xl mx-auto text-center space-y-8 px-2">
+					<AnimatedSection direction="down" delay={0.1}>
+						<div className="inline-block px-4 py-1.5 border border-black text-[10px] uppercase tracking-[0.3em] font-black">
+							Autonomous Tech Commentary Platform
+						</div>
+					</AnimatedSection>
 
-					<h1 className="hero-text text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight animate-fade-up">
-						Discover the Intersection of
-						<span className="relative ml-2 text-primary">
-							Tech and Humor
-							<span className="absolute -bottom-1 left-0 w-full h-1 bg-primary/50 animate-pulse"></span>
-						</span>
-					</h1>
+					<AnimatedSection direction="up" delay={0.3} distance={40}>
+						<h1 className="hero-text text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-serif leading-[1] tracking-tight">
+							Discover the Intersection of
+							<span className="block text-primary drop-shadow-[2px_2px_0_rgba(0,0,0,1)]">
+								Tech and Humor
+							</span>
+						</h1>
+					</AnimatedSection>
 
-					<p className="text-base sm:text-lg md:text-xl text-muted-foreground animate-fade-up animation-delay-200">
-						Dive into a world where cutting-edge tech meets sharp wit! Explore stories that spark curiosity, ignite laughter, and challenge the norm—crafted with passion, no algorithms required.
-					</p>
+					<AnimatedSection direction="up" delay={0.5} distance={30}>
+						<p className="text-lg sm:text-xl md:text-2xl text-foreground font-serif italic max-w-2xl mx-auto leading-relaxed">
+							Dive into a world where cutting-edge tech meets sharp wit! Explore stories that spark curiosity, ignite laughter, and challenge the norm.
+						</p>
+					</AnimatedSection>
 
-					<div className="pt-4 animate-fade-up animation-delay-300">
+					<AnimatedSection direction="up" delay={0.7} distance={20} className="pt-8">
 						<a
 							href="#latest-articles"
-							className="inline-flex items-center justify-center rounded-md px-4 sm:px-6 py-2 sm:py-3 bg-primary text-primary-foreground font-medium text-sm hover:bg-primary/90 transition-colors"
+							className="group relative inline-flex flex-col items-center gap-4"
 						>
-							Read Latest Articles
-							<svg
-								className="ml-2 h-4 w-4"
-								xmlns="http://www.w3.org/2000/svg"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								strokeWidth="2"
-								strokeLinecap="round"
-								strokeLinejoin="round"
-							>
-								<line x1="12" y1="5" x2="12" y2="19" />
-								<polyline points="19 12 12 19 5 12" />
-							</svg>
+							<span className="text-[10px] uppercase tracking-[0.4em] font-black group-hover:text-primary transition-colors">
+								Read Latest Articles
+							</span>
+							<div className="w-12 h-0.5 bg-black group-hover:w-24 transition-all duration-700"></div>
 						</a>
-					</div>
+					</AnimatedSection>
 
-					<div className="absolute bottom-10 left-0 right-0 flex justify-center animate-hover-float opacity-70">
+					<div className="absolute bottom-10 left-0 right-0 flex justify-center opacity-40">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							width="24"
@@ -82,7 +78,7 @@ const Hero = () => {
 							viewBox="0 0 24 24"
 							fill="none"
 							stroke="currentColor"
-							strokeWidth="2"
+							strokeWidth="3"
 							strokeLinecap="round"
 							strokeLinejoin="round"
 							className="animate-bounce"

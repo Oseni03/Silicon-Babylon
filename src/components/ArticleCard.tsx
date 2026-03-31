@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { type ArticleCardProps } from "@/types/types";
+import AnimatedSection from "@/components/AnimatedSection";
 
 const ArticleCard = ({
 	title,
@@ -18,26 +18,6 @@ const ArticleCard = ({
 	image,
 	imageAlt = title,
 }: ArticleCardProps) => {
-	const [isVisible, setIsVisible] = useState(false);
-	const cardRef = useRef<HTMLDivElement>(null);
-
-	useEffect(() => {
-		const observer = new IntersectionObserver(
-			([entry]) => {
-				if (entry.isIntersecting) {
-					setIsVisible(true);
-					observer.unobserve(entry.target);
-				}
-			},
-			{ threshold: 0.1 }
-		);
-
-		if (cardRef.current) observer.observe(cardRef.current);
-		return () => {
-			if (cardRef.current) observer.unobserve(cardRef.current);
-		};
-	}, []);
-
 	const formattedDate = new Date(date).toLocaleDateString("en-US", {
 		year: "numeric",
 		month: "short",
@@ -49,12 +29,12 @@ const ArticleCard = ({
 	const linkProps = isAffiliate ? { target: "_blank", rel: "noopener noreferrer sponsored" } : {};
 
 	return (
-		<div
-			ref={cardRef}
+		<AnimatedSection
+			direction="up"
+			distance={20}
+			delay={Math.min(index * 0.1, 0.6)}
 			className={cn(
-				"group flex flex-col h-full border-b border-foreground pb-8 md:pb-12 transition-all duration-700 ease-out animate-on-scroll fade-in",
-				isVisible && "active",
-				`animation-delay-${Math.min(index * 100, 600)}`,
+				"group flex flex-col h-full border-b border-foreground pb-8 md:pb-12 transition-all",
 				isAffiliate && "bg-primary/5 p-6 md:p-8"
 			)}
 		>
@@ -108,7 +88,7 @@ const ArticleCard = ({
 					)}
 				</div>
 			</LinkComponent>
-		</div>
+		</AnimatedSection>
 	);
 };
 

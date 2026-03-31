@@ -22,6 +22,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { Article } from "@/types/types";
 import { useArticle } from "@/hooks/use-articles";
+import AnimatedSection from "@/components/AnimatedSection";
 
 interface HomePageClientProps {
     initialArticles: Article[];
@@ -189,7 +190,7 @@ export default function HomePageClient({
                     <div className="space-y-16">
                         {/* Featured Hero Article */}
                         {featuredArticle && page === 1 && !searchQuery && (
-                            <div className="pb-16 text-foreground">
+                            <AnimatedSection direction="up" distance={30} className="pb-16 text-foreground">
                                 <ArticleCard
                                     slug={featuredArticle.slug}
                                     title={featuredArticle.title}
@@ -201,11 +202,11 @@ export default function HomePageClient({
                                     originalUrl={featuredArticle.originalUrl}
                                     image={featuredArticle.image}
                                 />
-                            </div>
+                            </AnimatedSection>
                         )}
 
                         {/* Article Grid */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16">
+                        <AnimatedSection delay={0.2} direction="none" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16">
                             {(page === 1 && !searchQuery ? moreArticles : articles).map((article, index) => (
                                 <ArticleCard
                                     key={`${article.slug}-${index}`}
@@ -220,7 +221,7 @@ export default function HomePageClient({
                                     image={article.image}
                                 />
                             ))}
-                        </div>
+                        </AnimatedSection>
                     </div>
                 )}
 

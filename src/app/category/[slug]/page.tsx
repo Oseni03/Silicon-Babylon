@@ -14,6 +14,7 @@ import { unslugify } from "@/lib/utils";
 import { getRandomAffiliate } from "@/lib/affiliates";
 import { getPaginatedArticlesByCategory } from "@/lib/db";
 import CategoryClient from "./CategoryClient";
+import AnimatedSection from "@/components/AnimatedSection";
 import { Metadata } from "next";
 
 interface PageProps {
@@ -59,7 +60,7 @@ const Page = async ({ params }: PageProps) => {
 			<Header />
 			<main className="flex-grow pt-12 md:pt-24 pb-12 md:pb-16 border-t border-black">
 				<section className="container mx-auto px-4 md:px-6">
-					<div className="mb-12 md:mb-20">
+					<AnimatedSection direction="up" distance={30} className="mb-12 md:mb-20">
 						<Breadcrumb className="mb-8">
 							<BreadcrumbList className="gap-2">
 								<BreadcrumbItem>
@@ -86,7 +87,7 @@ const Page = async ({ params }: PageProps) => {
 						<p className="text-muted-foreground text-lg max-w-xl">
 							Selected reporting and satirical analysis on {categoryName.toLowerCase()}.
 						</p>
-					</div>
+					</AnimatedSection>
 
 					<CategoryClient
 						initialArticles={withAffiliates}

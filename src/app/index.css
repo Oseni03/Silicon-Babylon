@@ -4,6 +4,7 @@
 
 @layer base {
   :root {
+    scroll-behavior: smooth;
     --background: 0 0% 98%;
     --foreground: 0 0% 0%; /* Pure black for maximum contrast */
 
