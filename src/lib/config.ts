@@ -1,12 +1,13 @@
-export const siteName = "SatiricTech";
+export const siteName = "Silicon Babylon";
 export const siteUrl =
 	process.env.NEXT_PUBLIC_SITE_URL ||
 	(process.env.NODE_ENV === "production"
-		? "https://www.satiric-tech.info"
+		? "https://www.siliconbabylon.vercel.app"
 		: "http://localhost:3000");
 export const siteKeywords = [
-	"satiricTech",
-	"Satiric",
+	"Silicon Babylon",
+	"SiliconBabylon",
+	"Babylon",
 	"tech satire",
 	"news tech news",
 	"tech news tech",

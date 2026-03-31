@@ -7,7 +7,7 @@ interface NewsletterPropsResult {
 	summary: string;
 }
 
-class SatiricTechAgent {
+class SiliconBabylonAgent {
 	private client: OpenAI;
 
 	constructor() {
@@ -46,7 +46,7 @@ class SatiricTechAgent {
 			.map((title) => `- ${title}`)
 			.join("\n");
 
-		const prompt = `You are a satirical tech newsletter writer for SatiricTech. Given these article titles, create a witty subject line and summary in the style of tech satire.
+		const prompt = `You are a satirical tech newsletter writer for Silicon Babylon. Given these article titles, create a witty subject line and summary in the style of tech satire.
 
 Article titles:
 ${articlesText}
@@ -187,4 +187,4 @@ DO NOT include any text outside the JSON.`;
 	}
 }
 
-export const ai_agent = new SatiricTechAgent();
+export const ai_agent = new SiliconBabylonAgent();

@@ -15,7 +15,7 @@ export const processFeeds = inngest.createFunction(
 	{ id: "process-feeds" },
 	{ cron: "TZ=Europe/Paris 0 */12 * * *" },
 	async ({ step }) => {
-		// This function will be called whenever the "satirictech/process-feed" event is sent
+		// This function will be called whenever the "silicon-babylon/process-feed" event is sent
 		// You can access event data via `event.data`
 		// Add your feed processing logic here
 

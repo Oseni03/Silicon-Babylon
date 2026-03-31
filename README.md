@@ -1,4 +1,4 @@
-# SatiricTech
+# Silicon Babylon
 
 A satirical tech news platform powered by AI.
 
